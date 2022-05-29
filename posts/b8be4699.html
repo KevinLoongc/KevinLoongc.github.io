@@ -1,0 +1,780 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Kevin Loongc">
+  <meta name="keywords" content="云杂货店, KevinL, KevinLoongc, QT, ROS, SLAM, 嵌入式">
+  
+    <meta name="description" content="Step 1:安装clang-format在Ubuntu下安装非常简单： 1sudo apt install clang-format  自带的排版格式主要有：LLVM, Google, Chromium, Mozilla, WebKit。 Step 2:自定义代码风格 导出默认配置文件.clang-format： 12# clang-format -style&#x3D;格式名 -dump-config">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Ubuntu下QT代码格式化配置——Clang-Format">
+<meta property="og:url" content="https://kevinloongc.github.io/posts/b8be4699.html">
+<meta property="og:site_name" content="云杂货店">
+<meta property="og:description" content="Step 1:安装clang-format在Ubuntu下安装非常简单： 1sudo apt install clang-format  自带的排版格式主要有：LLVM, Google, Chromium, Mozilla, WebKit。 Step 2:自定义代码风格 导出默认配置文件.clang-format： 12# clang-format -style&#x3D;格式名 -dump-config">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s1.ax1x.com/2022/05/08/O1nlSx.png">
+<meta property="article:published_time" content="2020-12-17T12:46:25.000Z">
+<meta property="article:modified_time" content="2022-05-29T03:31:48.481Z">
+<meta property="article:author" content="Kevin Loongc">
+<meta property="article:tag" content="Clang-Format">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://s1.ax1x.com/2022/05/08/O1nlSx.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>Ubuntu下QT代码格式化配置——Clang-Format - 云杂货店</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"kevinloongc.github.io","root":"/","version":"1.9.0","typing":{"enable":true,"typeSpeed":80,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":false},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>云杂货店</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Ubuntu下QT代码格式化配置——Clang-Format"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2020-12-17 20:46" pubdate>
+          2020年12月17日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          5.4k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          45 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Ubuntu下QT代码格式化配置——Clang-Format</h1>
+            
+              <p class="note note-info">
+                
+                  
+                    本文最后更新于：2022年5月29日 中午
+                  
+                
+              </p>
+            
+            <div class="markdown-body">
+              
+              <h2 id="Step-1-安装clang-format"><a href="#Step-1-安装clang-format" class="headerlink" title="Step 1:安装clang-format"></a>Step 1:安装clang-format</h2><p>在Ubuntu下安装非常简单：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">sudo apt install clang-format<br></code></pre></td></tr></table></figure>
+
+<p>自带的排版格式主要有：LLVM, Google, Chromium, Mozilla, WebKit。</p>
+<h2 id="Step-2-自定义代码风格"><a href="#Step-2-自定义代码风格" class="headerlink" title="Step 2:自定义代码风格"></a>Step 2:自定义代码风格</h2><ol>
+<li><p>导出默认配置文件.clang-format：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># clang-format -style=格式名 -dump-config &gt; 文件名</span><br>clang-format -style=llvm -dump-config &gt; .clang-format<br></code></pre></td></tr></table></figure>
+
+<p>在Ubuntu下以点开头命名的文件是隐藏文件，所以导出为.clang-format后，在文件夹中看不到该文件，可以使用快捷键Ctrl+h显示隐藏文件。</p>
+</li>
+<li><p>使用文本编辑器打开<code>.clang-format</code>文件，根据自己喜好修改即可。<br>下面放出我自己修改使用的代码风格给大家参考：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br></pre></td><td class="code"><pre><code class="hljs bash">---<br><span class="hljs-comment"># 语言: None, Cpp, Java, JavaScript, ObjC, Proto, TableGen, TextProto</span><br>Language:	Cpp<br><span class="hljs-comment"># BasedOnStyle:	LLVM</span><br><span class="hljs-comment"># 访问说明符(public、private等)的偏移</span><br>AccessModifierOffset:	-4<br><span class="hljs-comment"># 开括号(开圆括号、开尖括号、开方括号)后的对齐: Align, DontAlign, AlwaysBreak(总是在开括号后换行)</span><br>AlignAfterOpenBracket:	Align<br><span class="hljs-comment"># 连续赋值时，对齐所有等号</span><br>AlignConsecutiveAssignments:	<span class="hljs-literal">true</span><br><span class="hljs-comment"># 连续声明时，对齐所有声明的变量名</span><br>AlignConsecutiveDeclarations:	<span class="hljs-literal">true</span><br><span class="hljs-comment"># 左对齐逃脱换行(使用反斜杠换行)的反斜杠</span><br>AlignEscapedNewlinesLeft:	<span class="hljs-literal">true</span><br><span class="hljs-comment"># 水平对齐二元和三元表达式的操作数</span><br>AlignOperands:	<span class="hljs-literal">true</span><br><span class="hljs-comment"># 对齐连续的尾随的注释</span><br>AlignTrailingComments:	<span class="hljs-literal">true</span><br><span class="hljs-comment"># 允许函数声明的所有参数在放在下一行</span><br>AllowAllParametersOfDeclarationOnNextLine:	<span class="hljs-literal">true</span><br><span class="hljs-comment"># 允许短的块放在同一行</span><br>AllowShortBlocksOnASingleLine:	<span class="hljs-literal">false</span><br><span class="hljs-comment"># 允许短的case标签放在同一行</span><br>AllowShortCaseLabelsOnASingleLine:	<span class="hljs-literal">false</span><br><span class="hljs-comment"># 允许短的函数放在同一行: None, InlineOnly(定义在类中), Empty(空函数), Inline(定义在类中，空函数), All</span><br>AllowShortFunctionsOnASingleLine:	Empty<br><span class="hljs-comment"># 允许短的if语句保持在同一行</span><br>AllowShortIfStatementsOnASingleLine:	<span class="hljs-literal">false</span><br><span class="hljs-comment"># 允许短的循环保持在同一行</span><br>AllowShortLoopsOnASingleLine:	<span class="hljs-literal">false</span><br><span class="hljs-comment"># 总是在定义返回类型后换行(deprecated)</span><br>AlwaysBreakAfterDefinitionReturnType:	None<br><span class="hljs-comment"># 总是在返回类型后换行: None, All, TopLevel(顶级函数，不包括在类中的函数), </span><br><span class="hljs-comment">#   AllDefinitions(所有的定义，不包括声明), TopLevelDefinitions(所有的顶级函数的定义)</span><br>AlwaysBreakAfterReturnType:	None<br><span class="hljs-comment"># 总是在多行string字面量前换行</span><br>AlwaysBreakBeforeMultilineStrings:	<span class="hljs-literal">false</span><br><span class="hljs-comment"># 总是在template声明后换行</span><br>AlwaysBreakTemplateDeclarations:	<span class="hljs-literal">false</span><br><span class="hljs-comment"># false表示函数实参要么都在同一行，要么都各自一行</span><br>BinPackArguments:	<span class="hljs-literal">true</span><br><span class="hljs-comment"># false表示所有形参要么都在同一行，要么都各自一行</span><br>BinPackParameters:	<span class="hljs-literal">true</span><br><span class="hljs-comment"># 大括号换行，只有当BreakBeforeBraces设置为Custom时才有效</span><br>BraceWrapping:   <br>  <span class="hljs-comment"># class定义后面</span><br>  AfterClass:	<span class="hljs-literal">true</span><br>  <span class="hljs-comment"># 控制语句后面</span><br>  AfterControlStatement:	<span class="hljs-literal">true</span><br>  <span class="hljs-comment"># enum定义后面</span><br>  AfterEnum:	<span class="hljs-literal">true</span><br>  <span class="hljs-comment"># 函数定义后面</span><br>  AfterFunction:	<span class="hljs-literal">true</span><br>  <span class="hljs-comment"># 命名空间定义后面</span><br>  AfterNamespace:	<span class="hljs-literal">true</span><br>  <span class="hljs-comment"># ObjC定义后面</span><br>  AfterObjCDeclaration:	<span class="hljs-literal">true</span><br>  <span class="hljs-comment"># struct定义后面</span><br>  AfterStruct:	<span class="hljs-literal">true</span><br>  <span class="hljs-comment"># union定义后面</span><br>  AfterUnion:	<span class="hljs-literal">true</span><br>  <span class="hljs-comment"># catch之前</span><br>  BeforeCatch:	<span class="hljs-literal">true</span><br>  <span class="hljs-comment"># else之前</span><br>  BeforeElse:	<span class="hljs-literal">true</span><br>  <span class="hljs-comment"># 缩进大括号</span><br>  IndentBraces:	<span class="hljs-literal">false</span><br><span class="hljs-comment"># 在二元运算符前换行: None(在操作符后换行), NonAssignment(在非赋值的操作符前换行), All(在操作符前换行)</span><br>BreakBeforeBinaryOperators:	NonAssignment<br><span class="hljs-comment"># 在大括号前换行: Attach(始终将大括号附加到周围的上下文), Linux(除函数、命名空间和类定义，与Attach类似), </span><br><span class="hljs-comment">#   Mozilla(除枚举、函数、记录定义，与Attach类似), Stroustrup(除函数定义、catch、else，与Attach类似), </span><br><span class="hljs-comment">#   Allman(总是在大括号前换行), GNU(总是在大括号前换行，并对于控制语句的大括号增加额外的缩进), WebKit(在函数前换行), Custom</span><br><span class="hljs-comment">#   注：这里认为语句块也属于函数</span><br>BreakBeforeBraces:	Custom<br><span class="hljs-comment"># 在三元运算符前换行</span><br>BreakBeforeTernaryOperators:	<span class="hljs-literal">true</span><br><span class="hljs-comment"># 在构造函数的初始化列表的逗号前换行</span><br>BreakConstructorInitializersBeforeComma:	<span class="hljs-literal">false</span><br><span class="hljs-comment"># 每行字符的限制，0表示没有限制</span><br>ColumnLimit:	200<br><span class="hljs-comment"># 描述具有特殊意义的注释的正则表达式，它不应该被分割为多行或以其它方式改变</span><br>CommentPragmas:	<span class="hljs-string">&#x27;^ IWYU pragma:&#x27;</span><br><span class="hljs-comment"># 构造函数的初始化列表要么都在同一行，要么都各自一行</span><br>ConstructorInitializerAllOnOneLineOrOnePerLine:	<span class="hljs-literal">false</span><br><span class="hljs-comment"># 构造函数的初始化列表的缩进宽度</span><br>ConstructorInitializerIndentWidth:	4<br><span class="hljs-comment"># 延续的行的缩进宽度</span><br>ContinuationIndentWidth:	4<br><span class="hljs-comment"># 去除C++11的列表初始化的大括号&#123;后和&#125;前的空格</span><br>Cpp11BracedListStyle:	<span class="hljs-literal">false</span><br><span class="hljs-comment"># 继承最常用的指针和引用的对齐方式</span><br>DerivePointerAlignment:	<span class="hljs-literal">false</span><br><span class="hljs-comment"># 关闭格式化</span><br>DisableFormat:	<span class="hljs-literal">false</span><br><span class="hljs-comment"># 自动检测函数的调用和定义是否被格式为每行一个参数(Experimental)</span><br>ExperimentalAutoDetectBinPacking:	<span class="hljs-literal">false</span><br><span class="hljs-comment"># 需要被解读为foreach循环而不是函数调用的宏</span><br>ForEachMacros:	[ foreach, Q_FOREACH, BOOST_FOREACH ]<br><span class="hljs-comment"># 对#include进行排序，匹配了某正则表达式的#include拥有对应的优先级，匹配不到的则默认优先级为INT_MAX(优先级越小排序越靠前)，</span><br><span class="hljs-comment">#   可以定义负数优先级从而保证某些#include永远在最前面</span><br>IncludeCategories: <br>  - Regex:	<span class="hljs-string">&#x27;^&quot;(llvm|llvm-c|clang|clang-c)/&#x27;</span><br>    Priority:	2<br>  - Regex:	<span class="hljs-string">&#x27;^(&lt;|&quot;(gtest|isl|json)/)&#x27;</span><br>    Priority:	3<br>  - Regex:	<span class="hljs-string">&#x27;.*&#x27;</span><br>    Priority:	1<br><span class="hljs-comment"># 缩进case标签</span><br>IndentCaseLabels:	<span class="hljs-literal">true</span><br><span class="hljs-comment"># 缩进宽度</span><br>IndentWidth:	4<br><span class="hljs-comment"># 函数返回类型换行时，缩进函数声明或函数定义的函数名</span><br>IndentWrappedFunctionNames:	<span class="hljs-literal">false</span><br><span class="hljs-comment"># 保留在块开始处的空行</span><br>KeepEmptyLinesAtTheStartOfBlocks:	<span class="hljs-literal">true</span><br><span class="hljs-comment"># 开始一个块的宏的正则表达式</span><br>MacroBlockBegin:	<span class="hljs-string">&#x27;&#x27;</span><br><span class="hljs-comment"># 结束一个块的宏的正则表达式</span><br>MacroBlockEnd:	<span class="hljs-string">&#x27;&#x27;</span><br><span class="hljs-comment"># 连续空行的最大数量</span><br>MaxEmptyLinesToKeep:	1<br><span class="hljs-comment"># 命名空间的缩进: None, Inner(缩进嵌套的命名空间中的内容), All</span><br>NamespaceIndentation:	Inner<br><span class="hljs-comment"># 使用ObjC块时缩进宽度</span><br>ObjCBlockIndentWidth:	4<br><span class="hljs-comment"># 在ObjC的@property后添加一个空格</span><br>ObjCSpaceAfterProperty:	<span class="hljs-literal">false</span><br><span class="hljs-comment"># 在ObjC的protocol列表前添加一个空格</span><br>ObjCSpaceBeforeProtocolList:	<span class="hljs-literal">true</span><br><span class="hljs-comment"># 在call(后对函数调用换行的penalty</span><br>PenaltyBreakBeforeFirstCallParameter:	19<br><span class="hljs-comment"># 在一个注释中引入换行的penalty</span><br>PenaltyBreakComment:	300<br><span class="hljs-comment"># 第一次在&lt;&lt;前换行的penalty</span><br>PenaltyBreakFirstLessLess:	120<br><span class="hljs-comment"># 在一个字符串字面量中引入换行的penalty</span><br>PenaltyBreakString:	1000<br><span class="hljs-comment"># 对于每个在行字符数限制之外的字符的penalty</span><br>PenaltyExcessCharacter:	1000000<br><span class="hljs-comment"># 将函数的返回类型放到它自己的行的penalty</span><br>PenaltyReturnTypeOnItsOwnLine:	60<br><span class="hljs-comment"># 指针和引用的对齐: Left, Right, Middle</span><br>PointerAlignment:	Left<br><span class="hljs-comment"># 允许重新排版注释</span><br>ReflowComments:	<span class="hljs-literal">true</span><br><span class="hljs-comment"># 允许排序#include</span><br>SortIncludes:	<span class="hljs-literal">true</span><br><span class="hljs-comment"># 在C风格类型转换后添加空格</span><br>SpaceAfterCStyleCast:	<span class="hljs-literal">false</span><br><span class="hljs-comment"># 在赋值运算符之前添加空格</span><br>SpaceBeforeAssignmentOperators:	<span class="hljs-literal">true</span><br><span class="hljs-comment"># 开圆括号之前添加一个空格: Never, ControlStatements, Always</span><br>SpaceBeforeParens:	ControlStatements<br><span class="hljs-comment"># 在空的圆括号中添加空格</span><br>SpaceInEmptyParentheses:	<span class="hljs-literal">false</span><br><span class="hljs-comment"># 在尾随的评论前添加的空格数(只适用于//)</span><br>SpacesBeforeTrailingComments:	2<br><span class="hljs-comment"># 在尖括号的&lt;后和&gt;前添加空格</span><br>SpacesInAngles:	<span class="hljs-literal">true</span><br><span class="hljs-comment"># 在容器(ObjC和JavaScript的数组和字典等)字面量中添加空格</span><br>SpacesInContainerLiterals:	<span class="hljs-literal">true</span><br><span class="hljs-comment"># 在C风格类型转换的括号中添加空格</span><br>SpacesInCStyleCastParentheses:	<span class="hljs-literal">true</span><br><span class="hljs-comment"># 在圆括号的(后和)前添加空格</span><br>SpacesInParentheses:	<span class="hljs-literal">true</span><br><span class="hljs-comment"># 在方括号的[后和]前添加空格，lamda表达式和未指明大小的数组的声明不受影响</span><br>SpacesInSquareBrackets:	<span class="hljs-literal">true</span><br><span class="hljs-comment"># 标准: Cpp03, Cpp11, Auto</span><br>Standard:	Cpp11<br><span class="hljs-comment"># tab宽度</span><br>TabWidth:	4<br><span class="hljs-comment"># 使用tab字符: Never, ForIndentation, ForContinuationAndIndentation, Always</span><br>UseTab:	Never<br>...<br></code></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="Step-3-配置QT"><a href="#Step-3-配置QT" class="headerlink" title="Step 3:配置QT"></a>Step 3:配置QT</h2><ol>
+<li><p>添加Beautifier插件<br>打开QT Creator，依次选择菜单“帮助”-&gt;“关于插件”，找到-C++下的Beautifier插件，并勾选，重启QT Creator。<br><img src="https://s1.ax1x.com/2020/09/04/wkGiB4.png" srcset="/img/loading.gif" lazyload alt="wkGiB4.png"></p>
+</li>
+<li><p>依次点击Tools-&gt;Options-&gt;Beautifier，勾选Clang-Format，配置如下：<br><img src="https://s3.ax1x.com/2020/12/17/rG0hVO.png" srcset="/img/loading.gif" lazyload alt="rG0hVO.png"></p>
+<p><img src="https://s3.ax1x.com/2020/12/17/rG05Ie.png" srcset="/img/loading.gif" lazyload alt="rG05Ie.png"></p>
+</li>
+</ol>
+<p>完成。</p>
+
+              
+            </div>
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/QT/" class="category-chain-item">QT</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Clang-Format/">#Clang-Format</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Ubuntu下QT代码格式化配置——Clang-Format</div>
+      <div>https://kevinloongc.github.io/posts/b8be4699.html</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Kevin Loongc</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2020年12月17日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/posts/c44ead4c.html" title="ROS GUI程序开发——配置QT环境">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">ROS GUI程序开发——配置QT环境</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/posts/2642ade.html" title="Ubuntu16.04安装WPS">
+                        <span class="hidden-mobile">Ubuntu16.04安装WPS</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.4.16/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"aafuxXAEvmPa9M6u5J2bcS51-gzGzoHsz","appKey":"d6sAJLHqlK9SsXVkMJiMDJDU","path":"window.location.pathname","placeholder":null,"avatar":"retro","meta":["nick","mail"],"requiredFields":[],"pageSize":10,"lang":"zh-CN","highlight":false,"recordIP":false,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":false},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.0/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script>
+  (function() {
+    var enableLang = CONFIG.code_language.enable && CONFIG.code_language.default;
+    var enableCopy = CONFIG.copy_btn;
+    if (!enableLang && !enableCopy) {
+      return;
+    }
+
+    function getBgClass(ele) {
+      return Fluid.utils.getBackgroundLightness(ele) >= 0 ? 'code-widget-light' : 'code-widget-dark';
+    }
+
+    var copyTmpl = '';
+    copyTmpl += '<div class="code-widget">';
+    copyTmpl += 'LANG';
+    copyTmpl += '</div>';
+    jQuery('.markdown-body pre').each(function() {
+      var $pre = jQuery(this);
+      if ($pre.find('code.mermaid').length > 0) {
+        return;
+      }
+      if ($pre.find('span.line').length > 0) {
+        return;
+      }
+
+      var lang = '';
+
+      if (enableLang) {
+        lang = CONFIG.code_language.default;
+        if ($pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2 && $pre.children().hasClass('hljs')) {
+          lang = $pre[0].children[0].classList[1];
+        } else if ($pre[0].getAttribute('data-language')) {
+          lang = $pre[0].getAttribute('data-language');
+        } else if ($pre.parent().hasClass('sourceCode') && $pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2) {
+          lang = $pre[0].children[0].classList[1];
+          $pre.parent().addClass('code-wrapper');
+        } else if ($pre.parent().hasClass('markdown-body') && $pre[0].classList.length === 0) {
+          $pre.wrap('<div class="code-wrapper"></div>');
+        }
+        lang = lang.toUpperCase().replace('NONE', CONFIG.code_language.default);
+      }
+      $pre.append(copyTmpl.replace('LANG', lang).replace('code-widget">',
+        getBgClass($pre[0]) + (enableCopy ? ' code-widget copy-btn" data-clipboard-snippet><i class="iconfont icon-copy"></i>' : ' code-widget">')));
+
+      if (enableCopy) {
+        Fluid.utils.createScript('https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js', function() {
+          var clipboard = new window.ClipboardJS('.copy-btn', {
+            target: function(trigger) {
+              var nodes = trigger.parentNode.childNodes;
+              for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].tagName === 'CODE') {
+                  return nodes[i];
+                }
+              }
+            }
+          });
+          clipboard.on('success', function(e) {
+            e.clearSelection();
+            e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-copy', 'icon-success');
+            setTimeout(function() {
+              e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-success', 'icon-copy');
+            }, 2000);
+          });
+        });
+      }
+    });
+  })();
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

@@ -1,0 +1,1131 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Kevin Loongc">
+  <meta name="keywords" content="云杂货店, KevinL, KevinLoongc, QT, ROS, SLAM, 嵌入式">
+  
+    <meta name="description" content="随遇而安，奇遇良人">
+<meta property="og:type" content="website">
+<meta property="og:title" content="云杂货店">
+<meta property="og:url" content="https://kevinloongc.github.io/page/14/index.html">
+<meta property="og:site_name" content="云杂货店">
+<meta property="og:description" content="随遇而安，奇遇良人">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:author" content="Kevin Loongc">
+<meta property="article:tag" content="云杂货店, KevinL, KevinLoongc, QT, ROS, SLAM, 嵌入式">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>云杂货店</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"kevinloongc.github.io","root":"/","version":"1.9.0","typing":{"enable":true,"typeSpeed":80,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":false},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 100vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>云杂货店</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/home-bg.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="凋谢是真实的，盛开只是一种过去。"></span>
+          
+        </div>
+
+        
+      </div>
+
+      
+        <div class="scroll-down-bar">
+          <i class="iconfont icon-arrowdown"></i>
+        </div>
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      <div class="container nopadding-x-md">
+        <div id="board"
+          style="margin-top: 0">
+          
+          <div class="container">
+            <div class="row">
+              <div class="col-12 col-md-10 m-auto">
+                
+
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/posts/4588.html" target="_self">
+          <img src="https://s2.ax1x.com/2019/11/23/MbQrYq.md.png" srcset="/img/loading.gif" lazyload alt="双轮平衡小车项目">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/posts/4588.html" target="_self">
+          双轮平衡小车项目
+        </a>
+      </h1>
+
+      <a class="index-excerpt" href="/posts/4588.html" target="_self">
+        <div>
+          
+          一、项目概述双轮平衡车的控制系统采用STM32F103C8T6作为核心控制器，在此基础上增加了各种接口电路板组成整个硬件系统，包括单片机最小系统，直流电机驱动控制模块，电源管理模块，角度测量模块。软件调试部分依次对应硬件各模块进行程序设计，包括PWM模块，PID控制算法，人机交互控制等。  二、项目预算清单   产品名称 单位 数量 单价 金额    无线蓝牙模块 个 1 16.8 16.8
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2019-08-28 13:46" pubdate>
+              2019-08-28
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F/" class="category-chain-item">嵌入式</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F/STM32/" class="category-chain-item">STM32</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/STM32/">#STM32</a>
+            
+              <a href="/tags/%E5%8F%8C%E8%BD%AE%E5%B9%B3%E8%A1%A1%E8%BD%A6/">#双轮平衡车</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/posts/9e207.html" target="_self">
+          <img src="https://s2.ax1x.com/2019/11/23/Mb4HoD.png" srcset="/img/loading.gif" lazyload alt="模拟电磁曲射炮设计">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/posts/9e207.html" target="_self">
+          模拟电磁曲射炮设计
+        </a>
+      </h1>
+
+      <a class="index-excerpt" href="/posts/9e207.html" target="_self">
+        <div>
+          
+          一、前言本系统以STM32F103C8T6单片机为控制器，采用物理公式计算模拟电磁炮弹射距离与系统各方面的关系，采用自动充电放电实现全过程一键自动化控制，超声波模块读取定标点与引导标识的距离，摄像头模块读取定标点与引导标识的位置关系。通过大量实验计算充电时间、线圈匝数与弹射距离之间的关系，使系统足够达到设计要求。 二、系统构成采用两个容值为470uF、额定电压为450V电容并联作为容性储能元件。电
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2019-08-23 13:46" pubdate>
+              2019-08-23
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F/" class="category-chain-item">嵌入式</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F/STM32/" class="category-chain-item">STM32</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E7%AB%9E%E8%B5%9B/">#竞赛</a>
+            
+              <a href="/tags/STM32/">#STM32</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/posts/6c941452.html" target="_self">
+          <img src="https://s2.ax1x.com/2019/11/23/MbdUXR.jpg" srcset="/img/loading.gif" lazyload alt="倒立摆系统设计">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/posts/6c941452.html" target="_self">
+          倒立摆系统设计
+        </a>
+      </h1>
+
+      <a class="index-excerpt" href="/posts/6c941452.html" target="_self">
+        <div>
+          
+          一、前言倒立摆系统（Inverted Pendulum System, IPS）是一个典型的复杂、不稳定、非线性、多输入多输出（MIMO）系统，是进行控制理论研究的理想实验平台，常用来作为检验某种控制理论或方法是否合理的典型方案。 一阶倒立摆系统能用多种理论和方法来实现其稳定控制，如ＰＩＤ、自适应、状态反馈、模糊控制及人工神经元网络等多种理论和方法都能在倒立摆系统控制上得到实现。 对倒立摆系统的研
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2019-08-19 18:46" pubdate>
+              2019-08-19
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F/" class="category-chain-item">嵌入式</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F/STM32/" class="category-chain-item">STM32</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E7%AB%9E%E8%B5%9B/">#竞赛</a>
+            
+              <a href="/tags/STM32/">#STM32</a>
+            
+              <a href="/tags/%E5%80%92%E7%AB%8B%E6%91%86/">#倒立摆</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/posts/3bec21fb.html" target="_self">
+          <img src="https://s1.ax1x.com/2022/05/08/O1raNj.png" srcset="/img/loading.gif" lazyload alt="PID系数调节讲解">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/posts/3bec21fb.html" target="_self">
+          PID系数调节讲解
+        </a>
+      </h1>
+
+      <a class="index-excerpt" href="/posts/3bec21fb.html" target="_self">
+        <div>
+          
+          以风力摆系统为例讲解PID系数的调节。
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2019-08-10 10:46" pubdate>
+              2019-08-10
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%95%B0%E5%AD%A6/" class="category-chain-item">数学</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/PID/">#PID</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/posts/b1f7002e.html" target="_self">
+          <img src="https://s2.ax1x.com/2019/11/23/Mb36pt.png" srcset="/img/loading.gif" lazyload alt="STM32F103学习笔记——MPU6050数据读取与倾角检测">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/posts/b1f7002e.html" target="_self">
+          STM32F103学习笔记——MPU6050数据读取与倾角检测
+        </a>
+      </h1>
+
+      <a class="index-excerpt" href="/posts/b1f7002e.html" target="_self">
+        <div>
+          
+          使用STM32F103C8T6读取mpu6050的数据，转换成角度值，在串口中显示调式信息。
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2019-08-02 10:46" pubdate>
+              2019-08-02
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F/" class="category-chain-item">嵌入式</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F/STM32/" class="category-chain-item">STM32</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/STM32/">#STM32</a>
+            
+              <a href="/tags/MPU6050/">#MPU6050</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/posts/17780.html" target="_self">
+          <img src="https://s2.ax1x.com/2020/02/10/14MUWd.png" srcset="/img/loading.gif" lazyload alt="在ARM体系中字、半字、字节的概念理解">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/posts/17780.html" target="_self">
+          在ARM体系中字、半字、字节的概念理解
+        </a>
+      </h1>
+
+      <a class="index-excerpt" href="/posts/17780.html" target="_self">
+        <div>
+          
+          对字（Word）、半字（Half-Word）、字节（Byte）的概念说明如下： 字（Word）：在ARM体系结构（32位机）中，字的长度为32位，而在8位&#x2F;16位处理器体系结构中，字的长度一般为16位。 半字（Half-Word）：在ARM体系结构（32位机）中，半字的长度为16位，与8位&#x2F;16位处理器体系结构中字的长度一致。 字节（Byte）：在ARM体系结构（32位机）和8位&#x2F;16位处理器体系
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2019-08-01 13:46" pubdate>
+              2019-08-01
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F/" class="category-chain-item">嵌入式</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F/Others/" class="category-chain-item">Others</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E7%AC%94%E8%AE%B0/">#笔记</a>
+            
+              <a href="/tags/%E5%B5%8C%E5%85%A5%E5%BC%8F/">#嵌入式</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/posts/52bef225.html" target="_self">
+          <img src="https://s2.ax1x.com/2020/02/10/15lQTf.jpg" srcset="/img/loading.gif" lazyload alt="基于人脸识别的课堂考勤系统">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/posts/52bef225.html" target="_self">
+          基于人脸识别的课堂考勤系统
+        </a>
+      </h1>
+
+      <a class="index-excerpt" href="/posts/52bef225.html" target="_self">
+        <div>
+          
+          一、前言本系统的研究主要用来解决大学生假签到以及耗费大量时间的人工考勤，通过主机（树莓派）储存学生照片，进行处理生成对应的人脸数据。然后摄像头检测到人脸并自动进行拍照，通过face++对摄像头拍摄的学生人脸图片进行处理并识别，实现课堂自动考勤功能。同时，主机接受人脸识别后已经记录的人员名单，自动生成一个excel出勤表，通过邮箱自动把出勤表发送给相应的任课老师。 PS：本系统是在校期间，参加竞赛所
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2019-06-08 13:46" pubdate>
+              2019-06-08
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F/" class="category-chain-item">嵌入式</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F/RaspberryPi/" class="category-chain-item">RaspberryPi</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/RaspberryPi/">#RaspberryPi</a>
+            
+              <a href="/tags/%E7%AB%9E%E8%B5%9B/">#竞赛</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/posts/9ba1cad7.html" target="_self">
+          <img src="https://s1.ax1x.com/2022/05/08/O1nWhn.png" srcset="/img/loading.gif" lazyload alt="关闭Ubuntu系统“检测到系统程序错误”弹窗提示">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/posts/9ba1cad7.html" target="_self">
+          关闭Ubuntu系统“检测到系统程序错误”弹窗提示
+        </a>
+      </h1>
+
+      <a class="index-excerpt" href="/posts/9ba1cad7.html" target="_self">
+        <div>
+          
+          今天打开Ubuntu系统的时候，系统出现了弹窗提示”system program problem detected（检测到系统程序错误）”。我果断选择了取消，但是发现并没有什么作用，它时不时还是会有弹窗提示，在网上查找资料，找到了下面介绍两种解决方法：
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2019-05-22 09:46" pubdate>
+              2019-05-22
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Ubuntu/" class="category-chain-item">Ubuntu</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/Ubuntu/System/" class="category-chain-item">System</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/posts/18986.html" target="_self">
+          <img src="https://s1.ax1x.com/2022/05/08/O1nWhn.png" srcset="/img/loading.gif" lazyload alt="windows+ubuntu双系统启动引导修复教程">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/posts/18986.html" target="_self">
+          windows+ubuntu双系统启动引导修复教程
+        </a>
+      </h1>
+
+      <a class="index-excerpt" href="/posts/18986.html" target="_self">
+        <div>
+          
+          准备工作准备一个系统安装Ｕ盘，插入电脑－＞开机－＞选择试用Try ubuntu without install 安装boot-repair 打开终端(Open Terminal)，获取root权限，执行以下命令： 123sudo add-apt-repository ppa:yannubuntu&#x2F;boot-repairsudo apt-get updatesudo apt-get install
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2019-05-21 12:46" pubdate>
+              2019-05-21
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Ubuntu/" class="category-chain-item">Ubuntu</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/Ubuntu/System/" class="category-chain-item">System</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Ubuntu16-04/">#Ubuntu16.04</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/posts/40337.html" target="_self">
+          <img src="https://s1.ax1x.com/2022/05/08/O1nWhn.png" srcset="/img/loading.gif" lazyload alt="Deepin wine for Ubuntu">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/posts/40337.html" target="_self">
+          Deepin wine for Ubuntu
+        </a>
+      </h1>
+
+      <a class="index-excerpt" href="/posts/40337.html" target="_self">
+        <div>
+          
+          Deepin wine for Ubuntu一、项目介绍 Deepin-wine 环境的 Ubuntu 移植版   使用deepin原版二进制文件，解决依赖问题  仅供个人研究学习使用   二、软件架构（1）安装教程本地安装 克隆 (git clone https:&#x2F;&#x2F;github.com&#x2F;LKevin98&#x2F;deepin-wine-ubuntu.git) 或下载到本地。 解压后切换到解压文件目录，
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2019-05-21 10:46" pubdate>
+              2019-05-21
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Ubuntu/" class="category-chain-item">Ubuntu</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/Ubuntu/Software/" class="category-chain-item">Software</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Deepin-wine/">#Deepin-wine</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+
+
+  <nav aria-label="navigation">
+    <span class="pagination" id="pagination">
+      <a class="extend prev" rel="prev" href="/page/13/#board"><i class="iconfont icon-arrowleft"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/12/#board">12</a><a class="page-number" href="/page/13/#board">13</a><span class="page-number current">14</span><a class="page-number" href="/page/15/#board">15</a><a class="page-number" href="/page/16/#board">16</a><span class="space">&hellip;</span><a class="page-number" href="/page/18/#board">18</a><a class="extend next" rel="next" href="/page/15/#board"><i class="iconfont icon-arrowright"></i></a>
+    </span>
+  </nav>
+
+
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

@@ -1,0 +1,883 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Kevin Loongc">
+  <meta name="keywords" content="云杂货店, KevinL, KevinLoongc, QT, ROS, SLAM, 嵌入式">
+  
+    <meta name="description" content="angle_ll()求解线与线之间的角度；angle_lx()求解线与水平轴（x轴）之间的角度。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Halcon角度测量">
+<meta property="og:url" content="https://kevinloongc.github.io/posts/10014ecd.html">
+<meta property="og:site_name" content="云杂货店">
+<meta property="og:description" content="angle_ll()求解线与线之间的角度；angle_lx()求解线与水平轴（x轴）之间的角度。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s1.ax1x.com/2022/05/08/O1u6v6.png">
+<meta property="article:published_time" content="2021-11-30T06:54:25.000Z">
+<meta property="article:modified_time" content="2022-05-29T05:37:30.851Z">
+<meta property="article:author" content="Kevin Loongc">
+<meta property="article:tag" content="转载">
+<meta property="article:tag" content="Halcon">
+<meta property="article:tag" content="图像处理">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://s1.ax1x.com/2022/05/08/O1u6v6.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>Halcon角度测量 - 云杂货店</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"kevinloongc.github.io","root":"/","version":"1.9.0","typing":{"enable":true,"typeSpeed":80,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":false},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>云杂货店</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Halcon角度测量"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2021-11-30 14:54" pubdate>
+          2021年11月30日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          4.6k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          39 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar category-bar" style="margin-right: -1rem">
+    
+
+
+
+
+
+<div class="category-list">
+  
+  
+    
+    
+    
+    <div class="category row nomargin-x">
+      <a class="category-item 
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="Halcon"
+        id="heading-8c4fcff50407ab2921d898c4a2268fd1" role="tab" data-toggle="collapse" href="#collapse-8c4fcff50407ab2921d898c4a2268fd1"
+        aria-expanded="true"
+      >
+        Halcon
+        <span class="list-group-count">(4)</span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+      <div class="category-collapse collapse show" id="collapse-8c4fcff50407ab2921d898c4a2268fd1"
+           role="tabpanel" aria-labelledby="heading-8c4fcff50407ab2921d898c4a2268fd1">
+        
+        
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/posts/b1b010ea.html" title="Halcon-多个区域根据面积挑选想要的obj"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Halcon-多个区域根据面积挑选想要的obj</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/bd23ea3d.html" title="Halcon算子：最小外包矩形"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Halcon算子：最小外包矩形</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/10014ecd.html" title="Halcon角度测量"
+           class="list-group-item list-group-item-action
+           active">
+          <span class="category-post">Halcon角度测量</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/e553e068.html" title="基于HALCON的HSV颜色识别"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">基于HALCON的HSV颜色识别</span>
+        </a>
+      
+    
+  </div>
+
+        
+      </div>
+    </div>
+  
+</div>
+
+
+  </aside>
+
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Halcon角度测量</h1>
+            
+              <p class="note note-info">
+                
+                  
+                    本文最后更新于：2022年5月29日 下午
+                  
+                
+              </p>
+            
+            <div class="markdown-body">
+              
+              <p>angle_ll()求解线与线之间的角度；angle_lx()求解线与水平轴（x轴）之间的角度。</p>
+<span id="more"></span>
+
+
+<blockquote>
+<p>原文链接：<a target="_blank" rel="noopener" href="https://www.cnblogs.com/Nq1996/p/14257992.html">https://www.cnblogs.com/Nq1996/p/14257992.html</a><br>侵删</p>
+</blockquote>
+<p>在Halcon的使用过程中经常要使用到<span class="label label-primary">angle_ll</span>和<span class="label label-primary">angle_lx</span>两个算子来求解<span class="label label-primary">线与线之间的角度</span>以及<span class="label label-primary">线与水平轴（x轴）之间的角度</span>，而线线之间和线轴之间的角度正负往往是困扰我们的问题，下面对这两种情况进行解释说明。</p>
+<h1 id="线与线之间的角度"><a href="#线与线之间的角度" class="headerlink" title="线与线之间的角度"></a>线与线之间的角度</h1><p><strong>angle_ll( : : RowA1, ColumnA1, RowA2, ColumnA2, RowB1, ColumnB1, RowB2, ColumnB2 : Angle)</strong></p>
+<ul>
+<li><p><strong>功能：</strong>计算两条线之间的角度。</p>
+</li>
+<li><p><strong>参数：</strong></p>
+<p>RowA1, ColumnA1, RowA2, ColumnA2：第一条线的起点坐标和终点坐标；</p>
+<p>RowB1, ColumnB1, RowB2, ColumnB2：第二条线的起点坐标和终点坐标；</p>
+<p>Angle：两条直线之间的夹角, <code>-pi &lt;= Angle &lt;= pi</code></p>
+</li>
+</ul>
+<p>这里需要注意的是这些参数的输入顺序会影响到直线的方向，直线的方向是由起点指向终点，如下图所示：</p>
+<p><img src="https://gitee.com/KevinL98/images/raw/master/img/4.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="旋转的方向"><a href="#旋转的方向" class="headerlink" title="旋转的方向"></a>旋转的方向</h2><p><code>angle_ll</code>算子在计算两条直线之间的夹角的方式，可以理解为第一条直线绕着其起点进行旋转，直至第一条直线的方向和第二条直线的方向相同时，第一条直线所旋转的角度即为两条直线的角度。</p>
+<p>但是第一条直线顺时针和逆时针方向都可以转至和第二条直线相同的方向，应该朝哪个方向转动来计算角度呢？</p>
+<details>
+<summary>查看答案</summary>
+`angle_ll`算子的角度范围为**-Pi~Pi**，也就是说第一条直线的转动方向选择的是<span class="label label-primary">两条直线的夹角比较小的方向</span>。
+</details>
+
+
+<details>
+<summary>查看示例</summary>
+
+<p>如下图所示：</p>
+<p><img src="https://gitee.com/KevinL98/images/raw/master/img/5.png" srcset="/img/loading.gif" lazyload></p>
+<p>如果使用<code>angle_ll</code>算子计算图中红色直线与绿色直线的夹角，是应该将红色直线沿着蓝色箭头方向旋转还是黄色箭头方向进行旋转呢？答案是黄色箭头方向，因为黄色的夹角小于蓝色的夹角，蓝色夹角的角度超过了<code>angle_ll</code>算子的取值范围。</p>
+<h2 id="角度的正负"><a href="#角度的正负" class="headerlink" title="角度的正负"></a>角度的正负</h2><p>如果第一条直线旋转至第二条直线的方向为顺时针，那么角度为负值，逆时针则为正值，下面通过两个Halcon的程序来演示。</p>
+<ol>
+<li><p>顺时针旋转角度为负值</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs hdev">dev_close_window()<br>dev_open_window (0, 0, 900, 600, &#x27;black&#x27;, WindowHandle)<br><br>set_display_font (WindowHandle, 26, &#x27;mono&#x27;, &#x27;true&#x27;, &#x27;false&#x27;)<br>Row1 := 100<br>Col1 := 100<br>Row2 := 500<br>Col2 := 600<br>Row1Half := (Row1 + Row2)/2<br>Col1Half := (Col1 + Col2)/2<br><br>Row3 := 400<br>Col3 := 100<br>Row4 := 100<br>Col4 := 500<br>Row2Half := (Row3 + Row4)/2<br>Col2Half := (Col3 + Col4)/2<br><br>dev_set_color (&#x27;red&#x27;)<br>gen_region_line (RegionLines, Row1, Col1, Row2, Col2)<br>gen_arrow_contour_xld (Arrow1, Row1Half, Col1Half, Row1, Col1, 25, 15)<br><br>dev_set_color (&#x27;blue&#x27;)<br>gen_region_line (RegionLines, Row3, Col3, Row4, Col4)<br>gen_arrow_contour_xld (Arrow1, Row2Half, Col2Half, Row3, Col3, 25, 15)<br><br>angle_ll (Row4, Col4,Row3, Col3,  Row2, Col2,Row1, Col1, Angle)<br>disp_message (WindowHandle, &#x27;蓝色线转向红色线角度为：&#x27; + deg(Angle), &#x27;window&#x27;, 12, 12, &#x27;black&#x27;, &#x27;true&#x27;)<br></code></pre></td></tr></table></figure>
+
+<p><img src="https://gitee.com/KevinL98/images/raw/master/img/6.png" srcset="/img/loading.gif" lazyload></p>
+</li>
+<li><p>逆时针旋转角度为正值</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs hdev">dev_close_window()<br>dev_open_window (0, 0, 900, 600, &#x27;black&#x27;, WindowHandle)<br><br>set_display_font (WindowHandle, 26, &#x27;mono&#x27;, &#x27;true&#x27;, &#x27;false&#x27;)<br>Row1 := 100<br>Col1 := 100<br>Row2 := 500<br>Col2 := 600<br>Row1Half := (Row1 + Row2)/2<br>Col1Half := (Col1 + Col2)/2<br><br>Row3 := 400<br>Col3 := 100<br>Row4 := 100<br>Col4 := 500<br>Row2Half := (Row3 + Row4)/2<br>Col2Half := (Col3 + Col4)/2<br><br>dev_set_color (&#x27;red&#x27;)<br>gen_region_line (RegionLines, Row1, Col1, Row2, Col2)<br>gen_arrow_contour_xld (Arrow1, Row1Half, Col1Half, Row1, Col1, 25, 15)<br><br>dev_set_color (&#x27;blue&#x27;)<br>gen_region_line (RegionLines, Row3, Col3, Row4, Col4)<br>gen_arrow_contour_xld (Arrow1, Row2Half, Col2Half, Row4, Col4, 25, 15)<br><br>angle_ll (Row3, Col3, Row4, Col4, Row2, Col2,Row1, Col1, Angle)<br>disp_message (WindowHandle, &#x27;蓝色线转向红色线角度为：&#x27; + deg(Angle), &#x27;window&#x27;, 12, 12, &#x27;black&#x27;, &#x27;true&#x27;)<br></code></pre></td></tr></table></figure>
+
+<p><img src="https://gitee.com/KevinL98/images/raw/master/img/7.png" srcset="/img/loading.gif" lazyload></p>
+</li>
+</ol>
+<h1 id="线与水平轴（x轴）之间的角度"><a href="#线与水平轴（x轴）之间的角度" class="headerlink" title="线与水平轴（x轴）之间的角度"></a>线与水平轴（x轴）之间的角度</h1><p><strong>angle_lx( : : Row1, Column1, Row2, Column2 : Angle)</strong></p>
+<ul>
+<li><p><strong>功能：</strong>计算直线与水平坐标轴之间的夹角。</p>
+</li>
+<li><p><strong>参数：</strong></p>
+<p>Row1, Column1: 直线的起点坐标；</p>
+<p>Row2, Column2: 直线的终点坐标；</p>
+<p>Angle: 两条直线之间的夹角, <code>-pi &lt;= Angle &lt;= pi</code>。</p>
+</li>
+</ul>
+<p>其中，当直线方向与x轴方向构成的夹角位于<strong>一二象限</strong>时，该直线与x轴的夹角角度范围在<strong>0~Pi</strong>，当直线方向与x轴方向构成的夹角位于<strong>三四象限</strong>时，该直线与x轴的夹角范围在**-Pi~0**，具体可结合下图理解。</p>
+<p><img src="https://gitee.com/KevinL98/images/raw/master/img/8.png" srcset="/img/loading.gif" lazyload></p>
+<p>结合Halcon示范如下：</p>
+<ol>
+<li><p>直线方向与x轴方向构成的夹角位于<strong>一二象限</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs hdev">dev_close_window()<br>dev_open_window (0, 0, 900, 600, &#x27;black&#x27;, WindowHandle)<br>set_display_font (WindowHandle, 26, &#x27;mono&#x27;, &#x27;true&#x27;, &#x27;false&#x27;)<br>Row1 := 100<br>Col1 := 100<br>Row2 := 500<br>Col2 := 600<br>Row1Half := (Row1 + Row2)/2<br>Col1Half := (Col1 + Col2)/2<br><br>dev_set_color (&#x27;red&#x27;)<br>gen_region_line (RegionLines, Row1, Col1, Row2, Col2)<br>gen_arrow_contour_xld (Arrow1, Row1Half, Col1Half, Row1, Col1, 25, 15)<br><br>dev_set_color (&#x27;yellow&#x27;)<br>gen_region_line (ROI_0, 350, 100, 350, 750)<br>XRowHalf := 350<br>XColHalf := (100 + 700)/2<br>gen_arrow_contour_xld (Arrow, XRowHalf, XColHalf,350, 750, 25, 15)<br><br>angle_lx (Row2, Col2, Row1, Col1, Angle)<br>disp_message (WindowHandle, &#x27;红色线角度为：&#x27; + deg(Angle), &#x27;window&#x27;, 12, 12, &#x27;black&#x27;, &#x27;true&#x27;)<br>disp_message (WindowHandle, &#x27;X&#x27;, &#x27;Image&#x27;, 345, 765, &#x27;yellow&#x27;, &#x27;false&#x27;)<br></code></pre></td></tr></table></figure>
+
+<p><img src="https://gitee.com/KevinL98/images/raw/master/img/9.png" srcset="/img/loading.gif" lazyload></p>
+</li>
+<li><p>直线方向与x轴方向构成的夹角位于<strong>三四象限</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs hdev">dev_close_window()<br>dev_open_window (0, 0, 900, 600, &#x27;black&#x27;, WindowHandle)<br>set_display_font (WindowHandle, 26, &#x27;mono&#x27;, &#x27;true&#x27;, &#x27;false&#x27;)<br>Row1 := 100<br>Col1 := 100<br>Row2 := 500<br>Col2 := 600<br>Row1Half := (Row1 + Row2)/2<br>Col1Half := (Col1 + Col2)/2<br><br>dev_set_color (&#x27;red&#x27;)<br>gen_region_line (RegionLines, Row1, Col1, Row2, Col2)<br>gen_arrow_contour_xld (Arrow1, Row1Half, Col1Half, Row2, Col2, 25, 15)<br><br>dev_set_color (&#x27;yellow&#x27;)<br>gen_region_line (ROI_0, 350, 100, 350, 750)<br>XRowHalf := 350<br>XColHalf := (100 + 700)/2<br>gen_arrow_contour_xld (Arrow, XRowHalf, XColHalf,350, 750, 25, 15)<br><br>angle_lx (Row1, Col1,Row2, Col2,  Angle)<br>disp_message (WindowHandle, &#x27;红色线角度为：&#x27; + deg(Angle), &#x27;window&#x27;, 12, 12, &#x27;black&#x27;, &#x27;true&#x27;)<br>disp_message (WindowHandle, &#x27;X&#x27;, &#x27;Image&#x27;, 345, 765, &#x27;yellow&#x27;, &#x27;false&#x27;)<br></code></pre></td></tr></table></figure>
+
+<p><img src="https://gitee.com/KevinL98/images/raw/master/img/10.png" srcset="/img/loading.gif" lazyload></p>
+</li>
+</ol>
+
+              
+            </div>
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7/" class="category-chain-item">开发工具</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7/Halcon/" class="category-chain-item">Halcon</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E8%BD%AC%E8%BD%BD/">#转载</a>
+      
+        <a href="/tags/Halcon/">#Halcon</a>
+      
+        <a href="/tags/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/">#图像处理</a>
+      
+    </div>
+  
+</div>
+
+
+              
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/posts/7c3ea5fd.html" title="使用Astyle为QtCreator添加代码自动格式化功能">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">使用Astyle为QtCreator添加代码自动格式化功能</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/posts/b1b010ea.html" title="Halcon-多个区域根据面积挑选想要的obj">
+                        <span class="hidden-mobile">Halcon-多个区域根据面积挑选想要的obj</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.4.16/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"aafuxXAEvmPa9M6u5J2bcS51-gzGzoHsz","appKey":"d6sAJLHqlK9SsXVkMJiMDJDU","path":"window.location.pathname","placeholder":null,"avatar":"retro","meta":["nick","mail"],"requiredFields":[],"pageSize":10,"lang":"zh-CN","highlight":false,"recordIP":false,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":false},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.0/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script>
+  (function() {
+    var enableLang = CONFIG.code_language.enable && CONFIG.code_language.default;
+    var enableCopy = CONFIG.copy_btn;
+    if (!enableLang && !enableCopy) {
+      return;
+    }
+
+    function getBgClass(ele) {
+      return Fluid.utils.getBackgroundLightness(ele) >= 0 ? 'code-widget-light' : 'code-widget-dark';
+    }
+
+    var copyTmpl = '';
+    copyTmpl += '<div class="code-widget">';
+    copyTmpl += 'LANG';
+    copyTmpl += '</div>';
+    jQuery('.markdown-body pre').each(function() {
+      var $pre = jQuery(this);
+      if ($pre.find('code.mermaid').length > 0) {
+        return;
+      }
+      if ($pre.find('span.line').length > 0) {
+        return;
+      }
+
+      var lang = '';
+
+      if (enableLang) {
+        lang = CONFIG.code_language.default;
+        if ($pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2 && $pre.children().hasClass('hljs')) {
+          lang = $pre[0].children[0].classList[1];
+        } else if ($pre[0].getAttribute('data-language')) {
+          lang = $pre[0].getAttribute('data-language');
+        } else if ($pre.parent().hasClass('sourceCode') && $pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2) {
+          lang = $pre[0].children[0].classList[1];
+          $pre.parent().addClass('code-wrapper');
+        } else if ($pre.parent().hasClass('markdown-body') && $pre[0].classList.length === 0) {
+          $pre.wrap('<div class="code-wrapper"></div>');
+        }
+        lang = lang.toUpperCase().replace('NONE', CONFIG.code_language.default);
+      }
+      $pre.append(copyTmpl.replace('LANG', lang).replace('code-widget">',
+        getBgClass($pre[0]) + (enableCopy ? ' code-widget copy-btn" data-clipboard-snippet><i class="iconfont icon-copy"></i>' : ' code-widget">')));
+
+      if (enableCopy) {
+        Fluid.utils.createScript('https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js', function() {
+          var clipboard = new window.ClipboardJS('.copy-btn', {
+            target: function(trigger) {
+              var nodes = trigger.parentNode.childNodes;
+              for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].tagName === 'CODE') {
+                  return nodes[i];
+                }
+              }
+            }
+          });
+          clipboard.on('success', function(e) {
+            e.clearSelection();
+            e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-copy', 'icon-success');
+            setTimeout(function() {
+              e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-success', 'icon-copy');
+            }, 2000);
+          });
+        });
+      }
+    });
+  })();
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

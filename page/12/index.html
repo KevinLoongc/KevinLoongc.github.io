@@ -1,0 +1,1163 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Kevin Loongc">
+  <meta name="keywords" content="云杂货店, KevinL, KevinLoongc, QT, ROS, SLAM, 嵌入式">
+  
+    <meta name="description" content="随遇而安，奇遇良人">
+<meta property="og:type" content="website">
+<meta property="og:title" content="云杂货店">
+<meta property="og:url" content="https://kevinloongc.github.io/page/12/index.html">
+<meta property="og:site_name" content="云杂货店">
+<meta property="og:description" content="随遇而安，奇遇良人">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:author" content="Kevin Loongc">
+<meta property="article:tag" content="云杂货店, KevinL, KevinLoongc, QT, ROS, SLAM, 嵌入式">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>云杂货店</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"kevinloongc.github.io","root":"/","version":"1.9.0","typing":{"enable":true,"typeSpeed":80,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":false},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 100vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>云杂货店</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/home-bg.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="凋谢是真实的，盛开只是一种过去。"></span>
+          
+        </div>
+
+        
+      </div>
+
+      
+        <div class="scroll-down-bar">
+          <i class="iconfont icon-arrowdown"></i>
+        </div>
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      <div class="container nopadding-x-md">
+        <div id="board"
+          style="margin-top: 0">
+          
+          <div class="container">
+            <div class="row">
+              <div class="col-12 col-md-10 m-auto">
+                
+
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/posts/cf902744.html" target="_self">
+          <img src="https://s2.ax1x.com/2020/02/19/3VkU1S.png" srcset="/img/loading.gif" lazyload alt="两轮差速底盘SLAM系列(11)--机器人自主导航">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/posts/cf902744.html" target="_self">
+          两轮差速底盘SLAM系列(11)--机器人自主导航
+        </a>
+      </h1>
+
+      <a class="index-excerpt" href="/posts/cf902744.html" target="_self">
+        <div>
+          
+          Here&#39;s something encrypted, password is required to continue reading.
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-02-19 18:55" pubdate>
+              2020-02-19
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/ROS/" class="category-chain-item">ROS</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/ROS/%E4%B8%A4%E8%BD%AE%E5%B7%AE%E9%80%9F%E5%BA%95%E7%9B%98SLAM/" class="category-chain-item">两轮差速底盘SLAM</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/ROS/">#ROS</a>
+            
+              <a href="/tags/SLAM/">#SLAM</a>
+            
+              <a href="/tags/%E8%87%AA%E4%B8%BB%E5%AF%BC%E8%88%AA/">#自主导航</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/posts/25677.html" target="_self">
+          <img src="https://s2.ax1x.com/2020/02/19/3ElmPH.png" srcset="/img/loading.gif" lazyload alt="两轮差速底盘SLAM系列(10)--导航配置">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/posts/25677.html" target="_self">
+          两轮差速底盘SLAM系列(10)--导航配置
+        </a>
+      </h1>
+
+      <a class="index-excerpt" href="/posts/25677.html" target="_self">
+        <div>
+          
+          前言整个机器人SLAM实现基本都是参考ROS wiki——Setup and Configuration of the Navigation Stack on a Robot来进行开发:  Contents  Robot Setup ROS Transform Configuration (other transforms) Sensor Information (sensor sources)
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-02-18 23:55" pubdate>
+              2020-02-18
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/ROS/" class="category-chain-item">ROS</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/ROS/%E4%B8%A4%E8%BD%AE%E5%B7%AE%E9%80%9F%E5%BA%95%E7%9B%98SLAM/" class="category-chain-item">两轮差速底盘SLAM</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/ROS/">#ROS</a>
+            
+              <a href="/tags/SLAM/">#SLAM</a>
+            
+              <a href="/tags/Navigation/">#Navigation</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/posts/61649.html" target="_self">
+          <img src="https://s2.ax1x.com/2020/02/18/3i2BAH.png" srcset="/img/loading.gif" lazyload alt="两轮差速底盘SLAM系列(9)--ROS中常见的坐标系理解">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/posts/61649.html" target="_self">
+          两轮差速底盘SLAM系列(9)--ROS中常见的坐标系理解
+        </a>
+      </h1>
+
+      <a class="index-excerpt" href="/posts/61649.html" target="_self">
+        <div>
+          
+          ROS常见坐标系学习ROS到现在，最常见到坐标系就是map，odom，base_link，base_footprint，base_laser坐标系，这也是开始接触gmapping的一些坐标系。下面是我通过查找一些资料的理解：  世界坐标(map) map坐标系是一个世界固定坐标系，其Z轴指向上方。移动平台相对于map坐标系不随时间显著的漂移，map是不连续的，意味着移动平台在map坐标系可以离散跳
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-02-18 01:15" pubdate>
+              2020-02-18
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/ROS/" class="category-chain-item">ROS</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/ROS/%E4%B8%A4%E8%BD%AE%E5%B7%AE%E9%80%9F%E5%BA%95%E7%9B%98SLAM/" class="category-chain-item">两轮差速底盘SLAM</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/ROS/">#ROS</a>
+            
+              <a href="/tags/ROS%E5%9D%90%E6%A0%87%E7%B3%BB/">#ROS坐标系</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/posts/43720.html" target="_self">
+          <img src="https://s2.ax1x.com/2019/06/01/V3CsPA.png" srcset="/img/loading.gif" lazyload alt="两轮差速底盘SLAM系列(8)--gmapping建图">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/posts/43720.html" target="_self">
+          两轮差速底盘SLAM系列(8)--gmapping建图
+        </a>
+      </h1>
+
+      <a class="index-excerpt" href="/posts/43720.html" target="_self">
+        <div>
+          
+          前言在继续看本文之前，你需要完成下面的前提条件：  上位机ROS和底层STM32之间可以正常互相收发数据； 编写好了键盘控制节点，可以发布Twist速度话题信息； 可以通过Twist速度话题信息控制小车移动； 可以采集激光雷达深度信息； 可以发布里程计信息； 可以发布TF坐标变换。  根据move_base功能框图可以知道，想要实现建图导航功能，还需要提供地图信息。ROS开源社区汇集了多种SLAM
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-02-18 00:46" pubdate>
+              2020-02-18
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/ROS/" class="category-chain-item">ROS</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/ROS/%E4%B8%A4%E8%BD%AE%E5%B7%AE%E9%80%9F%E5%BA%95%E7%9B%98SLAM/" class="category-chain-item">两轮差速底盘SLAM</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/ROS/">#ROS</a>
+            
+              <a href="/tags/SLAM/">#SLAM</a>
+            
+              <a href="/tags/gmapping/">#gmapping</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/posts/bc3cbe5e.html" target="_self">
+          <img src="https://s2.ax1x.com/2020/02/17/39TFqf.png" srcset="/img/loading.gif" lazyload alt="两轮差速底盘SLAM系列(7)--TF变换">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/posts/bc3cbe5e.html" target="_self">
+          两轮差速底盘SLAM系列(7)--TF变换
+        </a>
+      </h1>
+
+      <a class="index-excerpt" href="/posts/bc3cbe5e.html" target="_self">
+        <div>
+          
+          Here&#39;s something encrypted, password is required to continue reading.
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-02-16 23:36" pubdate>
+              2020-02-16
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/ROS/" class="category-chain-item">ROS</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/ROS/%E4%B8%A4%E8%BD%AE%E5%B7%AE%E9%80%9F%E5%BA%95%E7%9B%98SLAM/" class="category-chain-item">两轮差速底盘SLAM</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/ROS/">#ROS</a>
+            
+              <a href="/tags/SLAM/">#SLAM</a>
+            
+              <a href="/tags/TF%E5%8F%98%E6%8D%A2/">#TF变换</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/posts/23fdc5dd.html" target="_self">
+          <img src="https://s2.ax1x.com/2019/06/01/V3C359.png" srcset="/img/loading.gif" lazyload alt="两轮差速底盘SLAM系列(6)--里程计信息">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/posts/23fdc5dd.html" target="_self">
+          两轮差速底盘SLAM系列(6)--里程计信息
+        </a>
+      </h1>
+
+      <a class="index-excerpt" href="/posts/23fdc5dd.html" target="_self">
+        <div>
+          
+          Here&#39;s something encrypted, password is required to continue reading.
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-02-16 19:36" pubdate>
+              2020-02-16
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/ROS/" class="category-chain-item">ROS</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/ROS/%E4%B8%A4%E8%BD%AE%E5%B7%AE%E9%80%9F%E5%BA%95%E7%9B%98SLAM/" class="category-chain-item">两轮差速底盘SLAM</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/ROS/">#ROS</a>
+            
+              <a href="/tags/SLAM/">#SLAM</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/posts/3290.html" target="_self">
+          <img src="https://s2.ax1x.com/2020/02/11/1odJeO.png" srcset="/img/loading.gif" lazyload alt="两轮差速底盘SLAM系列(5)--ROS下驱动激光雷达EAI-X4">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/posts/3290.html" target="_self">
+          两轮差速底盘SLAM系列(5)--ROS下驱动激光雷达EAI-X4
+        </a>
+      </h1>
+
+      <a class="index-excerpt" href="/posts/3290.html" target="_self">
+        <div>
+          
+          前言机器人必备条件——深度信息。 这里使用的激光雷达型号是EAI-X4，可以到它的官网查看对应型号的使用手册，它里面都会有详细的操作说明。但在实际应用中往往需要修改某些参数，以达到我们的设计要求。 本文仅以 Ubuntu16.04、Kinetic 版本 ROS 为例。 ROS驱动包安装1、下载驱动包进入到你的catkin_ws工作空间src目录，从GitHub下载 YDLIDAR X4 的最新 R
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-02-16 12:36" pubdate>
+              2020-02-16
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/ROS/" class="category-chain-item">ROS</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/ROS/%E4%B8%A4%E8%BD%AE%E5%B7%AE%E9%80%9F%E5%BA%95%E7%9B%98SLAM/" class="category-chain-item">两轮差速底盘SLAM</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/ROS/">#ROS</a>
+            
+              <a href="/tags/SLAM/">#SLAM</a>
+            
+              <a href="/tags/%E6%BF%80%E5%85%89%E9%9B%B7%E8%BE%BE/">#激光雷达</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/posts/34134.html" target="_self">
+          <img src="https://s2.ax1x.com/2020/02/16/3SXXNT.png" srcset="/img/loading.gif" lazyload alt="两轮差速底盘SLAM系列(4)--两轮差速速度解算">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/posts/34134.html" target="_self">
+          两轮差速底盘SLAM系列(4)--两轮差速速度解算
+        </a>
+      </h1>
+
+      <a class="index-excerpt" href="/posts/34134.html" target="_self">
+        <div>
+          
+          前言前面键盘控制节点在cmd_vel这个主题上发布了Twist消息，这个消息包含的就是机器人的期望前进速度和转向速度。本博文主要讲解如何把Twist消息转化为左右轮的期望速度，进而对机器人进行控制。 两轮差速运动解算1、线速度分解 当线速度twist.linear.x&#x3D;0时，机器人原地旋转： 123&#x2F;&#x2F; 线速度&#x3D;角速度∗半径 v &#x3D; ωrVr &#x3D; Vθ*(wheel_dist&#x2F;2.0); Vl &#x3D;
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-02-15 14:36" pubdate>
+              2020-02-15
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/ROS/" class="category-chain-item">ROS</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/ROS/%E4%B8%A4%E8%BD%AE%E5%B7%AE%E9%80%9F%E5%BA%95%E7%9B%98SLAM/" class="category-chain-item">两轮差速底盘SLAM</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/ROS/">#ROS</a>
+            
+              <a href="/tags/SLAM/">#SLAM</a>
+            
+              <a href="/tags/%E4%B8%A4%E8%BD%AE%E5%B7%AE%E9%80%9F%E9%80%9F%E5%BA%A6%E8%A7%A3%E7%AE%97/">#两轮差速速度解算</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/posts/be628c57.html" target="_self">
+          <img src="https://s2.ax1x.com/2020/02/14/1jiCWD.jpg" srcset="/img/loading.gif" lazyload alt="两轮差速底盘SLAM系列(3)--键盘控制(2)">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/posts/be628c57.html" target="_self">
+          两轮差速底盘SLAM系列(3)--键盘控制(2)
+        </a>
+      </h1>
+
+      <a class="index-excerpt" href="/posts/be628c57.html" target="_self">
+        <div>
+          
+          Here&#39;s something encrypted, password is required to continue reading.
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-02-14 14:03" pubdate>
+              2020-02-14
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/ROS/" class="category-chain-item">ROS</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/ROS/%E4%B8%A4%E8%BD%AE%E5%B7%AE%E9%80%9F%E5%BA%95%E7%9B%98SLAM/" class="category-chain-item">两轮差速底盘SLAM</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/ROS/">#ROS</a>
+            
+              <a href="/tags/SLAM/">#SLAM</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/posts/23588.html" target="_self">
+          <img src="https://s2.ax1x.com/2020/02/14/1jiCWD.jpg" srcset="/img/loading.gif" lazyload alt="两轮差速底盘SLAM系列(3)--键盘控制(1)">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/posts/23588.html" target="_self">
+          两轮差速底盘SLAM系列(3)--键盘控制(1)
+        </a>
+      </h1>
+
+      <a class="index-excerpt" href="/posts/23588.html" target="_self">
+        <div>
+          
+          前言机器人必备条件——发布Twist速度指令。 在继续看本文之前，你需要完成下面的前提条件：  上位机ROS和底层STM32之间可以正常互相收发数据。  前面已经搞通了ROS和STM32之间的CAN协议通讯，两者之间可以正常互相收发数据，那么现在就来写一个键盘控制节点，通过键盘操作小车移动。 因为ROS的代码具有很强的移植性，所以键盘控制的代码可以直接从其他机器人包移植过来，我这里主要参考了PR2
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-02-13 13:03" pubdate>
+              2020-02-13
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/ROS/" class="category-chain-item">ROS</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/ROS/%E4%B8%A4%E8%BD%AE%E5%B7%AE%E9%80%9F%E5%BA%95%E7%9B%98SLAM/" class="category-chain-item">两轮差速底盘SLAM</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/ROS/">#ROS</a>
+            
+              <a href="/tags/SLAM/">#SLAM</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+
+
+  <nav aria-label="navigation">
+    <span class="pagination" id="pagination">
+      <a class="extend prev" rel="prev" href="/page/11/#board"><i class="iconfont icon-arrowleft"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/#board">10</a><a class="page-number" href="/page/11/#board">11</a><span class="page-number current">12</span><a class="page-number" href="/page/13/#board">13</a><a class="page-number" href="/page/14/#board">14</a><span class="space">&hellip;</span><a class="page-number" href="/page/18/#board">18</a><a class="extend next" rel="next" href="/page/13/#board"><i class="iconfont icon-arrowright"></i></a>
+    </span>
+  </nav>
+
+
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

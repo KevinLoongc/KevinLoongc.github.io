@@ -1,0 +1,2837 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Kevin Loongc">
+  <meta name="keywords" content="云杂货店, KevinL, KevinLoongc, QT, ROS, SLAM, 嵌入式">
+  
+    <meta name="description" content="随遇而安，奇遇良人">
+<meta property="og:type" content="website">
+<meta property="og:title" content="分类">
+<meta property="og:url" content="https://kevinloongc.github.io/categories/index.html">
+<meta property="og:site_name" content="云杂货店">
+<meta property="og:description" content="随遇而安，奇遇良人">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:author" content="Kevin Loongc">
+<meta property="article:tag" content="云杂货店, KevinL, KevinLoongc, QT, ROS, SLAM, 嵌入式">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>分类 - 云杂货店</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"kevinloongc.github.io","root":"/","version":"1.9.0","typing":{"enable":true,"typeSpeed":80,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":false},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 60vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>云杂货店</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="分类"></span>
+          
+        </div>
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      <div class="container nopadding-x-md">
+        <div id="board"
+          >
+          
+          <div class="container">
+            <div class="row">
+              <div class="col-12 col-md-10 m-auto">
+                
+
+
+
+
+
+<div class="category-list">
+  
+  
+    
+    
+    
+    <div class="category row nomargin-x">
+      <a class="category-item collapsed
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="ROS"
+        id="heading-05665b7826ff460887094429e8a32116" role="tab" data-toggle="collapse" href="#collapse-05665b7826ff460887094429e8a32116"
+        aria-expanded="false"
+      >
+        ROS
+        <span class="list-group-count"></span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+        <a href="/categories/ROS/" class="category-count col-2 col-md-1 col-xm-1">
+          <i class="iconfont icon-articles"></i>
+          <span>40</span>
+        </a>
+      
+      <div class="category-collapse collapse " id="collapse-05665b7826ff460887094429e8a32116"
+           role="tabpanel" aria-labelledby="heading-05665b7826ff460887094429e8a32116">
+        
+        
+          
+          
+  <div class="category-post-list">
+    
+    
+  </div>
+
+          
+  
+    
+    
+    
+    <div class="category-sub row nomargin-x">
+      <a class="category-subitem collapsed
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="两轮差速底盘SLAM"
+        id="heading-a6a4521451985c8f69c14dd6dcb0f787" role="tab" data-toggle="collapse" href="#collapse-a6a4521451985c8f69c14dd6dcb0f787"
+        aria-expanded="false"
+      >
+        两轮差速底盘SLAM
+        <span class="list-group-count"></span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+        <a href="/categories/ROS/%E4%B8%A4%E8%BD%AE%E5%B7%AE%E9%80%9F%E5%BA%95%E7%9B%98SLAM/" class="category-count col-2 col-md-1 col-xm-1">
+          <i class="iconfont icon-articles"></i>
+          <span>16</span>
+        </a>
+      
+      <div class="category-collapse collapse " id="collapse-a6a4521451985c8f69c14dd6dcb0f787"
+           role="tabpanel" aria-labelledby="heading-a6a4521451985c8f69c14dd6dcb0f787">
+        
+        
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/posts/becfc177.html" title="两轮差速底盘SLAM系列(15)--虚拟墙"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">两轮差速底盘SLAM系列(15)--虚拟墙</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/ab5b3d38.html" title="两轮差速底盘SLAM系列(14)--速度平滑处理"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">两轮差速底盘SLAM系列(14)--速度平滑处理</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/1d1e892a.html" title="两轮差速底盘SLAM系列(13)--Rotate_Recovery功能包"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">两轮差速底盘SLAM系列(13)--Rotate_Recovery功能包</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/33000.html" title="两轮差速底盘SLAM系列(12)--laser_filters功能包的使用"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">两轮差速底盘SLAM系列(12)--laser_filters功能包的使用</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/cf902744.html" title="两轮差速底盘SLAM系列(11)--机器人自主导航"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">两轮差速底盘SLAM系列(11)--机器人自主导航</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/25677.html" title="两轮差速底盘SLAM系列(10)--导航配置"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">两轮差速底盘SLAM系列(10)--导航配置</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/61649.html" title="两轮差速底盘SLAM系列(9)--ROS中常见的坐标系理解"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">两轮差速底盘SLAM系列(9)--ROS中常见的坐标系理解</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/43720.html" title="两轮差速底盘SLAM系列(8)--gmapping建图"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">两轮差速底盘SLAM系列(8)--gmapping建图</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/bc3cbe5e.html" title="两轮差速底盘SLAM系列(7)--TF变换"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">两轮差速底盘SLAM系列(7)--TF变换</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/23fdc5dd.html" title="两轮差速底盘SLAM系列(6)--里程计信息"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">两轮差速底盘SLAM系列(6)--里程计信息</span>
+        </a>
+      
+    
+      
+      
+        <a href="/categories/ROS/%E4%B8%A4%E8%BD%AE%E5%B7%AE%E9%80%9F%E5%BA%95%E7%9B%98SLAM/" class="list-group-item list-group-item-action">
+          <span class="category-post">More...</span>
+        </a>
+        
+  </div>
+
+        
+      </div>
+    </div>
+  
+    
+    
+    
+    <div class="category-sub row nomargin-x">
+      <a class="category-subitem collapsed
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="ROS机器人学习(仿真)"
+        id="heading-df4232a118b44301d781bcce00f5128c" role="tab" data-toggle="collapse" href="#collapse-df4232a118b44301d781bcce00f5128c"
+        aria-expanded="false"
+      >
+        ROS机器人学习(仿真)
+        <span class="list-group-count"></span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+        <a href="/categories/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AD%A6%E4%B9%A0-%E4%BB%BF%E7%9C%9F/" class="category-count col-2 col-md-1 col-xm-1">
+          <i class="iconfont icon-articles"></i>
+          <span>9</span>
+        </a>
+      
+      <div class="category-collapse collapse " id="collapse-df4232a118b44301d781bcce00f5128c"
+           role="tabpanel" aria-labelledby="heading-df4232a118b44301d781bcce00f5128c">
+        
+        
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/posts/31300.html" title="ROS机器人学习(八)--ROS机器人自主导航"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">ROS机器人学习(八)--ROS机器人自主导航</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/45733.html" title="ROS机器人学习(七)--ROS中的导航框架"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">ROS机器人学习(七)--ROS中的导航框架</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/42632.html" title="ROS机器人学习(六)--ROS SLAM功能包应用方法"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">ROS机器人学习(六)--ROS SLAM功能包应用方法</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/9594.html" title="ROS机器人学习(五)--机器人SLAM导航必备条件"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">ROS机器人学习(五)--机器人SLAM导航必备条件</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/64089.html" title="ROS机器人学习(四)--Gazebo物理仿真环境搭建"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">ROS机器人学习(四)--Gazebo物理仿真环境搭建</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/57691.html" title="ROS机器人学习--ros_control"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">ROS机器人学习--ros_control</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/63737.html" title="ROS机器人学习(三)--使用ArbotiX控制机器人模型"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">ROS机器人学习(三)--使用ArbotiX控制机器人模型</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/9050.html" title="ROS机器人学习(二)--URDF模型优化"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">ROS机器人学习(二)--URDF模型优化</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/4133.html" title="ROS机器人学习(一)--URDF建模"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">ROS机器人学习(一)--URDF建模</span>
+        </a>
+      
+    
+  </div>
+
+        
+      </div>
+    </div>
+  
+    
+    
+    
+    <div class="category-sub row nomargin-x">
+      <a class="category-subitem collapsed
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="Others"
+        id="heading-52ef9633d88a7480b3a938ff9eaa2a25" role="tab" data-toggle="collapse" href="#collapse-52ef9633d88a7480b3a938ff9eaa2a25"
+        aria-expanded="false"
+      >
+        Others
+        <span class="list-group-count"></span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+        <a href="/categories/ROS/Others/" class="category-count col-2 col-md-1 col-xm-1">
+          <i class="iconfont icon-articles"></i>
+          <span>5</span>
+        </a>
+      
+      <div class="category-collapse collapse " id="collapse-52ef9633d88a7480b3a938ff9eaa2a25"
+           role="tabpanel" aria-labelledby="heading-52ef9633d88a7480b3a938ff9eaa2a25">
+        
+        
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/posts/64019.html" title="配置ROS支持C++11标准"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">配置ROS支持C++11标准</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/44716.html" title="ROS修改rosed默认的编辑器"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">ROS修改rosed默认的编辑器</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/42679.html" title="ROS使用动态链接库(.so文件)"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">ROS使用动态链接库(.so文件)</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/54885.html" title="ROS建图导航小车whbot"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">ROS建图导航小车whbot</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/32393.html" title="Ubuntu16.04 install Ros(Kinetic)"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Ubuntu16.04 install Ros(Kinetic)</span>
+        </a>
+      
+    
+  </div>
+
+        
+      </div>
+    </div>
+  
+    
+    
+    
+    <div class="category-sub row nomargin-x">
+      <a class="category-subitem collapsed
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="ROS入门编程"
+        id="heading-05dccb42d92a920db5cfce40ccbd3518" role="tab" data-toggle="collapse" href="#collapse-05dccb42d92a920db5cfce40ccbd3518"
+        aria-expanded="false"
+      >
+        ROS入门编程
+        <span class="list-group-count"></span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+        <a href="/categories/ROS/ROS%E5%85%A5%E9%97%A8%E7%BC%96%E7%A8%8B/" class="category-count col-2 col-md-1 col-xm-1">
+          <i class="iconfont icon-articles"></i>
+          <span>3</span>
+        </a>
+      
+      <div class="category-collapse collapse " id="collapse-05dccb42d92a920db5cfce40ccbd3518"
+           role="tabpanel" aria-labelledby="heading-05dccb42d92a920db5cfce40ccbd3518">
+        
+        
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/posts/32520.html" title="ROS基本编程--Service"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">ROS基本编程--Service</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/53687.html" title="ROS基本编程--Action"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">ROS基本编程--Action</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/59037.html" title="ROS基本编程--topic"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">ROS基本编程--topic</span>
+        </a>
+      
+    
+  </div>
+
+        
+      </div>
+    </div>
+  
+    
+    
+    
+    <div class="category-sub row nomargin-x">
+      <a class="category-subitem collapsed
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="ROS错误集"
+        id="heading-decfd6ed3e7f15316efd840440532cbe" role="tab" data-toggle="collapse" href="#collapse-decfd6ed3e7f15316efd840440532cbe"
+        aria-expanded="false"
+      >
+        ROS错误集
+        <span class="list-group-count"></span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+        <a href="/categories/ROS/ROS%E9%94%99%E8%AF%AF%E9%9B%86/" class="category-count col-2 col-md-1 col-xm-1">
+          <i class="iconfont icon-articles"></i>
+          <span>3</span>
+        </a>
+      
+      <div class="category-collapse collapse " id="collapse-decfd6ed3e7f15316efd840440532cbe"
+           role="tabpanel" aria-labelledby="heading-decfd6ed3e7f15316efd840440532cbe">
+        
+        
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/posts/32164419.html" title="ROS报错[turtlebot3_slam_gmapping-2] process has died"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">ROS报错[turtlebot3_slam_gmapping-2] process has died</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/4070.html" title="ROS安装过程中出现rosdep init ERROR解决方法"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">ROS安装过程中出现rosdep init ERROR解决方法</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/17178.html" title="ROS下gazebo不能加载模型"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">ROS下gazebo不能加载模型</span>
+        </a>
+      
+    
+  </div>
+
+        
+      </div>
+    </div>
+  
+    
+    
+    
+    <div class="category-sub row nomargin-x">
+      <a class="category-subitem collapsed
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="Turtlebot3仿真"
+        id="heading-f24432006885db4afaf9cb30ddec70cc" role="tab" data-toggle="collapse" href="#collapse-f24432006885db4afaf9cb30ddec70cc"
+        aria-expanded="false"
+      >
+        Turtlebot3仿真
+        <span class="list-group-count"></span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+        <a href="/categories/ROS/Turtlebot3%E4%BB%BF%E7%9C%9F/" class="category-count col-2 col-md-1 col-xm-1">
+          <i class="iconfont icon-articles"></i>
+          <span>3</span>
+        </a>
+      
+      <div class="category-collapse collapse " id="collapse-f24432006885db4afaf9cb30ddec70cc"
+           role="tabpanel" aria-labelledby="heading-f24432006885db4afaf9cb30ddec70cc">
+        
+        
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/posts/34207.html" title="Turtlebot3仿真3-建图和导航"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Turtlebot3仿真3-建图和导航</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/57650.html" title="Turtlebot3仿真2-加载Gazebo环境"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Turtlebot3仿真2-加载Gazebo环境</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/26186.html" title="Turtlebot3仿真1-ROS仿真环境搭建(kinetic版)"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Turtlebot3仿真1-ROS仿真环境搭建(kinetic版)</span>
+        </a>
+      
+    
+  </div>
+
+        
+      </div>
+    </div>
+  
+    
+    
+    
+    <div class="category-sub row nomargin-x">
+      <a class="category-subitem collapsed
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="ROS-GUI程序开发"
+        id="heading-77ae9dc2434a9e63768e6977838f920f" role="tab" data-toggle="collapse" href="#collapse-77ae9dc2434a9e63768e6977838f920f"
+        aria-expanded="false"
+      >
+        ROS-GUI程序开发
+        <span class="list-group-count"></span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+        <a href="/categories/ROS/ROS-GUI%E7%A8%8B%E5%BA%8F%E5%BC%80%E5%8F%91/" class="category-count col-2 col-md-1 col-xm-1">
+          <i class="iconfont icon-articles"></i>
+          <span>1</span>
+        </a>
+      
+      <div class="category-collapse collapse " id="collapse-77ae9dc2434a9e63768e6977838f920f"
+           role="tabpanel" aria-labelledby="heading-77ae9dc2434a9e63768e6977838f920f">
+        
+        
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/posts/c44ead4c.html" title="ROS GUI程序开发——配置QT环境"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">ROS GUI程序开发——配置QT环境</span>
+        </a>
+      
+    
+  </div>
+
+        
+      </div>
+    </div>
+  
+        
+      </div>
+    </div>
+  
+    
+    
+    
+    <div class="category row nomargin-x">
+      <a class="category-item collapsed
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="QT"
+        id="heading-33b8d767c1f7c7984d900797e2bb7727" role="tab" data-toggle="collapse" href="#collapse-33b8d767c1f7c7984d900797e2bb7727"
+        aria-expanded="false"
+      >
+        QT
+        <span class="list-group-count"></span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+        <a href="/categories/QT/" class="category-count col-2 col-md-1 col-xm-1">
+          <i class="iconfont icon-articles"></i>
+          <span>31</span>
+        </a>
+      
+      <div class="category-collapse collapse " id="collapse-33b8d767c1f7c7984d900797e2bb7727"
+           role="tabpanel" aria-labelledby="heading-33b8d767c1f7c7984d900797e2bb7727">
+        
+        
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/posts/f592f646.html" title="QT异常崩溃处理-window"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">QT异常崩溃处理-window</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/980de878.html" title="QString格式化输出double类型的精度问题"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">QString格式化输出double类型的精度问题</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/af032c2d.html" title="QLineEdit限制输入类型"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">QLineEdit限制输入类型</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/95cbda5a.html" title="Qt设置程序（进程）优先级"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Qt设置程序（进程）优先级</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/50944f7c.html" title="QT数据库使用-SQLite"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">QT数据库使用-SQLite</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/68360638.html" title="QT自定义控件-柱形和扇形统计图"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">QT自定义控件-柱形和扇形统计图</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/7c3ea5fd.html" title="使用Astyle为QtCreator添加代码自动格式化功能"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">使用Astyle为QtCreator添加代码自动格式化功能</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/9fb2590.html" title="QT添加外部动态库"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">QT添加外部动态库</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/8ca26d8c.html" title="qt发布程序时将依赖的dll分开放在不同目录下"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">qt发布程序时将依赖的dll分开放在不同目录下</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/c8226e0d.html" title="将QT界面程序封装成动态库DLL"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">将QT界面程序封装成动态库DLL</span>
+        </a>
+      
+    
+      
+      
+        <a href="/categories/QT/" class="list-group-item list-group-item-action">
+          <span class="category-post">More...</span>
+        </a>
+        
+  </div>
+
+        
+      </div>
+    </div>
+  
+    
+    
+    
+    <div class="category row nomargin-x">
+      <a class="category-item collapsed
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="Ubuntu"
+        id="heading-3d945423f8e9496c429a5d8c65b4604f" role="tab" data-toggle="collapse" href="#collapse-3d945423f8e9496c429a5d8c65b4604f"
+        aria-expanded="false"
+      >
+        Ubuntu
+        <span class="list-group-count"></span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+        <a href="/categories/Ubuntu/" class="category-count col-2 col-md-1 col-xm-1">
+          <i class="iconfont icon-articles"></i>
+          <span>25</span>
+        </a>
+      
+      <div class="category-collapse collapse " id="collapse-3d945423f8e9496c429a5d8c65b4604f"
+           role="tabpanel" aria-labelledby="heading-3d945423f8e9496c429a5d8c65b4604f">
+        
+        
+          
+          
+  <div class="category-post-list">
+    
+    
+  </div>
+
+          
+  
+    
+    
+    
+    <div class="category-sub row nomargin-x">
+      <a class="category-subitem collapsed
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="Software"
+        id="heading-719d067b229178f03bcfa1da4ac4dede" role="tab" data-toggle="collapse" href="#collapse-719d067b229178f03bcfa1da4ac4dede"
+        aria-expanded="false"
+      >
+        Software
+        <span class="list-group-count"></span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+        <a href="/categories/Ubuntu/Software/" class="category-count col-2 col-md-1 col-xm-1">
+          <i class="iconfont icon-articles"></i>
+          <span>16</span>
+        </a>
+      
+      <div class="category-collapse collapse " id="collapse-719d067b229178f03bcfa1da4ac4dede"
+           role="tabpanel" aria-labelledby="heading-719d067b229178f03bcfa1da4ac4dede">
+        
+        
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/posts/224aa90f.html" title="SublimeText3 package Install 无法安装插件"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">SublimeText3 package Install 无法安装插件</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/d11f11cc.html" title="Ubuntu为.APPImage可执行文件创建桌面快捷方式"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Ubuntu为.APPImage可执行文件创建桌面快捷方式</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/da754b40.html" title="Eigen3安装及注意"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Eigen3安装及注意</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/6ec3c411.html" title="Ubuntu多线程下载器——Motrix"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Ubuntu多线程下载器——Motrix</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/fb945601.html" title="Ubuntu下安装配置VSCode"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Ubuntu下安装配置VSCode</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/2642ade.html" title="Ubuntu16.04安装WPS"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Ubuntu16.04安装WPS</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/4af8d386.html" title="Ubuntu16.04使用Systemback制作系统镜像"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Ubuntu16.04使用Systemback制作系统镜像</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/9800a45e.html" title="Ubuntu16.04系统通过ip地址连接打印机"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Ubuntu16.04系统通过ip地址连接打印机</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/b78c73d0.html" title="Ubuntu16.04安装phpMyAdmin,Apache2,MariaDB and PHP7.0"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Ubuntu16.04安装phpMyAdmin,Apache2,MariaDB and PHP7.0</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/af2b7f78.html" title="Ubuntu16.04安装FoxitReader"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Ubuntu16.04安装FoxitReader</span>
+        </a>
+      
+    
+      
+      
+        <a href="/categories/Ubuntu/Software/" class="list-group-item list-group-item-action">
+          <span class="category-post">More...</span>
+        </a>
+        
+  </div>
+
+        
+      </div>
+    </div>
+  
+    
+    
+    
+    <div class="category-sub row nomargin-x">
+      <a class="category-subitem collapsed
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="System"
+        id="heading-a45da96d0bf6575970f2d27af22be28a" role="tab" data-toggle="collapse" href="#collapse-a45da96d0bf6575970f2d27af22be28a"
+        aria-expanded="false"
+      >
+        System
+        <span class="list-group-count"></span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+        <a href="/categories/Ubuntu/System/" class="category-count col-2 col-md-1 col-xm-1">
+          <i class="iconfont icon-articles"></i>
+          <span>9</span>
+        </a>
+      
+      <div class="category-collapse collapse " id="collapse-a45da96d0bf6575970f2d27af22be28a"
+           role="tabpanel" aria-labelledby="heading-a45da96d0bf6575970f2d27af22be28a">
+        
+        
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/posts/69b5539f.html" title="Ubuntu16.04开机自启动脚本文件"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Ubuntu16.04开机自启动脚本文件</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/fb74be9a.html" title="Ubuntu系统下Github无法加载图片"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Ubuntu系统下Github无法加载图片</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/9ba1cad7.html" title="关闭Ubuntu系统“检测到系统程序错误”弹窗提示"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">关闭Ubuntu系统“检测到系统程序错误”弹窗提示</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/18986.html" title="windows+ubuntu双系统启动引导修复教程"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">windows+ubuntu双系统启动引导修复教程</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/18369.html" title="彻底删除ubuntu系统引导项"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">彻底删除ubuntu系统引导项</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/63427.html" title="Ubuntu16.04 系统配置"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Ubuntu16.04 系统配置</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/60319.html" title="Ubuntu+windows双系统，添加开机引导"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Ubuntu+windows双系统，添加开机引导</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/42369.html" title="Ubuntu清理旧内核"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Ubuntu清理旧内核</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/7430.html" title="Ubuntu16.04+Windows双系统安装"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Ubuntu16.04+Windows双系统安装</span>
+        </a>
+      
+    
+  </div>
+
+        
+      </div>
+    </div>
+  
+        
+      </div>
+    </div>
+  
+    
+    
+    
+    <div class="category row nomargin-x">
+      <a class="category-item collapsed
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="嵌入式"
+        id="heading-62f8a8e20d03835fb846c1e03058cccb" role="tab" data-toggle="collapse" href="#collapse-62f8a8e20d03835fb846c1e03058cccb"
+        aria-expanded="false"
+      >
+        嵌入式
+        <span class="list-group-count"></span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+        <a href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F/" class="category-count col-2 col-md-1 col-xm-1">
+          <i class="iconfont icon-articles"></i>
+          <span>24</span>
+        </a>
+      
+      <div class="category-collapse collapse " id="collapse-62f8a8e20d03835fb846c1e03058cccb"
+           role="tabpanel" aria-labelledby="heading-62f8a8e20d03835fb846c1e03058cccb">
+        
+        
+          
+          
+  <div class="category-post-list">
+    
+    
+  </div>
+
+          
+  
+    
+    
+    
+    <div class="category-sub row nomargin-x">
+      <a class="category-subitem collapsed
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="STM32"
+        id="heading-77c96659ca42cabf0aadc4168ae3da3f" role="tab" data-toggle="collapse" href="#collapse-77c96659ca42cabf0aadc4168ae3da3f"
+        aria-expanded="false"
+      >
+        STM32
+        <span class="list-group-count"></span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+        <a href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F/STM32/" class="category-count col-2 col-md-1 col-xm-1">
+          <i class="iconfont icon-articles"></i>
+          <span>10</span>
+        </a>
+      
+      <div class="category-collapse collapse " id="collapse-77c96659ca42cabf0aadc4168ae3da3f"
+           role="tabpanel" aria-labelledby="heading-77c96659ca42cabf0aadc4168ae3da3f">
+        
+        
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/posts/6304ed30.html" title="基于STM32的智能门锁系统设计"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">基于STM32的智能门锁系统设计</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/3dca690f.html" title="STM32F103学习笔记——RC522射频卡"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">STM32F103学习笔记——RC522射频卡</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/5803b452.html" title="STM32F103学习笔记——AS608指纹识别模块的使用"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">STM32F103学习笔记——AS608指纹识别模块的使用</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/2ac21edf.html" title="STM32F103学习笔记——薄膜矩阵键盘扫描"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">STM32F103学习笔记——薄膜矩阵键盘扫描</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/9820a5cb.html" title="STM32F103读写内部flash"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">STM32F103读写内部flash</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/4588.html" title="双轮平衡小车项目"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">双轮平衡小车项目</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/9e207.html" title="模拟电磁曲射炮设计"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">模拟电磁曲射炮设计</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/6c941452.html" title="倒立摆系统设计"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">倒立摆系统设计</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/b1f7002e.html" title="STM32F103学习笔记——MPU6050数据读取与倾角检测"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">STM32F103学习笔记——MPU6050数据读取与倾角检测</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/37488.html" title="STM32F429开发板学习笔记"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">STM32F429开发板学习笔记</span>
+        </a>
+      
+    
+  </div>
+
+        
+      </div>
+    </div>
+  
+    
+    
+    
+    <div class="category-sub row nomargin-x">
+      <a class="category-subitem collapsed
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="Others"
+        id="heading-52ef9633d88a7480b3a938ff9eaa2a25" role="tab" data-toggle="collapse" href="#collapse-52ef9633d88a7480b3a938ff9eaa2a25"
+        aria-expanded="false"
+      >
+        Others
+        <span class="list-group-count"></span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+        <a href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F/Others/" class="category-count col-2 col-md-1 col-xm-1">
+          <i class="iconfont icon-articles"></i>
+          <span>6</span>
+        </a>
+      
+      <div class="category-collapse collapse " id="collapse-52ef9633d88a7480b3a938ff9eaa2a25"
+           role="tabpanel" aria-labelledby="heading-52ef9633d88a7480b3a938ff9eaa2a25">
+        
+        
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/posts/14e04910.html" title="ModbusTCP协议"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">ModbusTCP协议</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/a9bdb04c.html" title="【CRC】crc16几种标准校验算法及c语言代码"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">【CRC】crc16几种标准校验算法及c语言代码</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/21367.html" title="嵌入式面试题"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">嵌入式面试题</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/17780.html" title="在ARM体系中字、半字、字节的概念理解"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">在ARM体系中字、半字、字节的概念理解</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/dfc9b5c6.html" title="Arduino超声波智能避障小车"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Arduino超声波智能避障小车</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/17311.html" title="STM8S103F3P6核心板学习笔记"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">STM8S103F3P6核心板学习笔记</span>
+        </a>
+      
+    
+  </div>
+
+        
+      </div>
+    </div>
+  
+    
+    
+    
+    <div class="category-sub row nomargin-x">
+      <a class="category-subitem collapsed
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="RaspberryPi"
+        id="heading-e941ab0a40b3ca731335ce3483c5a817" role="tab" data-toggle="collapse" href="#collapse-e941ab0a40b3ca731335ce3483c5a817"
+        aria-expanded="false"
+      >
+        RaspberryPi
+        <span class="list-group-count"></span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+        <a href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F/RaspberryPi/" class="category-count col-2 col-md-1 col-xm-1">
+          <i class="iconfont icon-articles"></i>
+          <span>5</span>
+        </a>
+      
+      <div class="category-collapse collapse " id="collapse-e941ab0a40b3ca731335ce3483c5a817"
+           role="tabpanel" aria-labelledby="heading-e941ab0a40b3ca731335ce3483c5a817">
+        
+        
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/posts/52bef225.html" title="基于人脸识别的课堂考勤系统"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">基于人脸识别的课堂考勤系统</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/7796.html" title="Ubuntu16.04与树莓派进行文件传输"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Ubuntu16.04与树莓派进行文件传输</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/18659ddb.html" title="树莓派系统备份与还原"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">树莓派系统备份与还原</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/25146.html" title="Ubuntu16.04 通过网线直连树莓派"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Ubuntu16.04 通过网线直连树莓派</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/7ef6e9c3.html" title="安装树莓派raspberrypi系统"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">安装树莓派raspberrypi系统</span>
+        </a>
+      
+    
+  </div>
+
+        
+      </div>
+    </div>
+  
+    
+    
+    
+    <div class="category-sub row nomargin-x">
+      <a class="category-subitem collapsed
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="51单片机"
+        id="heading-ed06d96ccb65ec2eefab4ef9d649fda1" role="tab" data-toggle="collapse" href="#collapse-ed06d96ccb65ec2eefab4ef9d649fda1"
+        aria-expanded="false"
+      >
+        51单片机
+        <span class="list-group-count"></span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+        <a href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F/51%E5%8D%95%E7%89%87%E6%9C%BA/" class="category-count col-2 col-md-1 col-xm-1">
+          <i class="iconfont icon-articles"></i>
+          <span>3</span>
+        </a>
+      
+      <div class="category-collapse collapse " id="collapse-ed06d96ccb65ec2eefab4ef9d649fda1"
+           role="tabpanel" aria-labelledby="heading-ed06d96ccb65ec2eefab4ef9d649fda1">
+        
+        
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/posts/d7663396.html" title="51单片机超声波避障小车"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">51单片机超声波避障小车</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/105ab53e.html" title="51单片机PWM信号的产生与应用"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">51单片机PWM信号的产生与应用</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/f2ded1dc.html" title="51单片机学习摘要"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">51单片机学习摘要</span>
+        </a>
+      
+    
+  </div>
+
+        
+      </div>
+    </div>
+  
+        
+      </div>
+    </div>
+  
+    
+    
+    
+    <div class="category row nomargin-x">
+      <a class="category-item collapsed
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="编程学习"
+        id="heading-2950cdb85cbd97afd2de2ee194249d86" role="tab" data-toggle="collapse" href="#collapse-2950cdb85cbd97afd2de2ee194249d86"
+        aria-expanded="false"
+      >
+        编程学习
+        <span class="list-group-count"></span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+        <a href="/categories/%E7%BC%96%E7%A8%8B%E5%AD%A6%E4%B9%A0/" class="category-count col-2 col-md-1 col-xm-1">
+          <i class="iconfont icon-articles"></i>
+          <span>24</span>
+        </a>
+      
+      <div class="category-collapse collapse " id="collapse-2950cdb85cbd97afd2de2ee194249d86"
+           role="tabpanel" aria-labelledby="heading-2950cdb85cbd97afd2de2ee194249d86">
+        
+        
+          
+          
+  <div class="category-post-list">
+    
+    
+  </div>
+
+          
+  
+    
+    
+    
+    <div class="category-sub row nomargin-x">
+      <a class="category-subitem collapsed
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="C++"
+        id="heading-f6f87c9fdcf8b3c3f07f93f1ee8712c9" role="tab" data-toggle="collapse" href="#collapse-f6f87c9fdcf8b3c3f07f93f1ee8712c9"
+        aria-expanded="false"
+      >
+        C++
+        <span class="list-group-count"></span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+        <a href="/categories/%E7%BC%96%E7%A8%8B%E5%AD%A6%E4%B9%A0/C/" class="category-count col-2 col-md-1 col-xm-1">
+          <i class="iconfont icon-articles"></i>
+          <span>10</span>
+        </a>
+      
+      <div class="category-collapse collapse " id="collapse-f6f87c9fdcf8b3c3f07f93f1ee8712c9"
+           role="tabpanel" aria-labelledby="heading-f6f87c9fdcf8b3c3f07f93f1ee8712c9">
+        
+        
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/posts/8d98dcd8.html" title="红黑树详解"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">红黑树详解</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/4d2e67f5.html" title="C++哈希表"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">C++哈希表</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/57f916c0.html" title="C++STL中常见容器的时间复杂度"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">C++STL中常见容器的时间复杂度</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/44bbaae6.html" title="C++知识点"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">C++知识点</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/905019ed.html" title="【C++】清空cin缓存实现暂停并按回车继续"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">【C++】清空cin缓存实现暂停并按回车继续</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/58c3d271.html" title="【C++】virtual method but non-virtual destructor"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">【C++】virtual method but non-virtual destructor</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/f83bec93.html" title="C/C++解决宏定义冲突的问题"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">C/C++解决宏定义冲突的问题</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/26683.html" title="C++ vector清空元素的常用两种方法"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">C++ vector清空元素的常用两种方法</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/17135.html" title="Linux环境下统计一个目录下的文件数量－－C++"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Linux环境下统计一个目录下的文件数量－－C++</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/62716.html" title="顺序容器vector拷贝使用总结"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">顺序容器vector拷贝使用总结</span>
+        </a>
+      
+    
+  </div>
+
+        
+      </div>
+    </div>
+  
+    
+    
+    
+    <div class="category-sub row nomargin-x">
+      <a class="category-subitem collapsed
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="C++黑马视频讲义"
+        id="heading-30ab1306049db7034432cb9fb0b1b6ae" role="tab" data-toggle="collapse" href="#collapse-30ab1306049db7034432cb9fb0b1b6ae"
+        aria-expanded="false"
+      >
+        C++黑马视频讲义
+        <span class="list-group-count"></span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+        <a href="/categories/%E7%BC%96%E7%A8%8B%E5%AD%A6%E4%B9%A0/C-%E9%BB%91%E9%A9%AC%E8%A7%86%E9%A2%91%E8%AE%B2%E4%B9%89/" class="category-count col-2 col-md-1 col-xm-1">
+          <i class="iconfont icon-articles"></i>
+          <span>8</span>
+        </a>
+      
+      <div class="category-collapse collapse " id="collapse-30ab1306049db7034432cb9fb0b1b6ae"
+           role="tabpanel" aria-labelledby="heading-30ab1306049db7034432cb9fb0b1b6ae">
+        
+        
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/posts/e6f97ee3.html" title="第7阶段-C++实战项目机房预约"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">第7阶段-C++实战项目机房预约</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/e6f97ee3.html" title="第6阶段实战-基于STL泛化编程的演讲比赛"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">第6阶段实战-基于STL泛化编程的演讲比赛</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/f5d3d170.html" title="第5阶段-C++提高编程"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">第5阶段-C++提高编程</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/3227f781.html" title="第4阶段实战-基于多态的企业职工系统"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">第4阶段实战-基于多态的企业职工系统</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/2aeb9fce.html" title="第3阶段-C++核心编程"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">第3阶段-C++核心编程</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/bebd227a.html" title="第2阶段实战-通讯录管理"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">第2阶段实战-通讯录管理</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/523bedcd.html" title="第1阶段-C++匠心之作"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">第1阶段-C++匠心之作</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/c4d23249.html" title="C++课程安排"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">C++课程安排</span>
+        </a>
+      
+    
+  </div>
+
+        
+      </div>
+    </div>
+  
+    
+    
+    
+    <div class="category-sub row nomargin-x">
+      <a class="category-subitem collapsed
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="CMake"
+        id="heading-df49adab93b9e0c10c64f72458b31971" role="tab" data-toggle="collapse" href="#collapse-df49adab93b9e0c10c64f72458b31971"
+        aria-expanded="false"
+      >
+        CMake
+        <span class="list-group-count"></span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+        <a href="/categories/%E7%BC%96%E7%A8%8B%E5%AD%A6%E4%B9%A0/CMake/" class="category-count col-2 col-md-1 col-xm-1">
+          <i class="iconfont icon-articles"></i>
+          <span>3</span>
+        </a>
+      
+      <div class="category-collapse collapse " id="collapse-df49adab93b9e0c10c64f72458b31971"
+           role="tabpanel" aria-labelledby="heading-df49adab93b9e0c10c64f72458b31971">
+        
+        
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/posts/93012594.html" title="多目录工程的CmakeLists.txt编写"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">多目录工程的CmakeLists.txt编写</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/efb867c3.html" title="CMakeLists.txt基本语法说明"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">CMakeLists.txt基本语法说明</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/dfff96f9.html" title="VSCode创建编译CMake工程的一般流程"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">VSCode创建编译CMake工程的一般流程</span>
+        </a>
+      
+    
+  </div>
+
+        
+      </div>
+    </div>
+  
+    
+    
+    
+    <div class="category-sub row nomargin-x">
+      <a class="category-subitem collapsed
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="汇编"
+        id="heading-ef3380de76fd90069a3644053bc3379d" role="tab" data-toggle="collapse" href="#collapse-ef3380de76fd90069a3644053bc3379d"
+        aria-expanded="false"
+      >
+        汇编
+        <span class="list-group-count"></span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+        <a href="/categories/%E7%BC%96%E7%A8%8B%E5%AD%A6%E4%B9%A0/%E6%B1%87%E7%BC%96/" class="category-count col-2 col-md-1 col-xm-1">
+          <i class="iconfont icon-articles"></i>
+          <span>3</span>
+        </a>
+      
+      <div class="category-collapse collapse " id="collapse-ef3380de76fd90069a3644053bc3379d"
+           role="tabpanel" aria-labelledby="heading-ef3380de76fd90069a3644053bc3379d">
+        
+        
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/posts/37363.html" title="两个字符串比较"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">两个字符串比较</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/25377.html" title="二进制转十六进制"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">二进制转十六进制</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/53660.html" title="16进制转换成10进制（三种方法）"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">16进制转换成10进制（三种方法）</span>
+        </a>
+      
+    
+  </div>
+
+        
+      </div>
+    </div>
+  
+        
+      </div>
+    </div>
+  
+    
+    
+    
+    <div class="category row nomargin-x">
+      <a class="category-item collapsed
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="博客相关"
+        id="heading-e40875d8466a069e6757225980b24f62" role="tab" data-toggle="collapse" href="#collapse-e40875d8466a069e6757225980b24f62"
+        aria-expanded="false"
+      >
+        博客相关
+        <span class="list-group-count"></span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+        <a href="/categories/%E5%8D%9A%E5%AE%A2%E7%9B%B8%E5%85%B3/" class="category-count col-2 col-md-1 col-xm-1">
+          <i class="iconfont icon-articles"></i>
+          <span>19</span>
+        </a>
+      
+      <div class="category-collapse collapse " id="collapse-e40875d8466a069e6757225980b24f62"
+           role="tabpanel" aria-labelledby="heading-e40875d8466a069e6757225980b24f62">
+        
+        
+          
+          
+  <div class="category-post-list">
+    
+    
+  </div>
+
+          
+  
+    
+    
+    
+    <div class="category-sub row nomargin-x">
+      <a class="category-subitem collapsed
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="Hexo"
+        id="heading-c00d1eb68b529768ba98c975c76a9b66" role="tab" data-toggle="collapse" href="#collapse-c00d1eb68b529768ba98c975c76a9b66"
+        aria-expanded="false"
+      >
+        Hexo
+        <span class="list-group-count"></span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+        <a href="/categories/%E5%8D%9A%E5%AE%A2%E7%9B%B8%E5%85%B3/Hexo/" class="category-count col-2 col-md-1 col-xm-1">
+          <i class="iconfont icon-articles"></i>
+          <span>16</span>
+        </a>
+      
+      <div class="category-collapse collapse " id="collapse-c00d1eb68b529768ba98c975c76a9b66"
+           role="tabpanel" aria-labelledby="heading-c00d1eb68b529768ba98c975c76a9b66">
+        
+        
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/posts/b0be3e91.html" title="Windows安装最新版Hexo"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Windows安装最新版Hexo</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/b63dcdfd.html" title="使用 Github Action 实现全自动部署"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">使用 Github Action 实现全自动部署</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/f113bb6a.html" title="Butterfly魔改：动态分类条"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Butterfly魔改：动态分类条</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/a6409a0f.html" title="Butterfly主题文章标签外挂"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Butterfly主题文章标签外挂</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/898a4e86.html" title="Hexo + Butterfly 异地维护更新"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Hexo + Butterfly 异地维护更新</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/5134134a.html" title="Hexo-Server酱微信推送博客的评论消息"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Hexo-Server酱微信推送博客的评论消息</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/8fb19f32.html" title="Hexo-Twikoo评论系统配置教程"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Hexo-Twikoo评论系统配置教程</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/ec72beec.html" title="免费CDN：jsDelivr+Github"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">免费CDN：jsDelivr+Github</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/6f62cfb7.html" title="Hexo插入pdf文档"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Hexo插入pdf文档</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/12570.html" title="Hexo-abbrlink生成唯一永久文章链接"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Hexo-abbrlink生成唯一永久文章链接</span>
+        </a>
+      
+    
+      
+      
+        <a href="/categories/%E5%8D%9A%E5%AE%A2%E7%9B%B8%E5%85%B3/Hexo/" class="list-group-item list-group-item-action">
+          <span class="category-post">More...</span>
+        </a>
+        
+  </div>
+
+        
+      </div>
+    </div>
+  
+    
+    
+    
+    <div class="category-sub row nomargin-x">
+      <a class="category-subitem collapsed
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="Markdown"
+        id="heading-2182a74bab7188d959e795d9301e87ff" role="tab" data-toggle="collapse" href="#collapse-2182a74bab7188d959e795d9301e87ff"
+        aria-expanded="false"
+      >
+        Markdown
+        <span class="list-group-count"></span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+        <a href="/categories/%E5%8D%9A%E5%AE%A2%E7%9B%B8%E5%85%B3/Markdown/" class="category-count col-2 col-md-1 col-xm-1">
+          <i class="iconfont icon-articles"></i>
+          <span>2</span>
+        </a>
+      
+      <div class="category-collapse collapse " id="collapse-2182a74bab7188d959e795d9301e87ff"
+           role="tabpanel" aria-labelledby="heading-2182a74bab7188d959e795d9301e87ff">
+        
+        
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/posts/16e52f2e.html" title="PicGo+Gitee+Typora部署图床"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">PicGo+Gitee+Typora部署图床</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/55370.html" title="Markdown文件的基本编写语法"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Markdown文件的基本编写语法</span>
+        </a>
+      
+    
+  </div>
+
+        
+      </div>
+    </div>
+  
+    
+    
+    
+    <div class="category-sub row nomargin-x">
+      <a class="category-subitem collapsed
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="Jeklly"
+        id="heading-94716f94c6c962aa7683d352d20f73c6" role="tab" data-toggle="collapse" href="#collapse-94716f94c6c962aa7683d352d20f73c6"
+        aria-expanded="false"
+      >
+        Jeklly
+        <span class="list-group-count"></span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+        <a href="/categories/%E5%8D%9A%E5%AE%A2%E7%9B%B8%E5%85%B3/Jeklly/" class="category-count col-2 col-md-1 col-xm-1">
+          <i class="iconfont icon-articles"></i>
+          <span>1</span>
+        </a>
+      
+      <div class="category-collapse collapse " id="collapse-94716f94c6c962aa7683d352d20f73c6"
+           role="tabpanel" aria-labelledby="heading-94716f94c6c962aa7683d352d20f73c6">
+        
+        
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/posts/35741.html" title="Jeklly搭建个人博客"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Jeklly搭建个人博客</span>
+        </a>
+      
+    
+  </div>
+
+        
+      </div>
+    </div>
+  
+        
+      </div>
+    </div>
+  
+    
+    
+    
+    <div class="category row nomargin-x">
+      <a class="category-item collapsed
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="开发工具"
+        id="heading-2c509530bf439a36168a86e21c160c06" role="tab" data-toggle="collapse" href="#collapse-2c509530bf439a36168a86e21c160c06"
+        aria-expanded="false"
+      >
+        开发工具
+        <span class="list-group-count"></span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+        <a href="/categories/%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7/" class="category-count col-2 col-md-1 col-xm-1">
+          <i class="iconfont icon-articles"></i>
+          <span>6</span>
+        </a>
+      
+      <div class="category-collapse collapse " id="collapse-2c509530bf439a36168a86e21c160c06"
+           role="tabpanel" aria-labelledby="heading-2c509530bf439a36168a86e21c160c06">
+        
+        
+          
+          
+  <div class="category-post-list">
+    
+    
+  </div>
+
+          
+  
+    
+    
+    
+    <div class="category-sub row nomargin-x">
+      <a class="category-subitem collapsed
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="Halcon"
+        id="heading-8c4fcff50407ab2921d898c4a2268fd1" role="tab" data-toggle="collapse" href="#collapse-8c4fcff50407ab2921d898c4a2268fd1"
+        aria-expanded="false"
+      >
+        Halcon
+        <span class="list-group-count"></span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+        <a href="/categories/%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7/Halcon/" class="category-count col-2 col-md-1 col-xm-1">
+          <i class="iconfont icon-articles"></i>
+          <span>4</span>
+        </a>
+      
+      <div class="category-collapse collapse " id="collapse-8c4fcff50407ab2921d898c4a2268fd1"
+           role="tabpanel" aria-labelledby="heading-8c4fcff50407ab2921d898c4a2268fd1">
+        
+        
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/posts/e553e068.html" title="基于HALCON的HSV颜色识别"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">基于HALCON的HSV颜色识别</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/10014ecd.html" title="Halcon角度测量"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Halcon角度测量</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/b1b010ea.html" title="Halcon-多个区域根据面积挑选想要的obj"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Halcon-多个区域根据面积挑选想要的obj</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/bd23ea3d.html" title="Halcon算子：最小外包矩形"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Halcon算子：最小外包矩形</span>
+        </a>
+      
+    
+  </div>
+
+        
+      </div>
+    </div>
+  
+    
+    
+    
+    <div class="category-sub row nomargin-x">
+      <a class="category-subitem collapsed
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="SublimeText3"
+        id="heading-1c1021ad9e463426fe5498f2d02a1fa5" role="tab" data-toggle="collapse" href="#collapse-1c1021ad9e463426fe5498f2d02a1fa5"
+        aria-expanded="false"
+      >
+        SublimeText3
+        <span class="list-group-count"></span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+        <a href="/categories/%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7/SublimeText3/" class="category-count col-2 col-md-1 col-xm-1">
+          <i class="iconfont icon-articles"></i>
+          <span>1</span>
+        </a>
+      
+      <div class="category-collapse collapse " id="collapse-1c1021ad9e463426fe5498f2d02a1fa5"
+           role="tabpanel" aria-labelledby="heading-1c1021ad9e463426fe5498f2d02a1fa5">
+        
+        
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/posts/e0b75f1e.html" title="SublimeText3配置C/C++开发环境——windows"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">SublimeText3配置C/C++开发环境——windows</span>
+        </a>
+      
+    
+  </div>
+
+        
+      </div>
+    </div>
+  
+    
+    
+    
+    <div class="category-sub row nomargin-x">
+      <a class="category-subitem collapsed
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="VSCode"
+        id="heading-92ce826772dd138cdcbd6cbc6d5b29c4" role="tab" data-toggle="collapse" href="#collapse-92ce826772dd138cdcbd6cbc6d5b29c4"
+        aria-expanded="false"
+      >
+        VSCode
+        <span class="list-group-count"></span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+        <a href="/categories/%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7/VSCode/" class="category-count col-2 col-md-1 col-xm-1">
+          <i class="iconfont icon-articles"></i>
+          <span>1</span>
+        </a>
+      
+      <div class="category-collapse collapse " id="collapse-92ce826772dd138cdcbd6cbc6d5b29c4"
+           role="tabpanel" aria-labelledby="heading-92ce826772dd138cdcbd6cbc6d5b29c4">
+        
+        
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/posts/55f95c30.html" title="Windows下安装配置VSCode"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Windows下安装配置VSCode</span>
+        </a>
+      
+    
+  </div>
+
+        
+      </div>
+    </div>
+  
+        
+      </div>
+    </div>
+  
+    
+    
+    
+    <div class="category row nomargin-x">
+      <a class="category-item collapsed
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="Git"
+        id="heading-0bcc70105ad279503e31fe7b3f47b665" role="tab" data-toggle="collapse" href="#collapse-0bcc70105ad279503e31fe7b3f47b665"
+        aria-expanded="false"
+      >
+        Git
+        <span class="list-group-count"></span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+        <a href="/categories/Git/" class="category-count col-2 col-md-1 col-xm-1">
+          <i class="iconfont icon-articles"></i>
+          <span>4</span>
+        </a>
+      
+      <div class="category-collapse collapse " id="collapse-0bcc70105ad279503e31fe7b3f47b665"
+           role="tabpanel" aria-labelledby="heading-0bcc70105ad279503e31fe7b3f47b665">
+        
+        
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/posts/e12a7cca.html" title="Github的SSH-KEY配置"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Github的SSH-KEY配置</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/1873ad4f.html" title="git add 增加文件，文件名乱码"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">git add 增加文件，文件名乱码</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/3e9442ff.html" title="解决Git每次push时输入用户名和密码"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">解决Git每次push时输入用户名和密码</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/a91eaa72.html" title="Git学习笔记"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">Git学习笔记</span>
+        </a>
+      
+    
+  </div>
+
+        
+      </div>
+    </div>
+  
+    
+    
+    
+    <div class="category row nomargin-x">
+      <a class="category-item collapsed
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="数学"
+        id="heading-6e65831863dbf272b7a65cd8df1a440d" role="tab" data-toggle="collapse" href="#collapse-6e65831863dbf272b7a65cd8df1a440d"
+        aria-expanded="false"
+      >
+        数学
+        <span class="list-group-count"></span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+        <a href="/categories/%E6%95%B0%E5%AD%A6/" class="category-count col-2 col-md-1 col-xm-1">
+          <i class="iconfont icon-articles"></i>
+          <span>3</span>
+        </a>
+      
+      <div class="category-collapse collapse " id="collapse-6e65831863dbf272b7a65cd8df1a440d"
+           role="tabpanel" aria-labelledby="heading-6e65831863dbf272b7a65cd8df1a440d">
+        
+        
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/posts/d2194e40.html" title="点到直线的距离"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">点到直线的距离</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/d3d0f6a5.html" title="绝对位置坐标转化为相对位置坐标"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">绝对位置坐标转化为相对位置坐标</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/3bec21fb.html" title="PID系数调节讲解"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">PID系数调节讲解</span>
+        </a>
+      
+    
+  </div>
+
+        
+      </div>
+    </div>
+  
+    
+    
+    
+    <div class="category row nomargin-x">
+      <a class="category-item collapsed
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="生活杂录"
+        id="heading-09c5ec8433553fc6b152d1f89d7ee57e" role="tab" data-toggle="collapse" href="#collapse-09c5ec8433553fc6b152d1f89d7ee57e"
+        aria-expanded="false"
+      >
+        生活杂录
+        <span class="list-group-count"></span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+        <a href="/categories/%E7%94%9F%E6%B4%BB%E6%9D%82%E5%BD%95/" class="category-count col-2 col-md-1 col-xm-1">
+          <i class="iconfont icon-articles"></i>
+          <span>2</span>
+        </a>
+      
+      <div class="category-collapse collapse " id="collapse-09c5ec8433553fc6b152d1f89d7ee57e"
+           role="tabpanel" aria-labelledby="heading-09c5ec8433553fc6b152d1f89d7ee57e">
+        
+        
+          
+          
+  <div class="category-post-list">
+    
+    
+  </div>
+
+          
+  
+    
+    
+    
+    <div class="category-sub row nomargin-x">
+      <a class="category-subitem collapsed
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="实用小技能"
+        id="heading-626f07c947926152d5181cf60098588f" role="tab" data-toggle="collapse" href="#collapse-626f07c947926152d5181cf60098588f"
+        aria-expanded="false"
+      >
+        实用小技能
+        <span class="list-group-count"></span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+        <a href="/categories/%E7%94%9F%E6%B4%BB%E6%9D%82%E5%BD%95/%E5%AE%9E%E7%94%A8%E5%B0%8F%E6%8A%80%E8%83%BD/" class="category-count col-2 col-md-1 col-xm-1">
+          <i class="iconfont icon-articles"></i>
+          <span>1</span>
+        </a>
+      
+      <div class="category-collapse collapse " id="collapse-626f07c947926152d5181cf60098588f"
+           role="tabpanel" aria-labelledby="heading-626f07c947926152d5181cf60098588f">
+        
+        
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/posts/e1a92981.html" title="WIFI无线桥接,信号放大"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">WIFI无线桥接,信号放大</span>
+        </a>
+      
+    
+  </div>
+
+        
+      </div>
+    </div>
+  
+    
+    
+    
+    <div class="category-sub row nomargin-x">
+      <a class="category-subitem collapsed
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="随想随谈"
+        id="heading-97c892815aaf977e83b55a0a78535eb8" role="tab" data-toggle="collapse" href="#collapse-97c892815aaf977e83b55a0a78535eb8"
+        aria-expanded="false"
+      >
+        随想随谈
+        <span class="list-group-count"></span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+        <a href="/categories/%E7%94%9F%E6%B4%BB%E6%9D%82%E5%BD%95/%E9%9A%8F%E6%83%B3%E9%9A%8F%E8%B0%88/" class="category-count col-2 col-md-1 col-xm-1">
+          <i class="iconfont icon-articles"></i>
+          <span>1</span>
+        </a>
+      
+      <div class="category-collapse collapse " id="collapse-97c892815aaf977e83b55a0a78535eb8"
+           role="tabpanel" aria-labelledby="heading-97c892815aaf977e83b55a0a78535eb8">
+        
+        
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/posts/6ab2288.html" title="趁年轻，加油&#34;肝&#34;"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">趁年轻，加油&#34;肝&#34;</span>
+        </a>
+      
+    
+  </div>
+
+        
+      </div>
+    </div>
+  
+        
+      </div>
+    </div>
+  
+</div>
+
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

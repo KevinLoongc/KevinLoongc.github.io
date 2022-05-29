@@ -1,0 +1,1114 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Kevin Loongc">
+  <meta name="keywords" content="云杂货店, KevinL, KevinLoongc, QT, ROS, SLAM, 嵌入式">
+  
+    <meta name="description" content="随遇而安，奇遇良人">
+<meta property="og:type" content="website">
+<meta property="og:title" content="云杂货店">
+<meta property="og:url" content="https://kevinloongc.github.io/page/4/index.html">
+<meta property="og:site_name" content="云杂货店">
+<meta property="og:description" content="随遇而安，奇遇良人">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:author" content="Kevin Loongc">
+<meta property="article:tag" content="云杂货店, KevinL, KevinLoongc, QT, ROS, SLAM, 嵌入式">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>云杂货店</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"kevinloongc.github.io","root":"/","version":"1.9.0","typing":{"enable":true,"typeSpeed":80,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":false},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 100vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>云杂货店</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/home-bg.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="凋谢是真实的，盛开只是一种过去。"></span>
+          
+        </div>
+
+        
+      </div>
+
+      
+        <div class="scroll-down-bar">
+          <i class="iconfont icon-arrowdown"></i>
+        </div>
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      <div class="container nopadding-x-md">
+        <div id="board"
+          style="margin-top: 0">
+          
+          <div class="container">
+            <div class="row">
+              <div class="col-12 col-md-10 m-auto">
+                
+
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/posts/55f95c30.html" target="_self">
+          <img src="https://s3.ax1x.com/2021/03/02/6k2lXn.jpg" srcset="/img/loading.gif" lazyload alt="Windows下安装配置VSCode">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/posts/55f95c30.html" target="_self">
+          Windows下安装配置VSCode
+        </a>
+      </h1>
+
+      <a class="index-excerpt" href="/posts/55f95c30.html" target="_self">
+        <div>
+          
+          Step 1：下载与安装点击VSCode进入官网， 选择适合自己的版本下载安，自行安装。  Step 2：相关插件推荐 Chinese中文语言插件。 C&#x2F;C++代码补齐，符号跳转。 C++ intellisense自动代码补全；实时错误检查；代码改进建议。 bracket pair colorizer给括号上色，避免一层层的括号难看，默认配置就行。 Todo Tree跟踪文件的todo，fixme
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-04-06 15:56" pubdate>
+              2021-04-06
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7/" class="category-chain-item">开发工具</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7/VSCode/" class="category-chain-item">VSCode</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/VSCode/">#VSCode</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/posts/4b39c7e8.html" target="_self">
+          <img src="https://s1.ax1x.com/2022/05/08/O1nlSx.png" srcset="/img/loading.gif" lazyload alt="QT设置图片自适应QLable的大小">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/posts/4b39c7e8.html" target="_self">
+          QT设置图片自适应QLable的大小
+        </a>
+      </h1>
+
+      <a class="index-excerpt" href="/posts/4b39c7e8.html" target="_self">
+        <div>
+          
+          今天在编写一个qt demo程序，使用label显示图片时遇到一个问题：图片不能适应label的大小，因此显示的图片很难看。经查找资料，使用下面的方法解决问题，直接看代码： 1234QPixmap *pixmap &#x3D; new QPixmap(&quot;:&#x2F;pic&#x2F;src&#x2F;log&#x2F;2.jpeg&quot;);pixmap-&gt;scaled(ui-&gt;label-&gt;size(), Qt
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-03-24 10:36" pubdate>
+              2021-03-24
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/QT/" class="category-chain-item">QT</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/QLable/">#QLable</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/posts/905019ed.html" target="_self">
+          <img src="https://s1.ax1x.com/2022/05/08/O1mp26.png" srcset="/img/loading.gif" lazyload alt="【C++】清空cin缓存实现暂停并按回车继续">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/posts/905019ed.html" target="_self">
+          【C++】清空cin缓存实现暂停并按回车继续
+        </a>
+      </h1>
+
+      <a class="index-excerpt" href="/posts/905019ed.html" target="_self">
+        <div>
+          
+          在Windows下可以直接使用下面两句实现程序暂停并按回车清屏继续功能： 12system(&quot;pause&quot;);system(&quot;cls&quot;);    在Linux下，可以使用下面代码实现通用的效果： 1234cin.clear();cin.ignore(1, &amp;#x27;\n&amp;#x27;);cin.get();system(&quot;clear&quot;);
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-03-23 15:40" pubdate>
+              2021-03-23
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E7%BC%96%E7%A8%8B%E5%AD%A6%E4%B9%A0/" class="category-chain-item">编程学习</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E7%BC%96%E7%A8%8B%E5%AD%A6%E4%B9%A0/C/" class="category-chain-item">C++</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/cin/">#cin</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/posts/cf50139f.html" target="_self">
+          <img src="https://s1.ax1x.com/2022/05/08/O1nlSx.png" srcset="/img/loading.gif" lazyload alt="Qt按键失能的时候，按键灰度显示">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/posts/cf50139f.html" target="_self">
+          Qt按键失能的时候，按键灰度显示
+        </a>
+      </h1>
+
+      <a class="index-excerpt" href="/posts/cf50139f.html" target="_self">
+        <div>
+          
+          直接放出样例： 1234567QPushButton:enabled&amp;#123;background-color:rgb(46, 52, 54);color: white;   border-radius: 10px;  border: 2px groove gray; border-style: outset;&amp;#125;QPushButton:disabled&amp;#123;background-
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-03-19 16:52" pubdate>
+              2021-03-19
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/QT/" class="category-chain-item">QT</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/QPushButton/">#QPushButton</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/posts/93012594.html" target="_self">
+          <img src="https://s3.ax1x.com/2021/03/19/6WMRdH.png" srcset="/img/loading.gif" lazyload alt="多目录工程的CmakeLists.txt编写">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/posts/93012594.html" target="_self">
+          多目录工程的CmakeLists.txt编写
+        </a>
+      </h1>
+
+      <a class="index-excerpt" href="/posts/93012594.html" target="_self">
+        <div>
+          
+          绪开发一个cmake项目工程，一般会有多级目录，进行代码分类，这里以一个简单的例子介绍一下多目录工程的CmakeLists.txt编写。 功能为print.cpp调用hello.cpp 的hello()函数，main.cpp调用print.cpp 的print()函数。 1、工程目录 一级目录下有整体项目的CMakeLists.txt，子目录也分别有各自的CMakeLists.txt 2、主函数m
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-03-19 13:50" pubdate>
+              2021-03-19
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E7%BC%96%E7%A8%8B%E5%AD%A6%E4%B9%A0/" class="category-chain-item">编程学习</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E7%BC%96%E7%A8%8B%E5%AD%A6%E4%B9%A0/CMake/" class="category-chain-item">CMake</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/CMake/">#CMake</a>
+            
+              <a href="/tags/CMakeLists/">#CMakeLists</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/posts/58c3d271.html" target="_self">
+          <img src="https://s1.ax1x.com/2022/05/08/O1mp26.png" srcset="/img/loading.gif" lazyload alt="【C++】virtual method but non-virtual destructor">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/posts/58c3d271.html" target="_self">
+          【C++】virtual method but non-virtual destructor
+        </a>
+      </h1>
+
+      <a class="index-excerpt" href="/posts/58c3d271.html" target="_self">
+        <div>
+          
+          有虚函数（纯虚函数）就应该有虚析构函数。 1234567891011class Element&amp;#123;public:	virtual ~Element()	&amp;#123;		&#x2F;&#x2F;	&amp;#125;     virtual bool read()  &#x3D; 0;    virtual bool write() &#x3D; 0;&amp;#125;;  如果没有虚析构函数，使用该类声明指针，然后在删除该指针的时候会出现下面
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-03-18 20:40" pubdate>
+              2021-03-18
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E7%BC%96%E7%A8%8B%E5%AD%A6%E4%B9%A0/" class="category-chain-item">编程学习</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E7%BC%96%E7%A8%8B%E5%AD%A6%E4%B9%A0/C/" class="category-chain-item">C++</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/C-C/">#C/C++</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/posts/efb867c3.html" target="_self">
+          <img src="https://s3.ax1x.com/2021/03/04/6VTaQ0.jpg" srcset="/img/loading.gif" lazyload alt="CMakeLists.txt基本语法说明">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/posts/efb867c3.html" target="_self">
+          CMakeLists.txt基本语法说明
+        </a>
+      </h1>
+
+      <a class="index-excerpt" href="/posts/efb867c3.html" target="_self">
+        <div>
+          
+          前言最近开始使用CMake进行构建项目工程，CMake工程必有一个CMakeLists.txt配置文件，这里记录一些CMakeLists.txt的基本语法。 俗话说：好记性不如烂笔头。更何况我还没有好记性呢～ 常用指令1、cmake_minimum_required语法： cmake_minimum_required(cmake_Version)**指令功能: ** 指定cmake最小版本**例子
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-03-18 19:20" pubdate>
+              2021-03-18
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E7%BC%96%E7%A8%8B%E5%AD%A6%E4%B9%A0/" class="category-chain-item">编程学习</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E7%BC%96%E7%A8%8B%E5%AD%A6%E4%B9%A0/CMake/" class="category-chain-item">CMake</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/CMake/">#CMake</a>
+            
+              <a href="/tags/CMakeLists/">#CMakeLists</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/posts/77e41783.html" target="_self">
+          <img src="https://s1.ax1x.com/2022/05/08/O1nlSx.png" srcset="/img/loading.gif" lazyload alt="QT设置按钮按下后变成不可按">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/posts/77e41783.html" target="_self">
+          QT设置按钮按下后变成不可按
+        </a>
+      </h1>
+
+      <a class="index-excerpt" href="/posts/77e41783.html" target="_self">
+        <div>
+          
+          今天在编写一个demo程序，我想实现QPushButton按下后立即变成灰色（即不可按第二次了），发现在按钮槽函数中使用setEnabled(false);设置并不成功，在网上查找资料，发现只需要在后面加多一句代码qApp-&gt;processEvents();就行了。。。 例子： 12ui-&gt;pushButton_Connect-&gt;setEnabled(false);
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-03-18 17:36" pubdate>
+              2021-03-18
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/QT/" class="category-chain-item">QT</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/QPushButton/">#QPushButton</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/posts/f83bec93.html" target="_self">
+          <img src="https://s1.ax1x.com/2022/05/08/O1mp26.png" srcset="/img/loading.gif" lazyload alt="C/C++解决宏定义冲突的问题">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/posts/f83bec93.html" target="_self">
+          C/C++解决宏定义冲突的问题
+        </a>
+      </h1>
+
+      <a class="index-excerpt" href="/posts/f83bec93.html" target="_self">
+        <div>
+          
+          问题平时在编写C&#x2F;C++程序过程中，偶尔会出现重复宏定义的情况。比如：A文件中有宏定义 MAX，B文件中也有宏定义 MAX，但是还需要包含文件A，这个时候就会发生宏定义冲突问题。 处理方法 修改其中一个文件的宏定义名称，但如果是大型项目工程的话不推荐，可能会引起其他问题。  使用下面代码段即可完美解决 1234567#include &quot;A&quot;#ifdef MAX		&#x2F;&#x2F;如果已经定
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-03-17 19:20" pubdate>
+              2021-03-17
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E7%BC%96%E7%A8%8B%E5%AD%A6%E4%B9%A0/" class="category-chain-item">编程学习</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E7%BC%96%E7%A8%8B%E5%AD%A6%E4%B9%A0/C/" class="category-chain-item">C++</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/C-C/">#C/C++</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/posts/d11f11cc.html" target="_self">
+          <img src="https://s1.ax1x.com/2022/05/08/O1nWhn.png" srcset="/img/loading.gif" lazyload alt="Ubuntu为.APPImage可执行文件创建桌面快捷方式">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/posts/d11f11cc.html" target="_self">
+          Ubuntu为.APPImage可执行文件创建桌面快捷方式
+        </a>
+      </h1>
+
+      <a class="index-excerpt" href="/posts/d11f11cc.html" target="_self">
+        <div>
+          
+          Step 1：赋予权限首先需要给.APPImage文件赋予执行权限： 1sudo chmod +x Motrix.APPImage    Step 2：创建快捷方式 自行下载桌面图标，图片格式任意，如：png，jpg等。  创建快捷方式文件 12cd &#x2F;usr&#x2F;share&#x2F;applications&#x2F;sudo gedit Motrix.desktop 将如下信息复制 1234567[Desktop
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-03-17 15:26" pubdate>
+              2021-03-17
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Ubuntu/" class="category-chain-item">Ubuntu</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/Ubuntu/Software/" class="category-chain-item">Software</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/APPImage/">#APPImage</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+
+
+  <nav aria-label="navigation">
+    <span class="pagination" id="pagination">
+      <a class="extend prev" rel="prev" href="/page/3/#board"><i class="iconfont icon-arrowleft"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/#board">2</a><a class="page-number" href="/page/3/#board">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/#board">5</a><a class="page-number" href="/page/6/#board">6</a><span class="space">&hellip;</span><a class="page-number" href="/page/18/#board">18</a><a class="extend next" rel="next" href="/page/5/#board"><i class="iconfont icon-arrowright"></i></a>
+    </span>
+  </nav>
+
+
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

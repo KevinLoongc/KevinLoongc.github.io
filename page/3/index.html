@@ -1,0 +1,1085 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Kevin Loongc">
+  <meta name="keywords" content="云杂货店, KevinL, KevinLoongc, QT, ROS, SLAM, 嵌入式">
+  
+    <meta name="description" content="随遇而安，奇遇良人">
+<meta property="og:type" content="website">
+<meta property="og:title" content="云杂货店">
+<meta property="og:url" content="https://kevinloongc.github.io/page/3/index.html">
+<meta property="og:site_name" content="云杂货店">
+<meta property="og:description" content="随遇而安，奇遇良人">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:author" content="Kevin Loongc">
+<meta property="article:tag" content="云杂货店, KevinL, KevinLoongc, QT, ROS, SLAM, 嵌入式">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>云杂货店</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"kevinloongc.github.io","root":"/","version":"1.9.0","typing":{"enable":true,"typeSpeed":80,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":false},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 100vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>云杂货店</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/home-bg.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="凋谢是真实的，盛开只是一种过去。"></span>
+          
+        </div>
+
+        
+      </div>
+
+      
+        <div class="scroll-down-bar">
+          <i class="iconfont icon-arrowdown"></i>
+        </div>
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      <div class="container nopadding-x-md">
+        <div id="board"
+          style="margin-top: 0">
+          
+          <div class="container">
+            <div class="row">
+              <div class="col-12 col-md-10 m-auto">
+                
+
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/posts/f113bb6a.html" target="_self">
+          <img src="https://s1.ax1x.com/2022/05/08/O1uabF.jpg" srcset="/img/loading.gif" lazyload alt="Butterfly魔改：动态分类条">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/posts/f113bb6a.html" target="_self">
+          Butterfly魔改：动态分类条
+        </a>
+      </h1>
+
+      <a class="index-excerpt" href="/posts/f113bb6a.html" target="_self">
+        <div>
+          
+          直接按照张洪老师的教程来弄就行了。 Butterfly魔改添加动态分类条,
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-11-14 15:00" pubdate>
+              2021-11-14
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%8D%9A%E5%AE%A2%E7%9B%B8%E5%85%B3/" class="category-chain-item">博客相关</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E5%8D%9A%E5%AE%A2%E7%9B%B8%E5%85%B3/Hexo/" class="category-chain-item">Hexo</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Hexo/">#Hexo</a>
+            
+              <a href="/tags/Butterfly/">#Butterfly</a>
+            
+              <a href="/tags/%E8%BD%AC%E8%BD%BD/">#转载</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/posts/a6409a0f.html" target="_self">
+          <img src="https://s1.ax1x.com/2022/05/08/O1uabF.jpg" srcset="/img/loading.gif" lazyload alt="Butterfly主题文章标签外挂">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/posts/a6409a0f.html" target="_self">
+          Butterfly主题文章标签外挂
+        </a>
+      </h1>
+
+      <a class="index-excerpt" href="/posts/a6409a0f.html" target="_self">
+        <div>
+          
+          原文链接：https:&#x2F;&#x2F;butterfly.js.org&#x2F;posts&#x2F;4aa8abbe&#x2F;#標籤外掛（Tag-Plugins）https:&#x2F;&#x2F;akilar.top&#x2F;posts&#x2F;615e2dec
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-11-12 17:00" pubdate>
+              2021-11-12
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%8D%9A%E5%AE%A2%E7%9B%B8%E5%85%B3/" class="category-chain-item">博客相关</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E5%8D%9A%E5%AE%A2%E7%9B%B8%E5%85%B3/Hexo/" class="category-chain-item">Hexo</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Hexo/">#Hexo</a>
+            
+              <a href="/tags/Tag-Plugins/">#Tag Plugins</a>
+            
+              <a href="/tags/Butterfly/">#Butterfly</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/posts/898a4e86.html" target="_self">
+          <img src="https://s1.ax1x.com/2022/05/08/O1uabF.jpg" srcset="/img/loading.gif" lazyload alt="Hexo + Butterfly 异地维护更新">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/posts/898a4e86.html" target="_self">
+          Hexo + Butterfly 异地维护更新
+        </a>
+      </h1>
+
+      <a class="index-excerpt" href="/posts/898a4e86.html" target="_self">
+        <div>
+          
+          Hexo 使用了大量npm插件，有个node_modules目录无法git push到 Github 等网站保存。&#x2F;themes&#x2F;butterfly&#x2F; 下的主题文件夹，你会发现同样无法 git push 到 Github。这是因为，butterfly 是你克隆原作者的仓库，不能嵌套 push。                            针对 1，我们只用另一台
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-11-12 13:46" pubdate>
+              2021-11-12
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%8D%9A%E5%AE%A2%E7%9B%B8%E5%85%B3/" class="category-chain-item">博客相关</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E5%8D%9A%E5%AE%A2%E7%9B%B8%E5%85%B3/Hexo/" class="category-chain-item">Hexo</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Hexo/">#Hexo</a>
+            
+              <a href="/tags/Butterfly/">#Butterfly</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/posts/e12a7cca.html" target="_self">
+          <img src="https://s1.ax1x.com/2022/05/08/O1mLSP.png" srcset="/img/loading.gif" lazyload alt="Github的SSH-KEY配置">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/posts/e12a7cca.html" target="_self">
+          Github的SSH-KEY配置
+        </a>
+      </h1>
+
+      <a class="index-excerpt" href="/posts/e12a7cca.html" target="_self">
+        <div>
+          
+          同一个Github账号下不同仓库使用不同的SSH KEY，或者一台机器上管理多个Github帐号的SSH Key配置操作
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-09-08 13:50" pubdate>
+              2021-09-08
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Git/" class="category-chain-item">Git</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Git/">#Git</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/posts/8ca26d8c.html" target="_self">
+          <img src="https://s1.ax1x.com/2022/05/08/O1nlSx.png" srcset="/img/loading.gif" lazyload alt="qt发布程序时将依赖的dll分开放在不同目录下">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/posts/8ca26d8c.html" target="_self">
+          qt发布程序时将依赖的dll分开放在不同目录下
+        </a>
+      </h1>
+
+      <a class="index-excerpt" href="/posts/8ca26d8c.html" target="_self">
+        <div>
+          
+          前言QT发布的程序，exe可执行程序与dll文件都在同一个目录下，这样根目录看上去很混乱，不方便后续升级管理，现在想把那些dll文件，放到一个文件夹下，这个文件夹和exe在同一个目录下。网上搜索了许多资料，都没有找到实际有用的信息，不过从网上混乱的资料中，最终还是筛选到了一些有用的信息资料，本文记录以下具体的实现方法。 系统环境：  Windows 10 Qt5.9.3  方法这里采用了使用另一个
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-07-01 11:14" pubdate>
+              2021-07-01
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/QT/" class="category-chain-item">QT</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/posts/c8226e0d.html" target="_self">
+          <img src="https://s1.ax1x.com/2022/05/08/O1nlSx.png" srcset="/img/loading.gif" lazyload alt="将QT界面程序封装成动态库DLL">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/posts/c8226e0d.html" target="_self">
+          将QT界面程序封装成动态库DLL
+        </a>
+      </h1>
+
+      <a class="index-excerpt" href="/posts/c8226e0d.html" target="_self">
+        <div>
+          
+          本文记录如何将qt界面程序封装为动态链接库DLL的方法。
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-06-30 11:14" pubdate>
+              2021-06-30
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/QT/" class="category-chain-item">QT</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/DLL/">#DLL</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/posts/9ef1588d.html" target="_self">
+          <img src="https://s1.ax1x.com/2022/05/08/O1nlSx.png" srcset="/img/loading.gif" lazyload alt="Qt程序最小化或WIN+D后再打开，界面部分或全部假死的问题">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/posts/9ef1588d.html" target="_self">
+          Qt程序最小化或WIN+D后再打开，界面部分或全部假死的问题
+        </a>
+      </h1>
+
+      <a class="index-excerpt" href="/posts/9ef1588d.html" target="_self">
+        <div>
+          
+          版权声明：本文为CSDN博主「52_赫兹的鲸」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。原文链接：https:&#x2F;&#x2F;blog.csdn.net&#x2F;qq_40194498&#x2F;article&#x2F;details&#x2F;109511055  原因在最小化窗口属性后，Qt :: WA_Mapped从QWidget中删除（可以在qwidget.cpp中设置断点到setAttribu
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-06-29 11:36" pubdate>
+              2021-06-29
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/QT/" class="category-chain-item">QT</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/posts/a29dd9bc.html" target="_self">
+          <img src="https://s1.ax1x.com/2022/05/08/O1nlSx.png" srcset="/img/loading.gif" lazyload alt="Qt之程序最小化托盘显示及操作">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/posts/a29dd9bc.html" target="_self">
+          Qt之程序最小化托盘显示及操作
+        </a>
+      </h1>
+
+      <a class="index-excerpt" href="/posts/a29dd9bc.html" target="_self">
+        <div>
+          
+          版权声明：本文为CSDN博主「祝云飞」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。原文链接：https:&#x2F;&#x2F;blog.csdn.net&#x2F;zhuyunfei&#x2F;article&#x2F;details&#x2F;51433822  一、功能说明对于GUI程序，如果想要实现当最小化时，程序从任务栏消失，在系统托盘显示一个图标，表示此程序，并能在托盘内通过双击或者菜单使程序界面恢复。
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-06-11 16:36" pubdate>
+              2021-06-11
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/QT/" class="category-chain-item">QT</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/QSystemTrayIcon/">#QSystemTrayIcon</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/posts/47ba4923.html" target="_self">
+          <img src="https://s1.ax1x.com/2022/05/08/O1nlSx.png" srcset="/img/loading.gif" lazyload alt="Qt中QTabWidget隐藏某些tab">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/posts/47ba4923.html" target="_self">
+          Qt中QTabWidget隐藏某些tab
+        </a>
+      </h1>
+
+      <a class="index-excerpt" href="/posts/47ba4923.html" target="_self">
+        <div>
+          
+          前言项目开发的需要，对于一个QTabWidget，有时需要隐藏掉tab，需要再显示出来。这里记录下应对这种情况的实现方法。 实现方法123456QString tab_show_stytle &#x3D; QString(&quot;QTabBar::tab&amp;#123;background-color: rgb(0, 198, 198);color: rgb(255, 255, 255);width:45p
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-06-11 11:36" pubdate>
+              2021-06-11
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/QT/" class="category-chain-item">QT</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/QTabWidget/">#QTabWidget</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/posts/224aa90f.html" target="_self">
+          <img src="https://s1.ax1x.com/2020/07/05/Upc4fJ.jpg" srcset="/img/loading.gif" lazyload alt="SublimeText3 package Install 无法安装插件">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/posts/224aa90f.html" target="_self">
+          SublimeText3 package Install 无法安装插件
+        </a>
+      </h1>
+
+      <a class="index-excerpt" href="/posts/224aa90f.html" target="_self">
+        <div>
+          
+          原文链接：https:&#x2F;&#x2F;www.jianshu.com&#x2F;p&#x2F;c2f41ef12834  不啰嗦，上方法：   打开配置文件，配上地址即可： 1234&quot;channels&quot;:    [        &quot;https:&#x2F;&#x2F;github.com&#x2F;JavenZ&#x2F;channel_v3&#x2F;raw&#x2F;master&#x2F;channel_v3.json&quot;    ],  以下两个地址任
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-04-15 09:34" pubdate>
+              2021-04-15
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Ubuntu/" class="category-chain-item">Ubuntu</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/Ubuntu/Software/" class="category-chain-item">Software</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Sublime-Text3/">#Sublime Text3</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+
+
+  <nav aria-label="navigation">
+    <span class="pagination" id="pagination">
+      <a class="extend prev" rel="prev" href="/page/2/#board"><i class="iconfont icon-arrowleft"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/#board">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/#board">4</a><a class="page-number" href="/page/5/#board">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/18/#board">18</a><a class="extend next" rel="next" href="/page/4/#board"><i class="iconfont icon-arrowright"></i></a>
+    </span>
+  </nav>
+
+
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

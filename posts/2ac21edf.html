@@ -1,0 +1,926 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Kevin Loongc">
+  <meta name="keywords" content="云杂货店, KevinL, KevinLoongc, QT, ROS, SLAM, 嵌入式">
+  
+    <meta name="description" content="使用STM32F103C8T6读取薄膜矩阵键盘（列扫描），串口显示键盘按下对应的按键值。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="STM32F103学习笔记——薄膜矩阵键盘扫描">
+<meta property="og:url" content="https://kevinloongc.github.io/posts/2ac21edf.html">
+<meta property="og:site_name" content="云杂货店">
+<meta property="og:description" content="使用STM32F103C8T6读取薄膜矩阵键盘（列扫描），串口显示键盘按下对应的按键值。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.ax1x.com/2019/12/18/QHy3ZV.png">
+<meta property="article:published_time" content="2019-12-16T02:46:25.000Z">
+<meta property="article:modified_time" content="2022-05-29T04:54:00.857Z">
+<meta property="article:author" content="Kevin Loongc">
+<meta property="article:tag" content="STM32">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://s2.ax1x.com/2019/12/18/QHy3ZV.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>STM32F103学习笔记——薄膜矩阵键盘扫描 - 云杂货店</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"kevinloongc.github.io","root":"/","version":"1.9.0","typing":{"enable":true,"typeSpeed":80,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":false},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>云杂货店</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="STM32F103学习笔记——薄膜矩阵键盘扫描"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2019-12-16 10:46" pubdate>
+          2019年12月16日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          13k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          105 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar category-bar" style="margin-right: -1rem">
+    
+
+
+
+
+
+<div class="category-list">
+  
+  
+    
+    
+    
+    <div class="category row nomargin-x">
+      <a class="category-item 
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="STM32"
+        id="heading-77c96659ca42cabf0aadc4168ae3da3f" role="tab" data-toggle="collapse" href="#collapse-77c96659ca42cabf0aadc4168ae3da3f"
+        aria-expanded="true"
+      >
+        STM32
+        <span class="list-group-count">(10)</span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+      <div class="category-collapse collapse show" id="collapse-77c96659ca42cabf0aadc4168ae3da3f"
+           role="tabpanel" aria-labelledby="heading-77c96659ca42cabf0aadc4168ae3da3f">
+        
+        
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/posts/5803b452.html" title="STM32F103学习笔记——AS608指纹识别模块的使用"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">STM32F103学习笔记——AS608指纹识别模块的使用</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/b1f7002e.html" title="STM32F103学习笔记——MPU6050数据读取与倾角检测"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">STM32F103学习笔记——MPU6050数据读取与倾角检测</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/3dca690f.html" title="STM32F103学习笔记——RC522射频卡"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">STM32F103学习笔记——RC522射频卡</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/2ac21edf.html" title="STM32F103学习笔记——薄膜矩阵键盘扫描"
+           class="list-group-item list-group-item-action
+           active">
+          <span class="category-post">STM32F103学习笔记——薄膜矩阵键盘扫描</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/9820a5cb.html" title="STM32F103读写内部flash"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">STM32F103读写内部flash</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/37488.html" title="STM32F429开发板学习笔记"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">STM32F429开发板学习笔记</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/6c941452.html" title="倒立摆系统设计"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">倒立摆系统设计</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/4588.html" title="双轮平衡小车项目"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">双轮平衡小车项目</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/6304ed30.html" title="基于STM32的智能门锁系统设计"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">基于STM32的智能门锁系统设计</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/9e207.html" title="模拟电磁曲射炮设计"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">模拟电磁曲射炮设计</span>
+        </a>
+      
+    
+  </div>
+
+        
+      </div>
+    </div>
+  
+</div>
+
+
+  </aside>
+
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">STM32F103学习笔记——薄膜矩阵键盘扫描</h1>
+            
+              <p class="note note-info">
+                
+                  
+                    本文最后更新于：2022年5月29日 下午
+                  
+                
+              </p>
+            
+            <div class="markdown-body">
+              
+              <p>使用STM32F103C8T6读取薄膜矩阵键盘（列扫描），串口显示键盘按下对应的按键值。</p>
+<span id="more"></span>
+
+<h3 id="一、薄膜矩阵键盘介绍"><a href="#一、薄膜矩阵键盘介绍" class="headerlink" title="一、薄膜矩阵键盘介绍"></a>一、薄膜矩阵键盘介绍</h3><p>我买的薄膜矩阵键盘，原理图如下：</p>
+<p><img src="https://s2.ax1x.com/2019/12/18/QHy3ZV.png" srcset="/img/loading.gif" lazyload alt="QHy3ZV.png"></p>
+<p>左边的为行，右边的为列，扫描的原理：行为输入，列为输出。先让第一列为高电平，其他列为低电平，读取行的电平进行判断哪一个按键被按下；然后再设置第二列为高电平，其他列为低电平，再读取行的电平进行判断·····。</p>
+<h3 id="二、驱动代码"><a href="#二、驱动代码" class="headerlink" title="二、驱动代码"></a>二、驱动代码</h3><h4 id="1，矩阵键盘"><a href="#1，矩阵键盘" class="headerlink" title="1，矩阵键盘"></a>1，矩阵键盘</h4><h5 id="（1）keyboard-h"><a href="#（1）keyboard-h" class="headerlink" title="（1）keyboard.h"></a>（1）keyboard.h</h5><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-meta">#<span class="hljs-keyword">ifndef</span> __KEYBOARD_H</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> __KEYBOARD_H</span><br><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;stm32f10x.h&quot;</span></span><br><br><span class="hljs-comment">//Pin definition</span><br><span class="hljs-comment">/*******************************************************/</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> COLUMN_KEY_GPIO_PORT				GPIOA</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> COLUMN_KEY_GPIO_CLK					RCC_APB2Periph_GPIOA</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> C1_PIN								GPIO_Pin_8</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> C2_PIN								GPIO_Pin_9</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> C3_PIN								GPIO_Pin_10</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> C4_PIN								GPIO_Pin_11</span><br><br><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> ROW_KEY_GPIO_PORT					GPIOB</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> ROW_KEY_GPIO_CLK					RCC_APB2Periph_GPIOB</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> R1_PIN								GPIO_Pin_12</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> R2_PIN								GPIO_Pin_13</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> R3_PIN								GPIO_Pin_14</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> R4_PIN								GPIO_Pin_15</span><br><span class="hljs-comment">/************************************************************/</span><br><br><span class="hljs-type">void</span> <span class="hljs-title function_">KeyBoard_Init</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span>;<br><span class="hljs-type">char</span> <span class="hljs-title function_">Key_scan</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span>;<br><br><span class="hljs-meta">#<span class="hljs-keyword">endif</span>	<span class="hljs-comment">/* __KEYBOARD_H */</span></span><br><br></code></pre></td></tr></table></figure>
+
+<h5 id="（2）keyboard-c"><a href="#（2）keyboard-c" class="headerlink" title="（2）keyboard.c"></a>（2）keyboard.c</h5><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">/**</span><br><span class="hljs-comment">  ******************************************************************************</span><br><span class="hljs-comment">  * @file    keyboard.c</span><br><span class="hljs-comment">  * @author  Soso</span><br><span class="hljs-comment">  * @date    2019-12-18</span><br><span class="hljs-comment">  * @brief   Matrix keyboard driver configuration.</span><br><span class="hljs-comment">  ******************************************************************************</span><br><span class="hljs-comment">  */</span><br><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;keyboard.h&quot;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;systick.h&quot;</span></span><br><br><span class="hljs-keyword">extern</span> <span class="hljs-type">uint8_t</span> key_flag;<br><br><span class="hljs-type">void</span> <span class="hljs-title function_">KeyBoard_Init</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span><br>&#123;<br>	GPIO_InitTypeDef GPIO_InitStruct;<br>	<br>	<span class="hljs-comment">/* Enable KeyGPIO port clock */</span><br>	RCC_APB2PeriphClockCmd(COLUMN_KEY_GPIO_CLK|ROW_KEY_GPIO_CLK,ENABLE);<br>	<br>	<span class="hljs-comment">/* Column Key GPIO Configuration */</span><br>	GPIO_InitStruct.GPIO_Pin = C1_PIN|C2_PIN|C3_PIN|C4_PIN;<br>	GPIO_InitStruct.GPIO_Speed = GPIO_Speed_10MHz;<br>	GPIO_InitStruct.GPIO_Mode = GPIO_Mode_Out_PP;<br>	GPIO_Init(COLUMN_KEY_GPIO_PORT,&amp;GPIO_InitStruct);<br>	<br>	<span class="hljs-comment">/* Row Key GPIO Configuration */</span><br>	GPIO_InitStruct.GPIO_Pin = R1_PIN|R2_PIN|R3_PIN|R4_PIN;<br>	GPIO_InitStruct.GPIO_Speed = GPIO_Speed_10MHz;<br>	GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IPD;<br>	GPIO_Init(ROW_KEY_GPIO_PORT,&amp;GPIO_InitStruct);<br>	<br>	GPIO_SetBits(COLUMN_KEY_GPIO_PORT,C1_PIN|C2_PIN|C3_PIN|C4_PIN);<br>	GPIO_ResetBits(ROW_KEY_GPIO_PORT,R1_PIN|R2_PIN|R3_PIN|R4_PIN);<br>&#125;<br><br><br><span class="hljs-type">char</span> <span class="hljs-title function_">Key_scan</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span><br>&#123;<br>	<span class="hljs-type">uint16_t</span> temp = <span class="hljs-number">0</span>;<br>	<span class="hljs-type">char</span> Key_val = <span class="hljs-number">0</span>;<br>	<br>	<span class="hljs-comment">/*************************** Column 1 ***************************/</span><br>	GPIO_SetBits(COLUMN_KEY_GPIO_PORT,C1_PIN);<br>	GPIO_ResetBits(COLUMN_KEY_GPIO_PORT,C2_PIN|C3_PIN|C4_PIN);<br>	<br>	temp = GPIO_ReadInputData(ROW_KEY_GPIO_PORT) &amp; <span class="hljs-number">0xF000</span>;<br>	<br>	<span class="hljs-keyword">if</span>(temp != <span class="hljs-number">0x0000</span>)<br>	&#123;<br>		delay_ms(<span class="hljs-number">5</span>);<br>		temp = GPIO_ReadInputData(ROW_KEY_GPIO_PORT) &amp; <span class="hljs-number">0xF000</span>;<br>		<span class="hljs-keyword">if</span>(temp != <span class="hljs-number">0x0000</span>)<br>		&#123;<br>			key_flag = <span class="hljs-number">1</span>;<br>			temp = GPIO_ReadInputData(ROW_KEY_GPIO_PORT) &amp; <span class="hljs-number">0xF000</span>;<br>			<span class="hljs-keyword">switch</span>(temp)<br>			&#123;<br>				<span class="hljs-keyword">case</span> <span class="hljs-number">0x1000</span>: Key_val = <span class="hljs-string">&#x27;1&#x27;</span>;<span class="hljs-keyword">break</span>;<br>				<span class="hljs-keyword">case</span> <span class="hljs-number">0x2000</span>: Key_val = <span class="hljs-string">&#x27;4&#x27;</span>;<span class="hljs-keyword">break</span>;<br>				<span class="hljs-keyword">case</span> <span class="hljs-number">0x4000</span>: Key_val = <span class="hljs-string">&#x27;7&#x27;</span>;<span class="hljs-keyword">break</span>;<br>				<span class="hljs-keyword">case</span> <span class="hljs-number">0x8000</span>: Key_val = <span class="hljs-string">&#x27;*&#x27;</span>;<span class="hljs-keyword">break</span>;<br>			&#125;<br>		&#125;<br>		<span class="hljs-keyword">while</span>(temp != <span class="hljs-number">0x0000</span>)<br>		&#123;<br>			temp = GPIO_ReadInputData(ROW_KEY_GPIO_PORT) &amp; <span class="hljs-number">0xF000</span>;<br>		&#125;<br>	&#125;<br>	<br>	<span class="hljs-comment">/*************************** Column 2 ***************************/</span><br>	GPIO_SetBits(COLUMN_KEY_GPIO_PORT,C2_PIN);<br>	GPIO_ResetBits(COLUMN_KEY_GPIO_PORT,C1_PIN|C3_PIN|C4_PIN);<br>	<br>	temp = GPIO_ReadInputData(ROW_KEY_GPIO_PORT) &amp; <span class="hljs-number">0xF000</span>;<br>	<br>	<span class="hljs-keyword">if</span>(temp != <span class="hljs-number">0x0000</span>)<br>	&#123;<br>		delay_ms(<span class="hljs-number">5</span>);<br>		temp = GPIO_ReadInputData(ROW_KEY_GPIO_PORT) &amp; <span class="hljs-number">0xF000</span>;<br>		<span class="hljs-keyword">if</span>(temp != <span class="hljs-number">0x0000</span>)<br>		&#123;<br>			key_flag = <span class="hljs-number">1</span>;<br>			temp = GPIO_ReadInputData(ROW_KEY_GPIO_PORT) &amp; <span class="hljs-number">0xF000</span>;<br>			<span class="hljs-keyword">switch</span>(temp)<br>			&#123;<br>				<span class="hljs-keyword">case</span> <span class="hljs-number">0x1000</span>: Key_val = <span class="hljs-string">&#x27;2&#x27;</span>;<span class="hljs-keyword">break</span>;<br>				<span class="hljs-keyword">case</span> <span class="hljs-number">0x2000</span>: Key_val = <span class="hljs-string">&#x27;5&#x27;</span>;<span class="hljs-keyword">break</span>;<br>				<span class="hljs-keyword">case</span> <span class="hljs-number">0x4000</span>: Key_val = <span class="hljs-string">&#x27;8&#x27;</span>;<span class="hljs-keyword">break</span>;<br>				<span class="hljs-keyword">case</span> <span class="hljs-number">0x8000</span>: Key_val = <span class="hljs-string">&#x27;0&#x27;</span>;<span class="hljs-keyword">break</span>;<br>			&#125;<br>		&#125;<br>		<span class="hljs-keyword">while</span>(temp != <span class="hljs-number">0x0000</span>)<br>		&#123;<br>			temp = GPIO_ReadInputData(ROW_KEY_GPIO_PORT) &amp; <span class="hljs-number">0xF000</span>;<br>		&#125;<br>	&#125;<br>	<br>	<span class="hljs-comment">/*************************** Column 3 ***************************/</span><br>	GPIO_SetBits(COLUMN_KEY_GPIO_PORT,C3_PIN);<br>	GPIO_ResetBits(COLUMN_KEY_GPIO_PORT,C1_PIN|C2_PIN|C4_PIN);<br>	<br>	temp = GPIO_ReadInputData(ROW_KEY_GPIO_PORT) &amp; <span class="hljs-number">0xF000</span>;<br>	<br>	<span class="hljs-keyword">if</span>(temp != <span class="hljs-number">0x0000</span>)<br>	&#123;<br>		delay_ms(<span class="hljs-number">5</span>);<br>		temp = GPIO_ReadInputData(ROW_KEY_GPIO_PORT) &amp; <span class="hljs-number">0xF000</span>;<br>		<span class="hljs-keyword">if</span>(temp != <span class="hljs-number">0x0000</span>)<br>		&#123;<br>			key_flag = <span class="hljs-number">1</span>;<br>			temp = GPIO_ReadInputData(ROW_KEY_GPIO_PORT) &amp; <span class="hljs-number">0xF000</span>;<br>			<span class="hljs-keyword">switch</span>(temp)<br>			&#123;<br>				<span class="hljs-keyword">case</span> <span class="hljs-number">0x1000</span>: Key_val = <span class="hljs-string">&#x27;3&#x27;</span>;<span class="hljs-keyword">break</span>;<br>				<span class="hljs-keyword">case</span> <span class="hljs-number">0x2000</span>: Key_val = <span class="hljs-string">&#x27;6&#x27;</span>;<span class="hljs-keyword">break</span>;<br>				<span class="hljs-keyword">case</span> <span class="hljs-number">0x4000</span>: Key_val = <span class="hljs-string">&#x27;9&#x27;</span>;<span class="hljs-keyword">break</span>;<br>				<span class="hljs-keyword">case</span> <span class="hljs-number">0x8000</span>: Key_val = <span class="hljs-string">&#x27;#&#x27;</span>;<span class="hljs-keyword">break</span>;<br>			&#125;<br>		&#125;<br>		<span class="hljs-keyword">while</span>(temp != <span class="hljs-number">0x0000</span>)<br>		&#123;<br>			temp = GPIO_ReadInputData(ROW_KEY_GPIO_PORT) &amp; <span class="hljs-number">0xF000</span>;<br>		&#125;<br>	&#125;<br>	<br>	<span class="hljs-comment">/*************************** Column 4 ***************************/</span><br>	GPIO_SetBits(COLUMN_KEY_GPIO_PORT,C4_PIN);<br>	GPIO_ResetBits(COLUMN_KEY_GPIO_PORT,C1_PIN|C2_PIN|C3_PIN);<br>	<br>	temp = GPIO_ReadInputData(ROW_KEY_GPIO_PORT) &amp; <span class="hljs-number">0xF000</span>;<br>	<br>	<span class="hljs-keyword">if</span>(temp != <span class="hljs-number">0x0000</span>)<br>	&#123;<br>		delay_ms(<span class="hljs-number">5</span>);<br>		temp = GPIO_ReadInputData(ROW_KEY_GPIO_PORT) &amp; <span class="hljs-number">0xF000</span>;<br>		<span class="hljs-keyword">if</span>(temp != <span class="hljs-number">0x0000</span>)<br>		&#123;<br>			key_flag = <span class="hljs-number">1</span>;<br>			temp = GPIO_ReadInputData(ROW_KEY_GPIO_PORT) &amp; <span class="hljs-number">0xF000</span>;<br>			<span class="hljs-keyword">switch</span>(temp)<br>			&#123;<br>				<span class="hljs-keyword">case</span> <span class="hljs-number">0x1000</span>: Key_val = <span class="hljs-string">&#x27;A&#x27;</span>;<span class="hljs-keyword">break</span>;<br>				<span class="hljs-keyword">case</span> <span class="hljs-number">0x2000</span>: Key_val = <span class="hljs-string">&#x27;B&#x27;</span>;<span class="hljs-keyword">break</span>;<br>				<span class="hljs-keyword">case</span> <span class="hljs-number">0x4000</span>: Key_val = <span class="hljs-string">&#x27;C&#x27;</span>;<span class="hljs-keyword">break</span>;<br>				<span class="hljs-keyword">case</span> <span class="hljs-number">0x8000</span>: Key_val = <span class="hljs-string">&#x27;D&#x27;</span>;<span class="hljs-keyword">break</span>;<br>			&#125;<br>		&#125;<br>		<span class="hljs-keyword">while</span>(temp != <span class="hljs-number">0x0000</span>)<br>		&#123;<br>			temp = GPIO_ReadInputData(ROW_KEY_GPIO_PORT) &amp; <span class="hljs-number">0xF000</span>;<br>		&#125;<br>	&#125;<br>	<br>	<span class="hljs-keyword">return</span> Key_val;<br>&#125;<br><br><span class="hljs-comment">/*********************************************END OF FILE*********************************************/</span><br><br></code></pre></td></tr></table></figure>
+
+<h4 id="2，串口调式模块"><a href="#2，串口调式模块" class="headerlink" title="2，串口调式模块"></a>2，串口调式模块</h4><h5 id="（1）usart-h"><a href="#（1）usart-h" class="headerlink" title="（1）usart.h"></a>（1）usart.h</h5><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-meta">#<span class="hljs-keyword">ifndef</span> __USART_H</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> __USART_H</span><br><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;stm32f10x.h&quot;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;stdio.h&quot;</span></span><br><br><span class="hljs-comment">//Pin definition</span><br><span class="hljs-comment">/*******************************************************/</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> DEBUG_USART                             USART3</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> DEBUG_USART_CLK                         RCC_APB1Periph_USART3</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> DEBUG_USART_AF                       	RCC_APB2Periph_AFIO</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> DEBUG_USART_GPIO_CLK                 	RCC_APB2Periph_GPIOB</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> DEBUG_USART_BAUDRATE                    115200</span><br><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> DEBUG_USART_RX_GPIO_PORT                GPIOB</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> DEBUG_USART_RX_PIN                      GPIO_Pin_11</span><br><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> DEBUG_USART_TX_GPIO_PORT                GPIOB</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> DEBUG_USART_TX_PIN                      GPIO_Pin_10</span><br><br><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> DEBUG_USART_IRQ                 		USART3_IRQn</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> DEBUG_USART_IRQHandler					USART3_IRQHandler</span><br><br><span class="hljs-comment">/************************************************************/</span><br><br><span class="hljs-type">void</span> <span class="hljs-title function_">USART_Config</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span>;<br><span class="hljs-type">void</span> <span class="hljs-title function_">Usart_SendByte</span><span class="hljs-params">( USART_TypeDef * pUSARTx, <span class="hljs-type">uint8_t</span> ch)</span>;<br><span class="hljs-type">void</span> <span class="hljs-title function_">Usart_SendString</span><span class="hljs-params">( USART_TypeDef * pUSARTx, <span class="hljs-type">char</span> *str)</span>;<br><br><span class="hljs-type">void</span> <span class="hljs-title function_">Usart_SendHalfWord</span><span class="hljs-params">( USART_TypeDef * pUSARTx, <span class="hljs-type">uint16_t</span> ch)</span>;<br><br><span class="hljs-meta">#<span class="hljs-keyword">endif</span>	<span class="hljs-comment">/* __USART_H */</span></span><br><br></code></pre></td></tr></table></figure>
+
+<h5 id="（2）usart-c"><a href="#（2）usart-c" class="headerlink" title="（2）usart.c"></a>（2）usart.c</h5><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">/**</span><br><span class="hljs-comment">  ******************************************************************************</span><br><span class="hljs-comment">  * @file    uasrt.c</span><br><span class="hljs-comment">  * @author  Soso</span><br><span class="hljs-comment">  * @date    2019-12-18</span><br><span class="hljs-comment">  * @brief   Redirect c library printf function to usart port, interrupt receiving mode.</span><br><span class="hljs-comment">  ******************************************************************************</span><br><span class="hljs-comment">  */</span><br><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;usart.h&quot;</span></span><br><br><br><span class="hljs-comment">/* Configuring nested vectored interrupt controller NVIC */</span><br><span class="hljs-type">static</span> <span class="hljs-type">void</span> <span class="hljs-title function_">NVIC_Configuration</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span><br>&#123;<br>	NVIC_InitTypeDef NVIC_InitStructure;<br><br>	<span class="hljs-comment">/* Nested vector interrupt controller group selection */</span><br>	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);<br><br>	<span class="hljs-comment">/* Preemptio Priority is 1 */</span><br>	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = <span class="hljs-number">1</span>;<br>	<span class="hljs-comment">/* Sub Priority is 1 */</span><br>	NVIC_InitStructure.NVIC_IRQChannelSubPriority = <span class="hljs-number">1</span>;<br>	<span class="hljs-comment">/* Enable interrupt */</span><br>	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;<br>	<br>	<span class="hljs-comment">/* Configure USART as the interrupt source */</span><br>	NVIC_InitStructure.NVIC_IRQChannel = DEBUG_USART_IRQ;<br>	<span class="hljs-comment">/* Initialize configuration NVIC */</span><br>	NVIC_Init(&amp;NVIC_InitStructure);<br>&#125;<br><br><span class="hljs-type">void</span> <span class="hljs-title function_">USART_Config</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span><br>&#123;<br>	GPIO_InitTypeDef GPIO_InitStructure;<br>	USART_InitTypeDef USART_InitStructure;<br><br>	<span class="hljs-comment">/* Enable port alternate function and enable USART GPIO clock */</span><br>	RCC_APB2PeriphClockCmd(DEBUG_USART_AF|DEBUG_USART_GPIO_CLK,ENABLE);<br>	<span class="hljs-comment">/* Enable USART Clock */</span><br>	RCC_APB1PeriphClockCmd(DEBUG_USART_CLK,ENABLE);<br>	<br>	<span class="hljs-comment">/* Configure the Tx pin for alternate function  */</span><br>	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;<br>	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;<br><br>	GPIO_InitStructure.GPIO_Pin = DEBUG_USART_TX_PIN;<br>	GPIO_Init(DEBUG_USART_TX_GPIO_PORT, &amp;GPIO_InitStructure);<br>	<br>	<span class="hljs-comment">/* Configure the Rx pin for the alternate function */</span><br>	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;<br>	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;<br>	<br>	GPIO_InitStructure.GPIO_Pin = DEBUG_USART_RX_PIN;<br>	GPIO_Init(DEBUG_USART_RX_GPIO_PORT, &amp;GPIO_InitStructure);<br>	<br>	<span class="hljs-comment">/* Configuration USART mode */</span><br>	USART_InitStructure.USART_WordLength = USART_WordLength_8b;<br>	USART_InitStructure.USART_StopBits = USART_StopBits_1;<br>	USART_InitStructure.USART_Parity = USART_Parity_No;<br>	USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;<br>	<span class="hljs-comment">/* USART mode control: simultaneous enable send and receive */</span><br>	USART_InitStructure.USART_Mode = USART_Mode_Tx|USART_Mode_Rx;<br>	<br>	USART_InitStructure.USART_BaudRate = DEBUG_USART_BAUDRATE;<br>	USART_Init(DEBUG_USART, &amp;USART_InitStructure);<br>	<br>	<span class="hljs-comment">/* Configure the serial port to receive interrupts. */</span><br>	NVIC_Configuration();<br>	<br>	<span class="hljs-comment">/* Enable serial port receive interrupt */</span><br>	USART_ITConfig(DEBUG_USART, USART_IT_RXNE, ENABLE);<br>	<br>	<span class="hljs-comment">/* Enable serial */</span><br>	USART_Cmd(DEBUG_USART, ENABLE);<br>&#125;<br><br><br><span class="hljs-comment">/*****************  Send a character **********************/</span><br><span class="hljs-type">void</span> <span class="hljs-title function_">Usart_SendByte</span><span class="hljs-params">( USART_TypeDef * pUSARTx, <span class="hljs-type">uint8_t</span> ch)</span><br>&#123;<br>	<span class="hljs-comment">/* Send a byte of data to the USART */</span><br>	USART_SendData(pUSARTx,ch);<br>		<br>	<span class="hljs-comment">/* Waiting for the transmit data register to be empty */</span><br>	<span class="hljs-keyword">while</span> (USART_GetFlagStatus(pUSARTx, USART_FLAG_TXE) == RESET);	<br>&#125;<br><br><span class="hljs-comment">/*****************  Send string **********************/</span><br><span class="hljs-type">void</span> <span class="hljs-title function_">Usart_SendString</span><span class="hljs-params">( USART_TypeDef * pUSARTx, <span class="hljs-type">char</span> *str)</span><br>&#123;<br>	<span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> k=<span class="hljs-number">0</span>;<br>  <span class="hljs-keyword">do</span> <br>  &#123;<br>      Usart_SendByte( pUSARTx, *(str + k) );<br>      k++;<br>  &#125; <span class="hljs-keyword">while</span>(*(str + k)!=<span class="hljs-string">&#x27;\0&#x27;</span>);<br>  <br>  <span class="hljs-comment">/* Waiting for transmission to complete */</span><br>  <span class="hljs-keyword">while</span>(USART_GetFlagStatus(pUSARTx,USART_FLAG_TC)==RESET)<br>  &#123;&#125;<br>&#125;<br><br><span class="hljs-comment">/*****************  Send a 16-digit number **********************/</span><br><span class="hljs-type">void</span> <span class="hljs-title function_">Usart_SendHalfWord</span><span class="hljs-params">( USART_TypeDef * pUSARTx, <span class="hljs-type">uint16_t</span> ch)</span><br>&#123;<br>	<span class="hljs-type">uint8_t</span> temp_h, temp_l;<br>	<br>	<span class="hljs-comment">/* Take out the high eight */</span><br>	temp_h = (ch&amp;<span class="hljs-number">0XFF00</span>)&gt;&gt;<span class="hljs-number">8</span>;<br>	<span class="hljs-comment">/* Take the lower eight */</span><br>	temp_l = ch&amp;<span class="hljs-number">0XFF</span>;<br>	<br>	<span class="hljs-comment">/* Send high eight */</span><br>	USART_SendData(pUSARTx,temp_h);	<br>	<span class="hljs-keyword">while</span> (USART_GetFlagStatus(pUSARTx, USART_FLAG_TXE) == RESET);<br>	<br>	<span class="hljs-comment">/* Send the lower eight digits */</span><br>	USART_SendData(pUSARTx,temp_l);	<br>	<span class="hljs-keyword">while</span> (USART_GetFlagStatus(pUSARTx, USART_FLAG_TXE) == RESET);	<br>&#125;<br><br><span class="hljs-comment">/* Redirect the c library function printf to the serial port, </span><br><span class="hljs-comment">   use the printf function after redirection.	*/</span><br><span class="hljs-type">int</span> <span class="hljs-title function_">fputc</span><span class="hljs-params">(<span class="hljs-type">int</span> ch, FILE *f)</span><br>&#123;<br>	<span class="hljs-comment">/* Send a byte of data to the serial port */</span><br>	USART_SendData(DEBUG_USART, (<span class="hljs-type">uint8_t</span>) ch);<br><br>	<span class="hljs-comment">/* Waiting to send */</span><br>	<span class="hljs-keyword">while</span> (USART_GetFlagStatus(DEBUG_USART, USART_FLAG_TXE) == RESET);<br><br>	<span class="hljs-keyword">return</span> (ch);<br>&#125;<br><br><span class="hljs-comment">/* Redirect the c library function scanf to the serial port, </span><br><span class="hljs-comment">   rewrite backwards can use scanf, getchar and other functions. */</span><br><span class="hljs-type">int</span> <span class="hljs-title function_">fgetc</span><span class="hljs-params">(FILE *f)</span><br>&#123;<br>	<span class="hljs-comment">/* Waiting for serial input data */</span><br>	<span class="hljs-keyword">while</span> (USART_GetFlagStatus(DEBUG_USART, USART_FLAG_RXNE) == RESET);<br><br>	<span class="hljs-keyword">return</span> (<span class="hljs-type">int</span>)USART_ReceiveData(DEBUG_USART);<br>&#125;<br><span class="hljs-comment">/*********************************************END OF FILE*********************************************/</span><br><br></code></pre></td></tr></table></figure>
+
+<h4 id="3，延时函数配置模块"><a href="#3，延时函数配置模块" class="headerlink" title="3，延时函数配置模块"></a>3，延时函数配置模块</h4><h5 id="（1）systick-h"><a href="#（1）systick-h" class="headerlink" title="（1）systick.h"></a>（1）systick.h</h5><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-meta">#<span class="hljs-keyword">ifndef</span> __SYSTICK_H</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> __SYSTICK_H</span><br><br><span class="hljs-meta">#<span class="hljs-keyword">include</span><span class="hljs-string">&quot;stm32f10x.h&quot;</span></span><br><br><span class="hljs-type">void</span> <span class="hljs-title function_">delay_us</span><span class="hljs-params">(u32 i)</span>;<br><span class="hljs-type">void</span> <span class="hljs-title function_">delay_ms</span><span class="hljs-params">(u32 i)</span>;<br><br><br><span class="hljs-meta">#<span class="hljs-keyword">endif</span>	<span class="hljs-comment">/* __SYSTICK_DELAY_H */</span></span><br><br></code></pre></td></tr></table></figure>
+
+<h5 id="（2）systick-c"><a href="#（2）systick-c" class="headerlink" title="（2）systick.c"></a>（2）systick.c</h5><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;systick.h&quot;</span></span><br><br><span class="hljs-type">void</span> <span class="hljs-title function_">delay_us</span><span class="hljs-params">(u32 i)</span><br>&#123;<br>	u32 temp;<br>	SysTick-&gt;LOAD=<span class="hljs-number">9</span>*i;		 <span class="hljs-comment">//Set the reload value, at 72MHZ</span><br>	SysTick-&gt;CTRL=<span class="hljs-number">0X01</span>;		 <span class="hljs-comment">//Enable, reduce to zero is no action, use external clock source</span><br>	SysTick-&gt;VAL=<span class="hljs-number">0</span>;		   	 <span class="hljs-comment">//Clear counter</span><br>	<span class="hljs-keyword">do</span><br>	&#123;<br>		temp=SysTick-&gt;CTRL;		<span class="hljs-comment">//Read current countdown value</span><br>	&#125;<br>	<span class="hljs-keyword">while</span>((temp&amp;<span class="hljs-number">0x01</span>)&amp;&amp;(!(temp&amp;(<span class="hljs-number">1</span>&lt;&lt;<span class="hljs-number">16</span>))));	 <span class="hljs-comment">//Waiting time to arrive</span><br>	SysTick-&gt;CTRL=<span class="hljs-number">0</span>;	<span class="hljs-comment">//Close counter</span><br>	SysTick-&gt;VAL=<span class="hljs-number">0</span>;		<span class="hljs-comment">//Empty counter</span><br>&#125;<br><span class="hljs-type">void</span> <span class="hljs-title function_">delay_ms</span><span class="hljs-params">(u32 i)</span><br>&#123;<br>	u32 temp;<br>	SysTick-&gt;LOAD=<span class="hljs-number">9000</span>*i;	<span class="hljs-comment">//Set the reload value, at 72MHZ</span><br>	SysTick-&gt;CTRL=<span class="hljs-number">0X01</span>;		<span class="hljs-comment">//Enable, reduce to zero is no action, use external clock source</span><br>	SysTick-&gt;VAL=<span class="hljs-number">0</span>;			<span class="hljs-comment">//Clear counter</span><br>	<span class="hljs-keyword">do</span><br>	&#123;<br>		temp=SysTick-&gt;CTRL;	   <span class="hljs-comment">//Read current countdown value</span><br>	&#125;<br>	<span class="hljs-keyword">while</span>((temp&amp;<span class="hljs-number">0x01</span>)&amp;&amp;(!(temp&amp;(<span class="hljs-number">1</span>&lt;&lt;<span class="hljs-number">16</span>))));	<span class="hljs-comment">//Waiting time to arrive</span><br>	SysTick-&gt;CTRL=<span class="hljs-number">0</span>;	<span class="hljs-comment">//Close counter</span><br>	SysTick-&gt;VAL=<span class="hljs-number">0</span>;		<span class="hljs-comment">//Empty counter</span><br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+<h4 id="4，主函数main-c"><a href="#4，主函数main-c" class="headerlink" title="4，主函数main.c"></a>4，主函数main.c</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">/**</span><br><span class="hljs-comment">  ******************************************************************************</span><br><span class="hljs-comment">  * @file    main.c</span><br><span class="hljs-comment">  * @author  Soso</span><br><span class="hljs-comment">  * @date    2019-12-18</span><br><span class="hljs-comment">  * @brief   Matrix keyboard application.</span><br><span class="hljs-comment">  *</span><br><span class="hljs-comment">  ******************************************************************************</span><br><span class="hljs-comment">  */</span><br>  <br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;stm32f10x.h&quot;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;usart.h&quot;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;keyboard.h&quot;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;systick.h&quot;</span></span><br><br><span class="hljs-type">uint8_t</span> key_flag = <span class="hljs-number">0</span>;<br><br><span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span><br>&#123;<br>	KeyBoard_Init();<br>	USART_Config();<br>	<br>	<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Initialization successful.\r\n&quot;</span>);<br>	<br>	<span class="hljs-type">char</span> key_value = <span class="hljs-number">0</span>;<br>	<br>	<span class="hljs-keyword">while</span>(<span class="hljs-number">1</span>)<br>	&#123;<br>		key_value = Key_scan();<br>		<span class="hljs-keyword">if</span>(key_flag == <span class="hljs-number">1</span>)<br>		&#123;<br>			key_flag = <span class="hljs-number">0</span>;<br>			<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;S%c push down.\r\n&quot;</span>,key_value);<br>		&#125;<br>	&#125;<br>&#125;<br><br><br><br><br><span class="hljs-comment">/*********************************************END OF FILE*********************************************/</span><br><br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="三、硬件接线说明"><a href="#三、硬件接线说明" class="headerlink" title="三、硬件接线说明"></a>三、硬件接线说明</h3><figure class="highlight clean"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs clean">【*】 引脚分配<br>		   STM32		串口模块<br>			PB11    -&gt;     Tx<br>			PB10    -&gt;     Rx<br>			+<span class="hljs-number">3.3</span>V   -&gt;     +<span class="hljs-number">3.3</span>V<br>			GND     -&gt;     GND<br>			波特率：<span class="hljs-number">115200</span><br>			<br>		   STM32		矩阵键盘<br>			PB12	-&gt;     R1<br>			PB13	-&gt;     R2<br>			PB14	-&gt;     R3<br>			PB15	-&gt;     R4<br>			PA8		-&gt;     C1<br>			PA9		-&gt;     C2<br>			PA10	-&gt;     C3<br>			PA11	-&gt;     C4<br>			<br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="四、最终效果"><a href="#四、最终效果" class="headerlink" title="四、最终效果"></a>四、最终效果</h3><p><img src="https://s2.ax1x.com/2019/12/18/QHylq0.png" srcset="/img/loading.gif" lazyload alt="QHylq0.png"></p>
+
+              
+            </div>
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F/" class="category-chain-item">嵌入式</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F/STM32/" class="category-chain-item">STM32</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/STM32/">#STM32</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>STM32F103学习笔记——薄膜矩阵键盘扫描</div>
+      <div>https://kevinloongc.github.io/posts/2ac21edf.html</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Kevin Loongc</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2019年12月16日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/posts/5803b452.html" title="STM32F103学习笔记——AS608指纹识别模块的使用">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">STM32F103学习笔记——AS608指纹识别模块的使用</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/posts/9820a5cb.html" title="STM32F103读写内部flash">
+                        <span class="hidden-mobile">STM32F103读写内部flash</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.4.16/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"aafuxXAEvmPa9M6u5J2bcS51-gzGzoHsz","appKey":"d6sAJLHqlK9SsXVkMJiMDJDU","path":"window.location.pathname","placeholder":null,"avatar":"retro","meta":["nick","mail"],"requiredFields":[],"pageSize":10,"lang":"zh-CN","highlight":false,"recordIP":false,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":false},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.0/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script>
+  (function() {
+    var enableLang = CONFIG.code_language.enable && CONFIG.code_language.default;
+    var enableCopy = CONFIG.copy_btn;
+    if (!enableLang && !enableCopy) {
+      return;
+    }
+
+    function getBgClass(ele) {
+      return Fluid.utils.getBackgroundLightness(ele) >= 0 ? 'code-widget-light' : 'code-widget-dark';
+    }
+
+    var copyTmpl = '';
+    copyTmpl += '<div class="code-widget">';
+    copyTmpl += 'LANG';
+    copyTmpl += '</div>';
+    jQuery('.markdown-body pre').each(function() {
+      var $pre = jQuery(this);
+      if ($pre.find('code.mermaid').length > 0) {
+        return;
+      }
+      if ($pre.find('span.line').length > 0) {
+        return;
+      }
+
+      var lang = '';
+
+      if (enableLang) {
+        lang = CONFIG.code_language.default;
+        if ($pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2 && $pre.children().hasClass('hljs')) {
+          lang = $pre[0].children[0].classList[1];
+        } else if ($pre[0].getAttribute('data-language')) {
+          lang = $pre[0].getAttribute('data-language');
+        } else if ($pre.parent().hasClass('sourceCode') && $pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2) {
+          lang = $pre[0].children[0].classList[1];
+          $pre.parent().addClass('code-wrapper');
+        } else if ($pre.parent().hasClass('markdown-body') && $pre[0].classList.length === 0) {
+          $pre.wrap('<div class="code-wrapper"></div>');
+        }
+        lang = lang.toUpperCase().replace('NONE', CONFIG.code_language.default);
+      }
+      $pre.append(copyTmpl.replace('LANG', lang).replace('code-widget">',
+        getBgClass($pre[0]) + (enableCopy ? ' code-widget copy-btn" data-clipboard-snippet><i class="iconfont icon-copy"></i>' : ' code-widget">')));
+
+      if (enableCopy) {
+        Fluid.utils.createScript('https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js', function() {
+          var clipboard = new window.ClipboardJS('.copy-btn', {
+            target: function(trigger) {
+              var nodes = trigger.parentNode.childNodes;
+              for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].tagName === 'CODE') {
+                  return nodes[i];
+                }
+              }
+            }
+          });
+          clipboard.on('success', function(e) {
+            e.clearSelection();
+            e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-copy', 'icon-success');
+            setTimeout(function() {
+              e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-success', 'icon-copy');
+            }, 2000);
+          });
+        });
+      }
+    });
+  })();
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

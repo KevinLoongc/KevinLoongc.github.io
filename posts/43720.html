@@ -1,0 +1,1029 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Kevin Loongc">
+  <meta name="keywords" content="云杂货店, KevinL, KevinLoongc, QT, ROS, SLAM, 嵌入式">
+  
+    <meta name="description" content="前言在继续看本文之前，你需要完成下面的前提条件：  上位机ROS和底层STM32之间可以正常互相收发数据； 编写好了键盘控制节点，可以发布Twist速度话题信息； 可以通过Twist速度话题信息控制小车移动； 可以采集激光雷达深度信息； 可以发布里程计信息； 可以发布TF坐标变换。  根据move_base功能框图可以知道，想要实现建图导航功能，还需要提供地图信息。ROS开源社区汇集了多种SLAM">
+<meta property="og:type" content="article">
+<meta property="og:title" content="两轮差速底盘SLAM系列(8)--gmapping建图">
+<meta property="og:url" content="https://kevinloongc.github.io/posts/43720.html">
+<meta property="og:site_name" content="云杂货店">
+<meta property="og:description" content="前言在继续看本文之前，你需要完成下面的前提条件：  上位机ROS和底层STM32之间可以正常互相收发数据； 编写好了键盘控制节点，可以发布Twist速度话题信息； 可以通过Twist速度话题信息控制小车移动； 可以采集激光雷达深度信息； 可以发布里程计信息； 可以发布TF坐标变换。  根据move_base功能框图可以知道，想要实现建图导航功能，还需要提供地图信息。ROS开源社区汇集了多种SLAM">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.ax1x.com/2019/06/01/V3CsPA.png">
+<meta property="article:published_time" content="2020-02-17T16:46:25.000Z">
+<meta property="article:modified_time" content="2022-05-29T04:44:51.816Z">
+<meta property="article:author" content="Kevin Loongc">
+<meta property="article:tag" content="ROS">
+<meta property="article:tag" content="SLAM">
+<meta property="article:tag" content="gmapping">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://s2.ax1x.com/2019/06/01/V3CsPA.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>两轮差速底盘SLAM系列(8)--gmapping建图 - 云杂货店</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"kevinloongc.github.io","root":"/","version":"1.9.0","typing":{"enable":true,"typeSpeed":80,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":false},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>云杂货店</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="两轮差速底盘SLAM系列(8)--gmapping建图"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2020-02-18 00:46" pubdate>
+          2020年2月18日 凌晨
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          3k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          25 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar category-bar" style="margin-right: -1rem">
+    
+
+
+
+
+
+<div class="category-list">
+  
+  
+    
+    
+    
+    <div class="category row nomargin-x">
+      <a class="category-item 
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="两轮差速底盘SLAM"
+        id="heading-a6a4521451985c8f69c14dd6dcb0f787" role="tab" data-toggle="collapse" href="#collapse-a6a4521451985c8f69c14dd6dcb0f787"
+        aria-expanded="true"
+      >
+        两轮差速底盘SLAM
+        <span class="list-group-count">(16)</span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+      <div class="category-collapse collapse show" id="collapse-a6a4521451985c8f69c14dd6dcb0f787"
+           role="tabpanel" aria-labelledby="heading-a6a4521451985c8f69c14dd6dcb0f787">
+        
+        
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/posts/9512.html" title="两轮差速底盘SLAM系列(1)--机器人必备条件"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">两轮差速底盘SLAM系列(1)--机器人必备条件</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/25677.html" title="两轮差速底盘SLAM系列(10)--导航配置"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">两轮差速底盘SLAM系列(10)--导航配置</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/cf902744.html" title="两轮差速底盘SLAM系列(11)--机器人自主导航"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">两轮差速底盘SLAM系列(11)--机器人自主导航</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/33000.html" title="两轮差速底盘SLAM系列(12)--laser_filters功能包的使用"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">两轮差速底盘SLAM系列(12)--laser_filters功能包的使用</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/1d1e892a.html" title="两轮差速底盘SLAM系列(13)--Rotate_Recovery功能包"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">两轮差速底盘SLAM系列(13)--Rotate_Recovery功能包</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/ab5b3d38.html" title="两轮差速底盘SLAM系列(14)--速度平滑处理"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">两轮差速底盘SLAM系列(14)--速度平滑处理</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/becfc177.html" title="两轮差速底盘SLAM系列(15)--虚拟墙"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">两轮差速底盘SLAM系列(15)--虚拟墙</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/cc1e5bb7.html" title="两轮差速底盘SLAM系列(2)--CAN总线协议"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">两轮差速底盘SLAM系列(2)--CAN总线协议</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/23588.html" title="两轮差速底盘SLAM系列(3)--键盘控制(1)"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">两轮差速底盘SLAM系列(3)--键盘控制(1)</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/be628c57.html" title="两轮差速底盘SLAM系列(3)--键盘控制(2)"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">两轮差速底盘SLAM系列(3)--键盘控制(2)</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/34134.html" title="两轮差速底盘SLAM系列(4)--两轮差速速度解算"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">两轮差速底盘SLAM系列(4)--两轮差速速度解算</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/3290.html" title="两轮差速底盘SLAM系列(5)--ROS下驱动激光雷达EAI-X4"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">两轮差速底盘SLAM系列(5)--ROS下驱动激光雷达EAI-X4</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/23fdc5dd.html" title="两轮差速底盘SLAM系列(6)--里程计信息"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">两轮差速底盘SLAM系列(6)--里程计信息</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/bc3cbe5e.html" title="两轮差速底盘SLAM系列(7)--TF变换"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">两轮差速底盘SLAM系列(7)--TF变换</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/43720.html" title="两轮差速底盘SLAM系列(8)--gmapping建图"
+           class="list-group-item list-group-item-action
+           active">
+          <span class="category-post">两轮差速底盘SLAM系列(8)--gmapping建图</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/61649.html" title="两轮差速底盘SLAM系列(9)--ROS中常见的坐标系理解"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">两轮差速底盘SLAM系列(9)--ROS中常见的坐标系理解</span>
+        </a>
+      
+    
+  </div>
+
+        
+      </div>
+    </div>
+  
+</div>
+
+
+  </aside>
+
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">两轮差速底盘SLAM系列(8)--gmapping建图</h1>
+            
+              <p class="note note-info">
+                
+                  
+                    本文最后更新于：2022年5月29日 下午
+                  
+                
+              </p>
+            
+            <div class="markdown-body">
+              
+              <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>在继续看本文之前，你需要完成下面的前提条件：</p>
+<ul>
+<li>上位机ROS和底层STM32之间可以正常互相收发数据；</li>
+<li>编写好了键盘控制节点，可以发布Twist速度话题信息；</li>
+<li>可以通过Twist速度话题信息控制小车移动；</li>
+<li>可以采集激光雷达深度信息；</li>
+<li>可以发布里程计信息；</li>
+<li>可以发布TF坐标变换。</li>
+</ul>
+<p>根据<a target="_blank" rel="noopener" href="http://wiki.ros.org/move_base">move_base功能框图</a>可以知道，想要实现建图导航功能，还需要提供地图信息。ROS开源社区汇集了多种SLAM算法，可以直接使用或进行二次开发，这里我使用的<code>gmapping功能包</code>。</p>
+<h3 id="gmapping功能包"><a href="#gmapping功能包" class="headerlink" title="gmapping功能包"></a>gmapping功能包</h3><p><strong>目前来讲是最成熟也是用得最多的一种SLAM功能包。</strong></p>
+<p><img src="https://s2.ax1x.com/2019/06/01/V3CsPA.png" srcset="/img/loading.gif" lazyload alt="V3CsPA.png"></p>
+<p>从上图可以看出，我们只需要给<code>gmapping功能包</code>提供深度信息、IMU信息、里程计信息，它就可以生成输出栅格地图话题信息。</p>
+<h3 id="安装gmapping"><a href="#安装gmapping" class="headerlink" title="安装gmapping"></a>安装gmapping</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">sudo apt install ros-kinetic-gmapping<br></code></pre></td></tr></table></figure>
+
+<p>如果之前没有安装move_base，使用以下命令安装：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">sudo apt install ros-kinetic-move-base<br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="栅格地图取值原理"><a href="#栅格地图取值原理" class="headerlink" title="栅格地图取值原理"></a>栅格地图取值原理</h3><p><img src="https://s2.ax1x.com/2019/06/01/V3Cy8I.png" srcset="/img/loading.gif" lazyload alt="V3Cy8I.png"></p>
+<ul>
+<li>致命障碍：栅格值为254，障碍与机器人的中心重合，此时机器人必然与障碍物发生碰撞。</li>
+<li>内切障碍：栅格值为253，障碍物处于机器人轮廓的内切圆内，此时机器人也必然与障碍物发生碰撞。</li>
+<li>外切障碍：栅格值为252~128，障碍物处于机器人的轮廓的外切圆内，此时机器人与障碍物临界接触，不一定发生碰撞。</li>
+<li>非自由空间：栅格值为128~0，障碍物附近区域，一旦机器人进入该区域，将有较大概率发生碰撞，属于危险警戒区。机器人应该尽量避免进入。</li>
+<li>自由区域：栅格值为0，此处没有障碍物，机器人可以自由通过。</li>
+<li>未知区域：栅格值为255，此处还没有探知是否有障碍物，机器人可以前往继续建图。</li>
+</ul>
+<h3 id="配置gmapping节点"><a href="#配置gmapping节点" class="headerlink" title="配置gmapping节点"></a>配置gmapping节点</h3><p>SLAM算法已经在<code>gmapping功能包</code>中实现，我们暂时不需要深入理解算法的实现原理（想要深入理解的可以查看相关的论文资料），现在我们只需要关注如何借助其提供的接口实现相应功能。</p>
+<p>现在来创建一个运行gmapping节点的launch文件，进行节点的相关参数配置。进入<code>agv_car</code>功能包目录下的launch文件夹，创建一个<code>gmapping.launch</code>文件：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">roscd agv_car/launch/<br>gedit gmapping.launch<br></code></pre></td></tr></table></figure>
+
+<p>文件代码如下：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">launch</span>&gt;</span><br>    <br>  <span class="hljs-tag">&lt;<span class="hljs-name">node</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;slam_gmapping&quot;</span> <span class="hljs-attr">pkg</span>=<span class="hljs-string">&quot;gmapping&quot;</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;slam_gmapping&quot;</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">param</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;odom_frame&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;odom&quot;</span>/&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">param</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;base_frame&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;base_link&quot;</span>/&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">param</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;map_frame&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;map&quot;</span>/&gt;</span><br>    <span class="hljs-comment">&lt;!-- remap --&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">remap</span> <span class="hljs-attr">from</span>=<span class="hljs-string">&quot;scan&quot;</span> <span class="hljs-attr">to</span>=<span class="hljs-string">&quot;/scan&quot;</span>/&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">node</span>&gt;</span><br><br>  <span class="hljs-comment">&lt;!-- Set a static coordinate transformation from /base_link to /base_footprint --&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">node</span> <span class="hljs-attr">pkg</span>=<span class="hljs-string">&quot;tf&quot;</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;static_transform_publisher&quot;</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;basefootprint_to_baselink&quot;</span> <span class="hljs-attr">args</span>=<span class="hljs-string">&quot;0 0 0 0 0 0 /base_footprint /base_link 40&quot;</span> /&gt;</span><br><br><span class="hljs-tag">&lt;/<span class="hljs-name">launch</span>&gt;</span><br><br></code></pre></td></tr></table></figure>
+
+<p>文件包含了三部分：</p>
+<ol>
+<li><p>gmapping参数配置，这里的配置参数我只写出来少数几个，其它的参数不进行配置它会有默认值，具体参数配置说明可以查看<a target="_blank" rel="noopener" href="http://wiki.ros.org/gmapping">gmapping功能包介绍</a>。</p>
+</li>
+<li><p>tf坐标变换，<code>/base_footprint</code>与<code>/base_link</code>之间的关系。</p>
+</li>
+</ol>
+<h3 id="机器人SLAM"><a href="#机器人SLAM" class="headerlink" title="机器人SLAM"></a>机器人SLAM</h3><h4 id="新建launch文件"><a href="#新建launch文件" class="headerlink" title="新建launch文件"></a>新建launch文件</h4><p>首先启动机器人，发布SLAM所需要的深度信息、里程计信息，并接受运动控制Twist指令。启动的节点有点多，可以使用launch文件启动，在<code>agv_car</code>功能包launch文件夹下创建一个<code>base.launch</code>文件：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">roscd agv_car/launch<br>gedit base.launch<br></code></pre></td></tr></table></figure>
+
+<p>文件代码如下：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">launch</span>&gt;</span><br>    <span class="hljs-comment">&lt;!-- 启动base_control节点，发布里程计信息和tf变换 --&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">node</span> <span class="hljs-attr">pkg</span>=<span class="hljs-string">&quot;agv_car&quot;</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;base_control&quot;</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;base_control&quot;</span> /&gt;</span><br><br>    <span class="hljs-comment">&lt;!-- 启动keyboard_control节点，发布Twist运动控制指令 --&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">node</span> <span class="hljs-attr">pkg</span>=<span class="hljs-string">&quot;agv_car&quot;</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;keyboard_control&quot;</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;keyboard_control&quot;</span> /&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">launch</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>再创建一个<code>gmapping_demo.launch</code>文件：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">gedit gmapping_demo.launch<br></code></pre></td></tr></table></figure>
+
+<p>文件代码如下：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">launch</span>&gt;</span><br>  <span class="hljs-comment">&lt;!-- 启动激光雷达 --&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">include</span> <span class="hljs-attr">file</span>=<span class="hljs-string">&quot;$(find agv_car)/launch/laser4.launch&quot;</span> /&gt;</span><br><br>  <span class="hljs-comment">&lt;!-- 启动gmapping --&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">include</span> <span class="hljs-attr">file</span>=<span class="hljs-string">&quot;$(find agv_car)/launch/gmapping.launch&quot;</span> /&gt;</span><br><br>  <span class="hljs-comment">&lt;!-- rviz --&gt;</span>	<br>  <span class="hljs-tag">&lt;<span class="hljs-name">node</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;rviz&quot;</span> <span class="hljs-attr">pkg</span>=<span class="hljs-string">&quot;rviz&quot;</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;rviz&quot;</span> <span class="hljs-attr">args</span>=<span class="hljs-string">&quot;-d $(find agv_car)/rviz/mapping.rviz&quot;</span>/&gt;</span><br><br><span class="hljs-tag">&lt;/<span class="hljs-name">launch</span>&gt;</span><br><br></code></pre></td></tr></table></figure>
+
+
+
+<h4 id="启动gmapping建图"><a href="#启动gmapping建图" class="headerlink" title="启动gmapping建图"></a>启动gmapping建图</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">roslaunch agv_car base.launch <br>roslaunch agv_car gmapping_demo.launch <br></code></pre></td></tr></table></figure>
+
+<p>现在可以使用键盘控制机器人运动，进行建图了。</p>
+<p><img src="https://s2.ax1x.com/2020/02/18/3i6nXD.png" srcset="/img/loading.gif" lazyload alt="3i6nXD.png"></p>
+<h3 id="保存地图"><a href="#保存地图" class="headerlink" title="保存地图"></a>保存地图</h3><p>建图完成后，在 <code>agv_car功能包</code>创建maps文件夹保存地图文件：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash">roscd agv_car<br><span class="hljs-built_in">mkdir</span> map<br><span class="hljs-built_in">cd</span> map<br>rosrun map_server map_saver -f map<br></code></pre></td></tr></table></figure>
+
+<p>分别生成一个map.pgm图像文件和一个map.yaml配置文件</p>
+<p>.pgm图像文件：</p>
+<p><img src="https://s2.ax1x.com/2020/02/18/3i6LuD.png" srcset="/img/loading.gif" lazyload alt="3i6LuD.png"></p>
+<p>该图像文件可以后续使用软件进行编辑修改，例如：可以添加一堵墙、添加一些障碍物或者去掉一些障碍物等，进行人为修正地图。</p>
+<p>.yaml配置文件：</p>
+<p><img src="https://s2.ax1x.com/2020/02/18/3i6ODe.png" srcset="/img/loading.gif" lazyload alt="3i6ODe.png"></p>
+
+              
+            </div>
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/ROS/" class="category-chain-item">ROS</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/ROS/%E4%B8%A4%E8%BD%AE%E5%B7%AE%E9%80%9F%E5%BA%95%E7%9B%98SLAM/" class="category-chain-item">两轮差速底盘SLAM</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/ROS/">#ROS</a>
+      
+        <a href="/tags/SLAM/">#SLAM</a>
+      
+        <a href="/tags/gmapping/">#gmapping</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>两轮差速底盘SLAM系列(8)--gmapping建图</div>
+      <div>https://kevinloongc.github.io/posts/43720.html</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Kevin Loongc</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2020年2月18日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/posts/61649.html" title="两轮差速底盘SLAM系列(9)--ROS中常见的坐标系理解">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">两轮差速底盘SLAM系列(9)--ROS中常见的坐标系理解</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/posts/bc3cbe5e.html" title="两轮差速底盘SLAM系列(7)--TF变换">
+                        <span class="hidden-mobile">两轮差速底盘SLAM系列(7)--TF变换</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.4.16/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"aafuxXAEvmPa9M6u5J2bcS51-gzGzoHsz","appKey":"d6sAJLHqlK9SsXVkMJiMDJDU","path":"window.location.pathname","placeholder":null,"avatar":"retro","meta":["nick","mail"],"requiredFields":[],"pageSize":10,"lang":"zh-CN","highlight":false,"recordIP":false,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":false},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.0/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script>
+  (function() {
+    var enableLang = CONFIG.code_language.enable && CONFIG.code_language.default;
+    var enableCopy = CONFIG.copy_btn;
+    if (!enableLang && !enableCopy) {
+      return;
+    }
+
+    function getBgClass(ele) {
+      return Fluid.utils.getBackgroundLightness(ele) >= 0 ? 'code-widget-light' : 'code-widget-dark';
+    }
+
+    var copyTmpl = '';
+    copyTmpl += '<div class="code-widget">';
+    copyTmpl += 'LANG';
+    copyTmpl += '</div>';
+    jQuery('.markdown-body pre').each(function() {
+      var $pre = jQuery(this);
+      if ($pre.find('code.mermaid').length > 0) {
+        return;
+      }
+      if ($pre.find('span.line').length > 0) {
+        return;
+      }
+
+      var lang = '';
+
+      if (enableLang) {
+        lang = CONFIG.code_language.default;
+        if ($pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2 && $pre.children().hasClass('hljs')) {
+          lang = $pre[0].children[0].classList[1];
+        } else if ($pre[0].getAttribute('data-language')) {
+          lang = $pre[0].getAttribute('data-language');
+        } else if ($pre.parent().hasClass('sourceCode') && $pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2) {
+          lang = $pre[0].children[0].classList[1];
+          $pre.parent().addClass('code-wrapper');
+        } else if ($pre.parent().hasClass('markdown-body') && $pre[0].classList.length === 0) {
+          $pre.wrap('<div class="code-wrapper"></div>');
+        }
+        lang = lang.toUpperCase().replace('NONE', CONFIG.code_language.default);
+      }
+      $pre.append(copyTmpl.replace('LANG', lang).replace('code-widget">',
+        getBgClass($pre[0]) + (enableCopy ? ' code-widget copy-btn" data-clipboard-snippet><i class="iconfont icon-copy"></i>' : ' code-widget">')));
+
+      if (enableCopy) {
+        Fluid.utils.createScript('https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js', function() {
+          var clipboard = new window.ClipboardJS('.copy-btn', {
+            target: function(trigger) {
+              var nodes = trigger.parentNode.childNodes;
+              for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].tagName === 'CODE') {
+                  return nodes[i];
+                }
+              }
+            }
+          });
+          clipboard.on('success', function(e) {
+            e.clearSelection();
+            e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-copy', 'icon-success');
+            setTimeout(function() {
+              e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-success', 'icon-copy');
+            }, 2000);
+          });
+        });
+      }
+    });
+  })();
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

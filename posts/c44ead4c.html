@@ -1,0 +1,834 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Kevin Loongc">
+  <meta name="keywords" content="云杂货店, KevinL, KevinLoongc, QT, ROS, SLAM, 嵌入式">
+  
+    <meta name="description" content="Step 1: ROS安装配置 点击查看ROS安装参考教程。  安装ros对qt pkg的支持 12sudo apt-get install ros-kinetic-qt-createsudo apt-get install ros-kinetic-qt-build 安装完成即可通过catkin_create_qt_pkg来创建ros gui包 123mkdir -p ~&#x2F;catkin_qt&#x2F;sr">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ROS GUI程序开发——配置QT环境">
+<meta property="og:url" content="https://kevinloongc.github.io/posts/c44ead4c.html">
+<meta property="og:site_name" content="云杂货店">
+<meta property="og:description" content="Step 1: ROS安装配置 点击查看ROS安装参考教程。  安装ros对qt pkg的支持 12sudo apt-get install ros-kinetic-qt-createsudo apt-get install ros-kinetic-qt-build 安装完成即可通过catkin_create_qt_pkg来创建ros gui包 123mkdir -p ~&#x2F;catkin_qt&#x2F;sr">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s3.ax1x.com/2021/01/15/s0wxJS.png">
+<meta property="article:published_time" content="2021-01-15T08:46:25.000Z">
+<meta property="article:modified_time" content="2022-05-28T17:35:50.811Z">
+<meta property="article:author" content="Kevin Loongc">
+<meta property="article:tag" content="ROS GUI">
+<meta property="article:tag" content="QT-Ros">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://s3.ax1x.com/2021/01/15/s0wxJS.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>ROS GUI程序开发——配置QT环境 - 云杂货店</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"kevinloongc.github.io","root":"/","version":"1.9.0","typing":{"enable":true,"typeSpeed":80,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":false},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>云杂货店</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="ROS GUI程序开发——配置QT环境"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2021-01-15 16:46" pubdate>
+          2021年1月15日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          5.3k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          45 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">ROS GUI程序开发——配置QT环境</h1>
+            
+              <p class="note note-info">
+                
+                  
+                    本文最后更新于：2022年5月29日 凌晨
+                  
+                
+              </p>
+            
+            <div class="markdown-body">
+              
+              <h2 id="Step-1-ROS安装配置"><a href="#Step-1-ROS安装配置" class="headerlink" title="Step 1: ROS安装配置"></a>Step 1: ROS安装配置</h2><ol>
+<li><p>点击查看<a target="_blank" rel="noopener" href="http://lkevin98.gitee.io/blog/posts/32393.html">ROS安装参考教程</a>。</p>
+</li>
+<li><p>安装ros对qt pkg的支持</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">sudo apt-get install ros-kinetic-qt-create<br>sudo apt-get install ros-kinetic-qt-build<br></code></pre></td></tr></table></figure></li>
+<li><p>安装完成即可通过catkin_create_qt_pkg来创建ros gui包</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">mkdir</span> -p ~/catkin_qt/src<br><span class="hljs-built_in">cd</span> catkin_qt/src/<br>catkin_create_qt_pkg qt_ros<br></code></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="Step-2-安装qtcreator"><a href="#Step-2-安装qtcreator" class="headerlink" title="Step 2: 安装qtcreator"></a>Step 2: 安装qtcreator</h2><p>首先去<a target="_blank" rel="noopener" href="https://ros-qtc-plugin.readthedocs.io/en/latest/_source/How-to-Install-Users.html">ros-qtc官网</a>下载自己系统对应版本的qtcreator。</p>
+<p>我这里下载的为kinetic离线安装版本：<a target="_blank" rel="noopener" href="https://qtcreator-ros.datasys.swri.edu/downloads/installers/xenial/qtcreator-ros-xenial-latest-offline-installer.run">ros-qtc-pluging-kinetic</a>，下载完成后赋予权限再进行安装。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">chmod</span> +x qtcreator-ros-xenial-latest-offline-installer.run <br>sudo ./qtcreator-ros-xenial-latest-offline-installer.run <br></code></pre></td></tr></table></figure>
+
+
+
+
+
+<h2 id="Step-3-配置项目"><a href="#Step-3-配置项目" class="headerlink" title="Step 3: 配置项目"></a>Step 3: 配置项目</h2><p>打开终端，输入<code>qtcreator-ros</code>启动QT。</p>
+<h3 id="新建工作空间"><a href="#新建工作空间" class="headerlink" title="新建工作空间"></a>新建工作空间</h3><ol>
+<li><p>直接点击“New Project”，选择”Other Project→ROS Workspace→Choose”</p>
+<p><img src="https://s3.ax1x.com/2021/01/15/s0tFZ8.png" srcset="/img/loading.gif" lazyload alt="s0tFZ8.png"></p>
+</li>
+<li><p>Workspace Path点击“Browse”，选中自己已有的工作空间目录(注意工作空间需要提前执行catkin_make)；</p>
+</li>
+<li><p>Name和工作空间名称同名即可；</p>
+</li>
+<li><p>Build system选中CatkinMake，如下图。</p>
+<p><img src="https://s3.ax1x.com/2021/01/15/s0tPqf.png" srcset="/img/loading.gif" lazyload alt="s0tPqf.png"></p>
+</li>
+<li><p>最后点击Next，选择”Finish“即可。</p>
+</li>
+</ol>
+<h3 id="配置Cmakelist-txt"><a href="#配置Cmakelist-txt" class="headerlink" title="配置Cmakelist.txt"></a>配置Cmakelist.txt</h3><p>完成上面的配置，项目已经在qt中打开，点击左侧的小锤子进行编译，发现会有错误提示：<code>error: Unknown CMake command &quot;QT4_ADD_RESOURCES&quot;.</code></p>
+<p><a target="_blank" rel="noopener" href="https://imgchr.com/i/s0tsFe"><img src="https://s3.ax1x.com/2021/01/15/s0tsFe.png" srcset="/img/loading.gif" lazyload alt="s0tsFe.png"></a></p>
+<p>这是版本不匹配的错误（因为创建的为qt4的版本，这里用的是qt5），解决方法如下：</p>
+<ol>
+<li><p><strong>修改功能包的cmakelist.txt</strong><br>更改为如下，注意将<code>qt_ros</code>更改为自己的功能包名。</p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><code class="hljs makefile"><span class="hljs-comment">##############################################################################</span><br><span class="hljs-comment"># CMake</span><br><span class="hljs-comment">##############################################################################</span><br><br>cmake_minimum_required(VERSION 2.8.0)<br>project(qt_ros)<br>set(CMAKE_INCLUDE_CURRENT_DIR ON)<br><br><span class="hljs-comment">##############################################################################</span><br><span class="hljs-comment"># Catkin</span><br><span class="hljs-comment">##############################################################################</span><br><br><span class="hljs-comment"># qt_build provides the qt cmake glue, roscpp the comms for a default talker</span><br>find_package(catkin REQUIRED COMPONENTS rviz roscpp)<br><br>find_package(Qt5 REQUIRED Core Widgets)<br>set(QT_LIBRARIES Qt5::Widgets)<br>include_directories($&#123;catkin_INCLUDE_DIRS&#125;)<br><span class="hljs-comment"># Use this to define what the package will export (e.g. libs, headers).</span><br><span class="hljs-comment"># Since the default here is to produce only a binary, we don&#x27;t worry about</span><br><span class="hljs-comment"># exporting anything. </span><br>catkin_package()<br><br><span class="hljs-comment">##############################################################################</span><br><span class="hljs-comment"># Qt Environment</span><br><span class="hljs-comment">##############################################################################</span><br><br><span class="hljs-comment"># this comes from qt_build&#x27;s qt-ros.cmake which is automatically </span><br><span class="hljs-comment"># included via the dependency call in package.xml</span><br><span class="hljs-comment">#rosbuild_prepare_qt4(QtCore QtGui) # Add the appropriate components to the component list here</span><br><br><span class="hljs-comment">##############################################################################</span><br><span class="hljs-comment"># Sections</span><br><span class="hljs-comment">##############################################################################</span><br><br>file(GLOB QT_FORMS RELATIVE $&#123;CMAKE_CURRENT_SOURCE_DIR&#125; ui/*.ui)<br>file(GLOB QT_RESOURCES RELATIVE $&#123;CMAKE_CURRENT_SOURCE_DIR&#125; resources/*.qrc)<br>file(GLOB_RECURSE QT_MOC RELATIVE $&#123;CMAKE_CURRENT_SOURCE_DIR&#125; FOLLOW_SYMLINKS <span class="hljs-keyword">include</span>/qt_ros/*.hpp *.h)<br><br>QT5_ADD_RESOURCES(QT_RESOURCES_CPP $&#123;QT_RESOURCES&#125;)<br>QT5_WRAP_UI(QT_FORMS_HPP $&#123;QT_FORMS&#125;)<br>QT5_WRAP_CPP(QT_MOC_HPP $&#123;QT_MOC&#125;)<br><br><span class="hljs-comment">##############################################################################</span><br><span class="hljs-comment"># Sources</span><br><span class="hljs-comment">##############################################################################</span><br><br>file(GLOB_RECURSE QT_SOURCES RELATIVE $&#123;CMAKE_CURRENT_SOURCE_DIR&#125; FOLLOW_SYMLINKS src/*.cpp)<br><br><span class="hljs-comment">##############################################################################</span><br><span class="hljs-comment"># Binaries</span><br><span class="hljs-comment">##############################################################################</span><br><br>add_executable(qt_ros $&#123;QT_SOURCES&#125; $&#123;QT_RESOURCES_CPP&#125; $&#123;QT_FORMS_HPP&#125; $&#123;QT_MOC_HPP&#125;)<br>target_link_libraries(qt_ros $&#123;QT_LIBRARIES&#125; $&#123;catkin_LIBRARIES&#125;)<br>install(TARGETS qt_ros RUNTIME DESTINATION $&#123;CATKIN_PACKAGE_BIN_DESTINATION&#125;)<br><br></code></pre></td></tr></table></figure></li>
+<li><p><strong>修改功能包的package.xml</strong><br>注意将<code>qt_ros</code>更改为自己的功能包名</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-meta">&lt;?xml version=<span class="hljs-string">&quot;1.0&quot;</span>?&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">package</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span>qt_ros<span class="hljs-tag">&lt;/<span class="hljs-name">name</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>0.1.0<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">description</span>&gt;</span><br><br>     qt_ros<br><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">description</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">maintainer</span> <span class="hljs-attr">email</span>=<span class="hljs-string">&quot;TODO@gmail.com&quot;</span>&gt;</span>TODO<span class="hljs-tag">&lt;/<span class="hljs-name">maintainer</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">author</span>&gt;</span>TODO<span class="hljs-tag">&lt;/<span class="hljs-name">author</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">license</span>&gt;</span>BSD<span class="hljs-tag">&lt;/<span class="hljs-name">license</span>&gt;</span><br>  <span class="hljs-comment">&lt;!-- &lt;url type=&quot;bugtracker&quot;&gt;https://github.com/stonier/qt_ros/issues&lt;/url&gt; --&gt;</span><br>  <span class="hljs-comment">&lt;!-- &lt;url type=&quot;repository&quot;&gt;https://github.com/stonier/qt_ros&lt;/url&gt; --&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">buildtool_depend</span>&gt;</span>catkin<span class="hljs-tag">&lt;/<span class="hljs-name">buildtool_depend</span>&gt;</span><br>  <span class="hljs-comment">&lt;!--build_depend&gt;qt_build&lt;/build_depend--&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">build_depend</span>&gt;</span>roscpp<span class="hljs-tag">&lt;/<span class="hljs-name">build_depend</span>&gt;</span><br>  <span class="hljs-comment">&lt;!--build_depend&gt;libqt4-dev&lt;/build_depend--&gt;</span><br>  <span class="hljs-comment">&lt;!--run_depend&gt;qt_build&lt;/run_depend--&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">run_depend</span>&gt;</span>roscpp<span class="hljs-tag">&lt;/<span class="hljs-name">run_depend</span>&gt;</span><br>  <span class="hljs-comment">&lt;!--run_depend&gt;libqt4-dev&lt;/run_depend--&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">build_depend</span>&gt;</span>roscpp<span class="hljs-tag">&lt;/<span class="hljs-name">build_depend</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">run_depend</span>&gt;</span>roscpp<span class="hljs-tag">&lt;/<span class="hljs-name">run_depend</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">build_depend</span>&gt;</span>rospy<span class="hljs-tag">&lt;/<span class="hljs-name">build_depend</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">run_depend</span>&gt;</span>rospy<span class="hljs-tag">&lt;/<span class="hljs-name">run_depend</span>&gt;</span><br><br><span class="hljs-tag">&lt;<span class="hljs-name">build_depend</span>&gt;</span>rviz<span class="hljs-tag">&lt;/<span class="hljs-name">build_depend</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">run_depend</span>&gt;</span>rviz<span class="hljs-tag">&lt;/<span class="hljs-name">run_depend</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">build_depend</span>&gt;</span>qtbase5-dev<span class="hljs-tag">&lt;/<span class="hljs-name">build_depend</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">run_depend</span>&gt;</span>libqt5-core<span class="hljs-tag">&lt;/<span class="hljs-name">run_depend</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">run_depend</span>&gt;</span>libqt5-gui<span class="hljs-tag">&lt;/<span class="hljs-name">run_depend</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">run_depend</span>&gt;</span>libqt5-widgets<span class="hljs-tag">&lt;/<span class="hljs-name">run_depend</span>&gt;</span><br><br><br><span class="hljs-tag">&lt;/<span class="hljs-name">package</span>&gt;</span><br><br></code></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="修改main-window-hpp"><a href="#修改main-window-hpp" class="headerlink" title="修改main_window.hpp"></a>修改main_window.hpp</h3><p>在功能包下找到main_window.hpp，点击打开：</p>
+<p><img src="https://s3.ax1x.com/2021/01/15/s003o6.png" srcset="/img/loading.gif" lazyload alt="s003o6.png"></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;QtGui/QMainWindow&gt;</span></span><br></code></pre></td></tr></table></figure>
+
+<p>改为</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;QMainWindow&gt;</span></span><br></code></pre></td></tr></table></figure>
+
+<p>修改完成后，再次进行编译即可成功。</p>
+<h2 id="Step-4-运行可执行文件"><a href="#Step-4-运行可执行文件" class="headerlink" title="Step 4: 运行可执行文件"></a>Step 4: 运行可执行文件</h2><ol>
+<li><p>修改运行配置，添加<code>ROS Run Step</code>和<code>ROS Attach to Node</code>，点击左侧栏的<code>Projects</code> -&gt; <code>Run Settings</code> -&gt; <code>Add</code> -&gt; <code>ROS Run Configuration</code> -&gt; <code>Add Run Step</code>-&gt; <code>ROS Run Step</code> ，下拉找到功能包和节点可执行文件，如下图。<br><img src="https://s3.ax1x.com/2021/01/15/s0aTYD.png" srcset="/img/loading.gif" lazyload alt="s0aTYD.png"></p>
+<p><img src="https://s3.ax1x.com/2021/01/15/s0aoFO.png" srcset="/img/loading.gif" lazyload alt="s0aoFO.png"><br><img src="https://s3.ax1x.com/2021/01/15/s0a7fe.png" srcset="/img/loading.gif" lazyload alt="s0a7fe.png"></p>
+</li>
+<li><p>启动节点管理器</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">roscore<br></code></pre></td></tr></table></figure></li>
+<li><p>最后点击左下角<code>“绿色三角”Run</code>，即可运行程序。</p>
+<ul>
+<li>勾选<code>Use environment variables</code></li>
+<li>点击Connect按钮</li>
+</ul>
+</li>
+</ol>
+<p><img src="https://s3.ax1x.com/2021/01/15/s0wxJS.png" srcset="/img/loading.gif" lazyload alt="s0wxJS.png"></p>
+<p><strong>参考链接</strong>：</p>
+<p>【１】<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_38441692/article/details/105158790">https://blog.csdn.net/qq_38441692/article/details/105158790</a></p>
+<p>【２】<a target="_blank" rel="noopener" href="https://www.ncnynl.com/archives/201903/2864.html">https://www.ncnynl.com/archives/201903/2864.html</a></p>
+
+              
+            </div>
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/ROS/" class="category-chain-item">ROS</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/ROS/ROS-GUI%E7%A8%8B%E5%BA%8F%E5%BC%80%E5%8F%91/" class="category-chain-item">ROS-GUI程序开发</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/ROS-GUI/">#ROS GUI</a>
+      
+        <a href="/tags/QT-Ros/">#QT-Ros</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>ROS GUI程序开发——配置QT环境</div>
+      <div>https://kevinloongc.github.io/posts/c44ead4c.html</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Kevin Loongc</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2021年1月15日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/posts/c4d23249.html" title="C++课程安排">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">C++课程安排</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/posts/b8be4699.html" title="Ubuntu下QT代码格式化配置——Clang-Format">
+                        <span class="hidden-mobile">Ubuntu下QT代码格式化配置——Clang-Format</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.4.16/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"aafuxXAEvmPa9M6u5J2bcS51-gzGzoHsz","appKey":"d6sAJLHqlK9SsXVkMJiMDJDU","path":"window.location.pathname","placeholder":null,"avatar":"retro","meta":["nick","mail"],"requiredFields":[],"pageSize":10,"lang":"zh-CN","highlight":false,"recordIP":false,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":false},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.0/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script>
+  (function() {
+    var enableLang = CONFIG.code_language.enable && CONFIG.code_language.default;
+    var enableCopy = CONFIG.copy_btn;
+    if (!enableLang && !enableCopy) {
+      return;
+    }
+
+    function getBgClass(ele) {
+      return Fluid.utils.getBackgroundLightness(ele) >= 0 ? 'code-widget-light' : 'code-widget-dark';
+    }
+
+    var copyTmpl = '';
+    copyTmpl += '<div class="code-widget">';
+    copyTmpl += 'LANG';
+    copyTmpl += '</div>';
+    jQuery('.markdown-body pre').each(function() {
+      var $pre = jQuery(this);
+      if ($pre.find('code.mermaid').length > 0) {
+        return;
+      }
+      if ($pre.find('span.line').length > 0) {
+        return;
+      }
+
+      var lang = '';
+
+      if (enableLang) {
+        lang = CONFIG.code_language.default;
+        if ($pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2 && $pre.children().hasClass('hljs')) {
+          lang = $pre[0].children[0].classList[1];
+        } else if ($pre[0].getAttribute('data-language')) {
+          lang = $pre[0].getAttribute('data-language');
+        } else if ($pre.parent().hasClass('sourceCode') && $pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2) {
+          lang = $pre[0].children[0].classList[1];
+          $pre.parent().addClass('code-wrapper');
+        } else if ($pre.parent().hasClass('markdown-body') && $pre[0].classList.length === 0) {
+          $pre.wrap('<div class="code-wrapper"></div>');
+        }
+        lang = lang.toUpperCase().replace('NONE', CONFIG.code_language.default);
+      }
+      $pre.append(copyTmpl.replace('LANG', lang).replace('code-widget">',
+        getBgClass($pre[0]) + (enableCopy ? ' code-widget copy-btn" data-clipboard-snippet><i class="iconfont icon-copy"></i>' : ' code-widget">')));
+
+      if (enableCopy) {
+        Fluid.utils.createScript('https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js', function() {
+          var clipboard = new window.ClipboardJS('.copy-btn', {
+            target: function(trigger) {
+              var nodes = trigger.parentNode.childNodes;
+              for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].tagName === 'CODE') {
+                  return nodes[i];
+                }
+              }
+            }
+          });
+          clipboard.on('success', function(e) {
+            e.clearSelection();
+            e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-copy', 'icon-success');
+            setTimeout(function() {
+              e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-success', 'icon-copy');
+            }, 2000);
+          });
+        });
+      }
+    });
+  })();
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

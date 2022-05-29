@@ -1,0 +1,949 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Kevin Loongc">
+  <meta name="keywords" content="云杂货店, KevinL, KevinLoongc, QT, ROS, SLAM, 嵌入式">
+  
+    <meta name="description" content="安装完Ubuntu16.04系统后，需要对系统进行一些基本配置。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Ubuntu16.04 系统配置">
+<meta property="og:url" content="https://kevinloongc.github.io/posts/63427.html">
+<meta property="og:site_name" content="云杂货店">
+<meta property="og:description" content="安装完Ubuntu16.04系统后，需要对系统进行一些基本配置。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s1.ax1x.com/2022/05/08/O1nWhn.png">
+<meta property="article:published_time" content="2019-04-20T13:36:25.000Z">
+<meta property="article:modified_time" content="2022-05-29T02:33:12.384Z">
+<meta property="article:author" content="Kevin Loongc">
+<meta property="article:tag" content="Ubuntu16.04">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://s1.ax1x.com/2022/05/08/O1nWhn.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>Ubuntu16.04 系统配置 - 云杂货店</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"kevinloongc.github.io","root":"/","version":"1.9.0","typing":{"enable":true,"typeSpeed":80,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":false},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>云杂货店</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Ubuntu16.04 系统配置"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2019-04-20 21:36" pubdate>
+          2019年4月20日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          9.9k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          83 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Ubuntu16.04 系统配置</h1>
+            
+              <p class="note note-info">
+                
+                  
+                    本文最后更新于：2022年5月29日 上午
+                  
+                
+              </p>
+            
+            <div class="markdown-body">
+              
+              <p>安装完Ubuntu16.04系统后，需要对系统进行一些基本配置。</p>
+<span id="more"></span>
+
+
+<h2 id="系统篇"><a href="#系统篇" class="headerlink" title="系统篇"></a>系统篇</h2><h4 id="换源"><a href="#换源" class="headerlink" title="换源"></a>换源</h4><p>我更换使用的是<a target="_blank" rel="noopener" href="https://mirrors.tuna.tsinghua.edu.cn/help/ubuntu/">清华大学国内源</a>。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">cd</span> /etc/apt<br>sudo <span class="hljs-built_in">mv</span> sources.list sources.list.bak<br>sudo nano sources.list<br></code></pre></td></tr></table></figure>
+<p>输入一下内容，保存。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 默认注释了源码镜像以提高 apt update 速度，如有需要可自行取消注释 16.04</span><br>deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ xenial main restricted universe multiverse<br><span class="hljs-comment"># deb-src https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ xenial main restricted universe multiverse</span><br>deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ xenial-updates main restricted universe multiverse<br><span class="hljs-comment"># deb-src https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ xenial-updates main restricted universe multiverse</span><br>deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ xenial-backports main restricted universe multiverse<br><span class="hljs-comment"># deb-src https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ xenial-backports main restricted universe multiverse</span><br>deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ xenial-security main restricted universe multiverse<br><span class="hljs-comment"># deb-src https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ xenial-security main restricted universe multiverse</span><br><br></code></pre></td></tr></table></figure>
+
+<p>阿里云国内源：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs bash">deb http://mirrors.aliyun.com/ubuntu/ xenial main restricted universe multiverse<br>deb http://mirrors.aliyun.com/ubuntu/ xenial-security main restricted universe multiverse<br>deb http://mirrors.aliyun.com/ubuntu/ xenial-updates main restricted universe multiverse<br>deb http://mirrors.aliyun.com/ubuntu/ xenial-proposed main restricted universe multiverse<br>deb http://mirrors.aliyun.com/ubuntu/ xenial-backports main restricted universe multiverse<br>deb-src http://mirrors.aliyun.com/ubuntu/ xenial main restricted universe multiverse<br>deb-src http://mirrors.aliyun.com/ubuntu/ xenial-security main restricted universe multiverse<br>deb-src http://mirrors.aliyun.com/ubuntu/ xenial-updates main restricted universe multiverse<br>deb-src http://mirrors.aliyun.com/ubuntu/ xenial-proposed main restricted universe multiverse<br>deb-src http://mirrors.aliyun.com/ubuntu/ xenial-backports main restricted universe multiverse<br></code></pre></td></tr></table></figure>
+
+
+<h4 id="删除不必要软件，剩下干净系统"><a href="#删除不必要软件，剩下干净系统" class="headerlink" title="删除不必要软件，剩下干净系统"></a>删除不必要软件，剩下干净系统</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 删除火狐浏览器，删除前请确保你下载了Google浏览器的安装包，下面有教程</span><br>dpkg --get-selections|grep firefox<br>sudo apt-get purge firefox firefox-locale-en firefox-locale-zh-hans unity-scope-firefoxbookmarks<br><br>sudo apt-get remove unity-webapps-common<br>sudo apt-get purge totem thunderbird rhythmbox empathy brasero simple-scan gnome-mahjongg aisleriot<br>sudo apt-get purge gnome-mines transmission-common gnome-orca webbrowser-app gnome-sudoku landscape-client-ui-install<br>sudo apt-get purge onboard deja-dup<br>sudo apt-get autoremove<br></code></pre></td></tr></table></figure>
+
+
+<h4 id="更新"><a href="#更新" class="headerlink" title="更新"></a>更新</h4><p>安装完系统之后，需要更新一些补丁。Ctrl+Alt+T调出终端，执行一下代码：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">sudo apt-get update &amp;&amp; sudo apt-get upgrade -y &amp;&amp; sudo apt-get autoremove<br></code></pre></td></tr></table></figure>
+
+
+<h4 id="安装显卡驱动"><a href="#安装显卡驱动" class="headerlink" title="安装显卡驱动"></a>安装显卡驱动</h4><p>1）打开软件和更新，点击开发者选项，勾选 <strong>提前释放出的更新</strong>，点击关闭重新载入；</p>
+<p>2）然后再打开软件和更新，点击附加驱动，选择专有显卡驱动进行安装：<img src="https://s2.ax1x.com/2019/06/01/V1xNJP.png" srcset="/img/loading.gif" lazyload alt="V1xNJP.png"></p>
+<p>3）禁用坑爹的nouveau ，继续在终端输入：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">sudo <span class="hljs-built_in">chmod</span> 666 /etc/modprobe.d/blacklist.conf<br>sudo gedit /etc/modprobe.d/blacklist.conf<br></code></pre></td></tr></table></figure>
+
+<p>4)在最后一行添加如下内容：<code>blacklist nouveau<br></code><br>效果如下，最底行添加了<img src="https://s2.ax1x.com/2019/06/01/V1xwQS.png" srcset="/img/loading.gif" lazyload alt="V1xwQS.png"><br>保存文件关闭。</p>
+<h4 id="Ubuntu-Windows双系统时间同步"><a href="#Ubuntu-Windows双系统时间同步" class="headerlink" title="Ubuntu+Windows双系统时间同步"></a>Ubuntu+Windows双系统时间同步</h4><p>安装ntpdate：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">sudo apt-get install ntpdate<br></code></pre></td></tr></table></figure>
+<p>设置校正服务器：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">sudo ntpdate time.windows.com<br></code></pre></td></tr></table></figure>
+<p>设置硬件时间为本地时间：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">sudo hwclock --localtime --systohc<br></code></pre></td></tr></table></figure>
+
+
+<h4 id="设置Windows为开机默认选项"><a href="#设置Windows为开机默认选项" class="headerlink" title="设置Windows为开机默认选项"></a>设置Windows为开机默认选项</h4><p>1、打开终端，输入：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">cd</span> /etc/default/<br></code></pre></td></tr></table></figure>
+<p>2、接着输入：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">sudo nano grub<br></code></pre></td></tr></table></figure>
+<p>3、现在进入了grub文件，找到GRUB_DEFAULT = 0，因为Ubuntu的顺序是从0开始的，并且windows对应第3个选项，所以将0改为2。</p>
+<p>5、按Ctrl+X，会有一个询问是否保存，输入Y保存修改后的grub文件，会有再次询问时，按回车确认退出。</p>
+<p>6、更新grub文件：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">sudo update-grub<br></code></pre></td></tr></table></figure>
+
+<h4 id="删除多余的开机启动项"><a href="#删除多余的开机启动项" class="headerlink" title="删除多余的开机启动项"></a>删除多余的开机启动项</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash">sudo su<br><span class="hljs-built_in">cp</span> /boot/grub/grub.cfg /boot/grub/grub.cfg_backup<br><span class="hljs-built_in">cat</span> /boot/grub/grub.cfg &gt; tmp<br>gedit tmp<br></code></pre></td></tr></table></figure>
+
+<p>找到并删除下面的内容：</p>
+<figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs jboss-cli"><span class="hljs-comment">### BEGIN /etc/grub.d/25_custom ###</span><br>menuentry <span class="hljs-string">&quot;Windows UEFI bootmgfw.efi&quot;</span> &#123;<br>search <span class="hljs-params">--fs-uuid</span> <span class="hljs-params">--no-floppy</span> <span class="hljs-params">--set=root</span> 09C1-B27D<br>chainloader <span class="hljs-params">($&#123;root&#125;)</span><span class="hljs-string">/EFI/Microsoft/Boot/bootmgfw.efi</span><br>&#125;<br><br>menuentry <span class="hljs-string">&quot;Windows Boot UEFI loader&quot;</span> &#123;<br>search <span class="hljs-params">--fs-uuid</span> <span class="hljs-params">--no-floppy</span> <span class="hljs-params">--set=root</span> 09C1-B27D<br>chainloader <span class="hljs-params">($&#123;root&#125;)</span><span class="hljs-string">/EFI/Boot/bkpbootx64.efi</span><br>&#125;<br><br>menuentry <span class="hljs-string">&quot;Windows Boot UEFI fbx64.efi&quot;</span> &#123;<br>search <span class="hljs-params">--fs-uuid</span> <span class="hljs-params">--no-floppy</span> <span class="hljs-params">--set=root</span> 09C1-B27D<br>chainloader <span class="hljs-params">($&#123;root&#125;)</span><span class="hljs-string">/EFI/Boot/fbx64.efi</span><br>&#125;<br><br>menuentry <span class="hljs-string">&quot;EFI/systemd/systemd-bootx64.efi&quot;</span> &#123;<br>search <span class="hljs-params">--fs-uuid</span> <span class="hljs-params">--no-floppy</span> <span class="hljs-params">--set=root</span> 09C1-B27D<br>chainloader <span class="hljs-params">($&#123;root&#125;)</span><span class="hljs-string">/EFI/systemd/systemd-bootx64.efi</span><br>&#125;<br><br>menuentry <span class="hljs-string">&quot;EFI/ubuntu/mmx64.efi&quot;</span> &#123;<br>search <span class="hljs-params">--fs-uuid</span> <span class="hljs-params">--no-floppy</span> <span class="hljs-params">--set=root</span> 09C1-B27D<br>chainloader <span class="hljs-params">($&#123;root&#125;)</span><span class="hljs-string">/EFI/ubuntu/mmx64.efi</span><br>&#125;<br><span class="hljs-comment">### END /etc/grub.d/25_custom ###</span><br></code></pre></td></tr></table></figure>
+
+<p>更新文件：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">cat</span> tmp &gt; /boot/grub/grub.cfg<br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="软件篇"><a href="#软件篇" class="headerlink" title="软件篇"></a>软件篇</h2><h4 id="Google-Chrome"><a href="#Google-Chrome" class="headerlink" title="Google Chrome"></a>Google Chrome</h4><p>首先在 火狐浏览器中打开<a target="_blank" rel="noopener" href="http://www.google.cn/intl/zh-CN/chrome/browser/desktop/index.html">Google Chrome浏览器官网</a>。</p>
+<p>选择“下载 Chrome（Linux 版）”点击“下载 Chrome”，保存本地。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">sudo dpkg -i google-chrome-stable_current_amd64.deb<br></code></pre></td></tr></table></figure>
+
+
+<h4 id="vim"><a href="#vim" class="headerlink" title="vim"></a>vim</h4><p>1）命令行安装：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">sudo apt-get install vim<br></code></pre></td></tr></table></figure>
+<p>2）VIM配置：</p>
+<p>在命令行下，输入命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">sudo vim /etc/vim/vimrc<br></code></pre></td></tr></table></figure>
+<p>在VIM的最后一行，输入下面的内容，可以让您的VIM变得更漂亮、舒服。</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs vim"><span class="hljs-keyword">set</span> <span class="hljs-keyword">nu</span>				<span class="hljs-comment">&quot; 在左侧行号</span><br><span class="hljs-keyword">set</span> tabstop=<span class="hljs-number">4</span>		<span class="hljs-comment">&quot; tab 长度设置为 4</span><br><span class="hljs-keyword">set</span> nobackup		<span class="hljs-comment">&quot; 覆盖文件时不备份</span><br><span class="hljs-keyword">set</span> cursorline		<span class="hljs-comment">&quot; 突出显示当前行</span><br><span class="hljs-keyword">set</span> ruler			<span class="hljs-comment">&quot; 在右下角显示光标位置的状态行</span><br><span class="hljs-keyword">set</span> mouse=<span class="hljs-keyword">a</span>		<span class="hljs-comment">&quot; 设置鼠标</span><br><span class="hljs-string">&quot;set autoindent	&quot;</span> 自动缩进<br></code></pre></td></tr></table></figure>
+
+
+<h4 id="安装shadowsocksgui"><a href="#安装shadowsocksgui" class="headerlink" title="安装shadowsocksgui"></a>安装shadowsocksgui</h4><p>使用ppa源的方式安装:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">sudo add-apt-repository ppa:hzwhuang/ss-qt5<br>sudo apt-get update<br>sudo apt-get install shadowsocks-qt5<br></code></pre></td></tr></table></figure>
+
+
+<h4 id="添加浏览器插件"><a href="#添加浏览器插件" class="headerlink" title="添加浏览器插件"></a>添加浏览器插件</h4><p>1）下载<a target="_blank" rel="noopener" href="https://github.com/Magicalsoso/SwitchOmega">SwitchOmega Github地址</a><br>下载完成后，在Google浏览器的扩展插件打开开发者模式，直接拖拉添加进去。</p>
+<p>2）然后进行配置：<br>①新建情景模式<img src="https://s2.ax1x.com/2019/06/01/V1xgJ0.png" srcset="/img/loading.gif" lazyload alt="V1xgJ0.png"></p>
+<p>②情景模式配置<img src="https://s2.ax1x.com/2019/06/01/V1xyon.png" srcset="/img/loading.gif" lazyload alt="V1xyon.png"></p>
+<p>③设置自动切换<br>如上配置后，在访问网站时通过切换右上角插件的情景模式可以使用代理或直接访问网站。但是我们为了简便，可以使用自动切换功能，它会基于一套规则，过滤我们访问的网站，需要走外网的使用代理，否则直接连接即可。默认在插件添加后会有一个叫做“auto switch”的情景模式，我们在其上边修改即可。<img src="https://s2.ax1x.com/2019/06/01/V1xciq.png" srcset="/img/loading.gif" lazyload alt="V1xciq.png"><br>地址：<a target="_blank" rel="noopener" href="https://raw.githubusercontent.com/gfwlist/gfwlist/master/gfwlist.txt">https://raw.githubusercontent.com/gfwlist/gfwlist/master/gfwlist.txt</a></p>
+<p>④点击右上角浏览器的插件，选择情景模式为自动切换，然后就可以访问网站了。</p>
+<h4 id="系统备份软件systemback"><a href="#系统备份软件systemback" class="headerlink" title="系统备份软件systemback"></a>系统备份软件systemback</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">sudo add-apt-repository ppa:nemh/systemback<br>sudo apt-get update<br>sudo apt-get install systemback<br></code></pre></td></tr></table></figure>
+
+
+<h4 id="可分屏终端"><a href="#可分屏终端" class="headerlink" title="可分屏终端"></a>可分屏终端</h4><p>1、安装</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">sudo apt-get install terminator<br></code></pre></td></tr></table></figure>
+<p>2、修改终端命令提示符颜色：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment">#打开设置文件</span><br>sudo gedit ~/.bashrc <br></code></pre></td></tr></table></figure>
+<p>3、将文件中if和else下的PS1屏蔽后，修改为以下：</p>
+<figure class="highlight wren"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs wren"><span class="hljs-variable">PS1</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;\[<span class="hljs-char escape_">\e</span>]0;\u@\h: \w<span class="hljs-char escape_">\a</span>\]$&#123;debian_chroot:+($debian_chroot)&#125;\[<span class="hljs-char escape_">\0</span>33[01;32m\]\u@\h\[<span class="hljs-char escape_">\0</span>33[00m\]:\[<span class="hljs-char escape_">\0</span>33[01;34m\]\w\[<span class="hljs-char escape_">\0</span>33[00m\]\$&quot;</span><br></code></pre></td></tr></table></figure>
+<p>4、保存，在终端输入如下命令后便可永久更改：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">source</span> ~/.bashrc<br></code></pre></td></tr></table></figure>
+
+
+<h4 id="显示内存CPU网速等（System-Monitor）"><a href="#显示内存CPU网速等（System-Monitor）" class="headerlink" title="显示内存CPU网速等（System Monitor）"></a>显示内存CPU网速等（System Monitor）</h4><p>通过添加PPA安装：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">sudo add-apt-repository ppa:fossfreedom/indicator-sysmonitor<br>sudo apt-get update<br>sudo apt-get install indicator-sysmonitor<br></code></pre></td></tr></table></figure>
+<p>终端执行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">indicator-sysmonitor &amp;<br></code></pre></td></tr></table></figure>
+<p>然后Ctrl+C就可以实现后台运行indicator-sysmonitor，可以看到下图标效果。<br>为程序添加开机启动！鼠标右键点击标题栏上图标，弹出菜单，选择首选项。勾上Run on startup，这样就能开机启动了。<br>切换到 Advanced 选项，可以对要显示的信息的格式进行设置。<br>可以尝试设置其他格式，再Test，直到效果满意再点击保存。</p>
+<h4 id="安装截图工具-Shutter"><a href="#安装截图工具-Shutter" class="headerlink" title="安装截图工具 Shutter"></a>安装截图工具 Shutter</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">sudo add-apt-repository ppa:shutter/ppa<br>sudo apt-get update<br>sudo apt-get install shutter<br></code></pre></td></tr></table></figure>
+<p>添加快捷键：<br>打开系统设置-&gt;键盘设置<img src="https://s2.ax1x.com/2019/06/01/V1xow9.png" srcset="/img/loading.gif" lazyload alt="V1xow9.png"></p>
+<p>设置快捷键<br><img src="https://s2.ax1x.com/2019/06/01/V1xIeJ.png" srcset="/img/loading.gif" lazyload alt="V1xIeJ.png"></p>
+<h4 id="Screenfetch"><a href="#Screenfetch" class="headerlink" title="Screenfetch"></a>Screenfetch</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">sudo apt-get install screenfetch<br></code></pre></td></tr></table></figure>
+
+
+<h4 id="RAR压缩"><a href="#RAR压缩" class="headerlink" title="RAR压缩"></a>RAR压缩</h4><p>Ubuntu刚安装的时候是不能解压rar文件的，只有在安装了解压工具之后，才可以解压。</p>
+<p>安装：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">sudo apt-get install unrar rar<br></code></pre></td></tr></table></figure>
+<p>卸载：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">sudo apt-get remove unrar rar<br></code></pre></td></tr></table></figure>
+<p>rar常用命令主要有:</p>
+<p>x 带路径解压文档中内容到当前目录<br>   例:rar x test.rar<br>   这样解压的话，dir1就会保持原来的目录结构</p>
+<p>更多参考：<a target="_blank" rel="noopener" href="https://www.linuxidc.com/Linux/2017-03/141564.htm">https://www.linuxidc.com/Linux/2017-03/141564.htm</a></p>
+<h4 id="PDF文件编辑器"><a href="#PDF文件编辑器" class="headerlink" title="PDF文件编辑器"></a>PDF文件编辑器</h4><p>Okular:基于KDE的GUI程序，支持注释，不支持tab页以及注释功能，打开页面的速度和渲染速度都不错，支持很多查看模式，可配置项目多，安装方便，支持jk翻页（VI的快捷命令，很方便，很好用）</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">sudo apt-get install okular<br></code></pre></td></tr></table></figure>
+
+
+<h4 id="VScode"><a href="#VScode" class="headerlink" title="VScode"></a>VScode</h4><p>1、<a target="_blank" rel="noopener" href="https://code.visualstudio.com/Download">VScode下载链接</a></p>
+<p>2、到下载目录进行安装：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">sudo dpkg -i code_1.33.1-1554971066_amd64.deb<br></code></pre></td></tr></table></figure>
+
+
+<h4 id="Typora编辑器"><a href="#Typora编辑器" class="headerlink" title="Typora编辑器"></a>Typora编辑器</h4><p>Typora是linux下编辑markdown的非常好的工具。</p>
+<p>1、<a target="_blank" rel="noopener" href="https://www.typora.io/#linux">官网教程</a></p>
+<p>2、进入下载目录进行安装：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># add key</span><br>sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys BA300B7755AFCFAE<br><span class="hljs-comment"># add Typora&#x27;s repository</span><br>sudo add-apt-repository <span class="hljs-string">&#x27;deb https://typora.io/linux ./&#x27;</span><br>sudo apt-get update<br><span class="hljs-comment"># install typora</span><br>sudo apt-get install typora<br></code></pre></td></tr></table></figure>
+
+
+<h4 id="Filezilla"><a href="#Filezilla" class="headerlink" title="Filezilla"></a>Filezilla</h4><p>这软件可以与树莓派进行文件传输</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">sudo apt install filezilla<br></code></pre></td></tr></table></figure>
+
+
+<h4 id="pycharm-专业破解版"><a href="#pycharm-专业破解版" class="headerlink" title="pycharm 专业破解版"></a>pycharm 专业破解版</h4><p>1、<a target="_blank" rel="noopener" href="http://www.jetbrains.com/pycharm/download/#section=linux">下载安装包</a><br>2、下载后文件在/home/xxx/Downloads/ 中，切换到该目录，并解压：tar -zxvf xxxx</p>
+<p>3、修改hosts文件：sudo vim /etc/hosts，在文件中增加一行：0.0.0.0 account.jetbrains.com</p>
+<p>4、保存，使用命令：:wq</p>
+<p>5、切换到安装包解压之后的文件夹的bin目录下(~/home/xx/Downloads/pycharm-2018.2.2/bin/)，执行<code>sh ./pycharm.sh</code></p>
+<p>这里选择第二项或者第三项</p>
+<p>选择第二个Activation code，则需要<a target="_blank" rel="noopener" href="http://idea.lanyus.com/">获取注册码</a></p>
+<p>软件配置:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">!/usr/bin/python3</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">-*- coding:utf-8 -*-</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">* @file <span class="hljs-variable">$&#123;NAME&#125;</span>.py</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">* @author Soso</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">* @<span class="hljs-built_in">date</span> <span class="hljs-variable">$&#123;DATE&#125;</span> <span class="hljs-variable">$&#123;TIME&#125;</span></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">* @brief</span><br></code></pre></td></tr></table></figure>
+<p>6、创建应用图标快捷方式</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">sudo gedit <span class="hljs-regexp">/usr/</span>share<span class="hljs-regexp">/applications/</span>Pycharm.desktop<br></code></pre></td></tr></table></figure>
+<p>此时会打开一个文档,复制下面内容到此文档：</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs ini"><span class="hljs-section">[Desktop Entry]</span><br><span class="hljs-attr">Type</span>=Application<br><span class="hljs-attr">Name</span>=Pycharm<br><span class="hljs-attr">GenericName</span>=Pycharm3<br><span class="hljs-attr">Comment</span>=Pycharm3:The Python IDE<br><span class="hljs-attr">Exec</span>=<span class="hljs-string">&quot;/opt/pycharm-2018.2.2/bin/pycharm.sh&quot;</span> %f<br><span class="hljs-attr">Icon</span>=/opt/pycharm-<span class="hljs-number">2018.2</span>.<span class="hljs-number">2</span>/bin/pycharm.png<br><span class="hljs-attr">Terminal</span>=pycharm<br><span class="hljs-attr">Categories</span>=Pycharm<span class="hljs-comment">;</span><br><br></code></pre></td></tr></table></figure>
+<p>上面的Icon一项的<em>pycharm.png</em>是图标文件名，需要自己下载图片放到对应的目录下。</p>
+<p>最后保存即可，然后即可在/usr/share/applications目录下打开pycharm，直接复制快捷方式到桌面。</p>
+<h4 id="安装Virtual-Box-or-VMWare-workstation-Pro-14"><a href="#安装Virtual-Box-or-VMWare-workstation-Pro-14" class="headerlink" title="安装Virtual Box or VMWare workstation Pro 14"></a>安装Virtual Box or VMWare workstation Pro 14</h4><p>1、<a target="_blank" rel="noopener" href="https://www.vmware.com/products/workstation-pro/workstation-pro-evaluation.html">下载地址</a></p>
+<p>2、转到下载目录，执行命令进行安装：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">sudo <span class="hljs-built_in">chmod</span> +x VMware-Workstation-Full-14.1.3-9474260.x86_64.bundle<br>sudo ./VMware-Workstation-Full-14.1.3-9474260.x86_64.bundle<br></code></pre></td></tr></table></figure>
+<p>3、输入破解秘钥：</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">CG54H</span>-D8D0H-H8DHY-C6X7X-N2KG6<br><span class="hljs-attribute">ZC3WK</span>-AFXEK-<span class="hljs-number">488</span>JP-A7MQX-XL8YF<br><span class="hljs-attribute">AC5XK</span>-<span class="hljs-number">0</span>ZD4H-<span class="hljs-number">088</span>HP-<span class="hljs-number">9</span>NQZV-ZG2R4<br><span class="hljs-attribute">ZC5XK</span>-A6E0M-<span class="hljs-number">080</span>XQ-<span class="hljs-number">04</span>ZZG-YF08D<br><span class="hljs-attribute">ZY5H0</span>-D3Y8K-M89EZ-AYPEG-MYUA<br></code></pre></td></tr></table></figure>
+
+
+
+<h4 id="Sublime-text"><a href="#Sublime-text" class="headerlink" title="Sublime-text"></a>Sublime-text</h4><p><a target="_blank" rel="noopener" href="http://www.sublimetext.com/docs/3/linux_repositories.html#apt">官网教程</a></p>
+<p>Install the GPG key:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">wget -qO - https://download.sublimetext.com/sublimehq-pub.gpg | sudo apt-key add -<br></code></pre></td></tr></table></figure>
+
+<p>Ensure apt is set up to work with https sources:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">sudo apt-get install apt-transport-https<br><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;deb https://download.sublimetext.com/ apt/stable/&quot;</span> | sudo <span class="hljs-built_in">tee</span> /etc/apt/sources.list.d/sublime-text.list `<br></code></pre></td></tr></table></figure>
+
+<p>Update apt sources and install Sublime Text</p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs pgsql">sudo apt-<span class="hljs-keyword">get</span> <span class="hljs-keyword">update</span><br>sudo apt-<span class="hljs-keyword">get</span> install sublime-<span class="hljs-type">text</span><br></code></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="https://packagecontrol.io/installation">手动安装Package Control</a></p>
+<ol>
+<li>点击Preferences &gt; Browse Packages菜单；</li>
+<li>进入打开的目录的上层目录，然后再进入<code>Installed Packages</code>目录；</li>
+<li>下载<a target="_blank" rel="noopener" href="https://packagecontrol.io/Package%20Control.sublime-package">Package Control.sublime-package</a> 并将其复制到<code>Installed Packages /</code>目录中</li>
+<li>重新启动Sublime</li>
+</ol>
+<p>配置Install Package：</p>
+<p>1，channel_v3.json 下载到本地，然后进行本地访问。<br>下载地址：<a target="_blank" rel="noopener" href="https://packagecontrol.io/channel_v3.json">https://packagecontrol.io/channel_v3.json</a> （进去后ctrl+s保存即可）</p>
+<p>2，在Preferences-&gt;Package Setting-&gt;Package Control -&gt;Setting User 中添加代码</p>
+<figure class="highlight prolog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs prolog"><span class="hljs-string">&quot;channels&quot;</span>:<br>[<br>	<span class="hljs-string">&quot;/home/yun/.config/sublime-text-3/Packages/channel_v3.json&quot;</span><br>],<br></code></pre></td></tr></table></figure>
+
+<p>注：上面的地址是channel_v3.json在本地的绝对地址</p>
+<p>配置C语言编译环境：</p>
+<p>不包含scanf时，在sublime控制台输出；包含scanf时，在终端输出结果，敲回车后自动退出</p>
+<p>1，Sublime界面–&gt;Tools–&gt;Build System–&gt;New Build System，弹出一个简单的文件，把以下代码粘贴进去，</p>
+<figure class="highlight nsis"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs nsis">&#123;<br>    <span class="hljs-string">&quot;cmd&quot;</span>: [<span class="hljs-string">&quot;g++ <span class="hljs-variable">$&#123;file&#125;</span> -o <span class="hljs-variable">$&#123;file_base_name&#125;</span>&quot;</span>], <br>    <span class="hljs-string">&quot;file_regex&quot;</span>: <span class="hljs-string">&quot;^(..[^:]*):([0-9]+):?([0-9]+)?:? (.*)$&quot;</span>,<br>    <span class="hljs-string">&quot;working_dir&quot;</span>: <span class="hljs-string">&quot;<span class="hljs-variable">$&#123;file_path&#125;</span>&quot;</span>,<br>    <span class="hljs-string">&quot;selector&quot;</span>: <span class="hljs-string">&quot;source.c, source.c++&quot;</span>,<br>    <span class="hljs-string">&quot;shell&quot;</span>: <span class="hljs-literal">true</span>,<br>    <span class="hljs-string">&quot;variants&quot;</span>:<br>    [<br>        &#123;<br>            <span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;Run&quot;</span>,<br>            <span class="hljs-string">&quot;shell_cmd&quot;</span>: <span class="hljs-string">&quot;gcc \&quot;</span><span class="hljs-variable">$&#123;file&#125;</span>\<span class="hljs-string">&quot; -o \&quot;</span><span class="hljs-variable">$&#123;file_path&#125;</span>/<span class="hljs-variable">$&#123;file_base_name&#125;</span>\<span class="hljs-string">&quot; -Wformat=2 &amp;&amp; \&quot;</span><span class="hljs-variable">$&#123;file_path&#125;</span>/<span class="hljs-variable">$&#123;file_base_name&#125;</span>\<span class="hljs-string">&quot;&quot;</span><br>        &#125;,<br>        &#123;<br>            <span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;RunInShell&quot;</span>,<br>            <span class="hljs-string">&quot;cmd&quot;</span>: [<span class="hljs-string">&quot;gnome-terminal -- bash -c &#x27;<span class="hljs-variable">$&#123;file_path&#125;</span>/<span class="hljs-variable">$&#123;file_base_name&#125;</span>;read&#x27; &quot;</span>]<br><br>        &#125;<br>    ]<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>2，保存为g++.sublime-build,保存位置就是默认路径，即Packages–&gt;User 目录下</p>
+<p>3，第三步，设置快捷键，Sublime界面–&gt;Preferences–&gt;Key Bindings-User, 打开后写入以下代码：</p>
+<figure class="highlight prolog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs prolog">[<br>    &#123; <span class="hljs-string">&quot;keys&quot;</span>: [<span class="hljs-string">&quot;f8&quot;</span>], <span class="hljs-string">&quot;command&quot;</span>: <span class="hljs-string">&quot;build&quot;</span>,<span class="hljs-string">&quot;args&quot;</span>: &#123;<span class="hljs-string">&quot;variant&quot;</span>: <span class="hljs-string">&quot;RunInShell&quot;</span>&#125; &#125;,<br>]<br></code></pre></td></tr></table></figure>
+
+<p> 4，保存，这样就完成调用Linux下的终端了，Sublime写好C/C++程序后，</p>
+<p>　　ctrl+B编译程序，ctrl+shift+B使用Sublime自带的控制台运行程序，F8为调用Ubuntu终端运行程序。</p>
+
+              
+            </div>
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Ubuntu/" class="category-chain-item">Ubuntu</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/Ubuntu/System/" class="category-chain-item">System</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Ubuntu16-04/">#Ubuntu16.04</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Ubuntu16.04 系统配置</div>
+      <div>https://kevinloongc.github.io/posts/63427.html</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Kevin Loongc</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2019年4月20日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/posts/7796.html" title="Ubuntu16.04与树莓派进行文件传输">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Ubuntu16.04与树莓派进行文件传输</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/posts/55370.html" title="Markdown文件的基本编写语法">
+                        <span class="hidden-mobile">Markdown文件的基本编写语法</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.4.16/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"aafuxXAEvmPa9M6u5J2bcS51-gzGzoHsz","appKey":"d6sAJLHqlK9SsXVkMJiMDJDU","path":"window.location.pathname","placeholder":null,"avatar":"retro","meta":["nick","mail"],"requiredFields":[],"pageSize":10,"lang":"zh-CN","highlight":false,"recordIP":false,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":false},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.0/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script>
+  (function() {
+    var enableLang = CONFIG.code_language.enable && CONFIG.code_language.default;
+    var enableCopy = CONFIG.copy_btn;
+    if (!enableLang && !enableCopy) {
+      return;
+    }
+
+    function getBgClass(ele) {
+      return Fluid.utils.getBackgroundLightness(ele) >= 0 ? 'code-widget-light' : 'code-widget-dark';
+    }
+
+    var copyTmpl = '';
+    copyTmpl += '<div class="code-widget">';
+    copyTmpl += 'LANG';
+    copyTmpl += '</div>';
+    jQuery('.markdown-body pre').each(function() {
+      var $pre = jQuery(this);
+      if ($pre.find('code.mermaid').length > 0) {
+        return;
+      }
+      if ($pre.find('span.line').length > 0) {
+        return;
+      }
+
+      var lang = '';
+
+      if (enableLang) {
+        lang = CONFIG.code_language.default;
+        if ($pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2 && $pre.children().hasClass('hljs')) {
+          lang = $pre[0].children[0].classList[1];
+        } else if ($pre[0].getAttribute('data-language')) {
+          lang = $pre[0].getAttribute('data-language');
+        } else if ($pre.parent().hasClass('sourceCode') && $pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2) {
+          lang = $pre[0].children[0].classList[1];
+          $pre.parent().addClass('code-wrapper');
+        } else if ($pre.parent().hasClass('markdown-body') && $pre[0].classList.length === 0) {
+          $pre.wrap('<div class="code-wrapper"></div>');
+        }
+        lang = lang.toUpperCase().replace('NONE', CONFIG.code_language.default);
+      }
+      $pre.append(copyTmpl.replace('LANG', lang).replace('code-widget">',
+        getBgClass($pre[0]) + (enableCopy ? ' code-widget copy-btn" data-clipboard-snippet><i class="iconfont icon-copy"></i>' : ' code-widget">')));
+
+      if (enableCopy) {
+        Fluid.utils.createScript('https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js', function() {
+          var clipboard = new window.ClipboardJS('.copy-btn', {
+            target: function(trigger) {
+              var nodes = trigger.parentNode.childNodes;
+              for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].tagName === 'CODE') {
+                  return nodes[i];
+                }
+              }
+            }
+          });
+          clipboard.on('success', function(e) {
+            e.clearSelection();
+            e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-copy', 'icon-success');
+            setTimeout(function() {
+              e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-success', 'icon-copy');
+            }, 2000);
+          });
+        });
+      }
+    });
+  })();
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

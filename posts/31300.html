@@ -1,0 +1,921 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Kevin Loongc">
+  <meta name="keywords" content="云杂货店, KevinL, KevinLoongc, QT, ROS, SLAM, 嵌入式">
+  
+    <meta name="description" content="导航仿真上一篇博文已经介绍了如何配置move_base和amcl，但是大家应该还是对它们没有一个直观的感受和认识，现在我们来进行调用它们结合之前的知识来实现ROS机器人自主导航。 新建launch启动文件在 mbot_navigation 功能包launch目录下新建启动文件，命名为nav_cloister_demo.launch。此launch文件加载了地图配置，启动了move_base节点和A">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ROS机器人学习(八)--ROS机器人自主导航">
+<meta property="og:url" content="https://kevinloongc.github.io/posts/31300.html">
+<meta property="og:site_name" content="云杂货店">
+<meta property="og:description" content="导航仿真上一篇博文已经介绍了如何配置move_base和amcl，但是大家应该还是对它们没有一个直观的感受和认识，现在我们来进行调用它们结合之前的知识来实现ROS机器人自主导航。 新建launch启动文件在 mbot_navigation 功能包launch目录下新建启动文件，命名为nav_cloister_demo.launch。此launch文件加载了地图配置，启动了move_base节点和A">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.ax1x.com/2019/06/01/V3PEZD.png">
+<meta property="article:published_time" content="2019-04-30T02:36:25.000Z">
+<meta property="article:modified_time" content="2022-05-29T04:45:38.469Z">
+<meta property="article:author" content="Kevin Loongc">
+<meta property="article:tag" content="ROS">
+<meta property="article:tag" content="ROS仿真">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://s2.ax1x.com/2019/06/01/V3PEZD.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>ROS机器人学习(八)--ROS机器人自主导航 - 云杂货店</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"kevinloongc.github.io","root":"/","version":"1.9.0","typing":{"enable":true,"typeSpeed":80,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":false},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>云杂货店</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="ROS机器人学习(八)--ROS机器人自主导航"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2019-04-30 10:36" pubdate>
+          2019年4月30日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          8.1k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          68 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar category-bar" style="margin-right: -1rem">
+    
+
+
+
+
+
+<div class="category-list">
+  
+  
+    
+    
+    
+    <div class="category row nomargin-x">
+      <a class="category-item 
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="ROS机器人学习(仿真)"
+        id="heading-df4232a118b44301d781bcce00f5128c" role="tab" data-toggle="collapse" href="#collapse-df4232a118b44301d781bcce00f5128c"
+        aria-expanded="true"
+      >
+        ROS机器人学习(仿真)
+        <span class="list-group-count">(9)</span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+      <div class="category-collapse collapse show" id="collapse-df4232a118b44301d781bcce00f5128c"
+           role="tabpanel" aria-labelledby="heading-df4232a118b44301d781bcce00f5128c">
+        
+        
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/posts/4133.html" title="ROS机器人学习(一)--URDF建模"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">ROS机器人学习(一)--URDF建模</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/45733.html" title="ROS机器人学习(七)--ROS中的导航框架"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">ROS机器人学习(七)--ROS中的导航框架</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/63737.html" title="ROS机器人学习(三)--使用ArbotiX控制机器人模型"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">ROS机器人学习(三)--使用ArbotiX控制机器人模型</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/9050.html" title="ROS机器人学习(二)--URDF模型优化"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">ROS机器人学习(二)--URDF模型优化</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/9594.html" title="ROS机器人学习(五)--机器人SLAM导航必备条件"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">ROS机器人学习(五)--机器人SLAM导航必备条件</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/31300.html" title="ROS机器人学习(八)--ROS机器人自主导航"
+           class="list-group-item list-group-item-action
+           active">
+          <span class="category-post">ROS机器人学习(八)--ROS机器人自主导航</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/42632.html" title="ROS机器人学习(六)--ROS SLAM功能包应用方法"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">ROS机器人学习(六)--ROS SLAM功能包应用方法</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/64089.html" title="ROS机器人学习(四)--Gazebo物理仿真环境搭建"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">ROS机器人学习(四)--Gazebo物理仿真环境搭建</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/57691.html" title="ROS机器人学习--ros_control"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">ROS机器人学习--ros_control</span>
+        </a>
+      
+    
+  </div>
+
+        
+      </div>
+    </div>
+  
+</div>
+
+
+  </aside>
+
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">ROS机器人学习(八)--ROS机器人自主导航</h1>
+            
+              <p class="note note-info">
+                
+                  
+                    本文最后更新于：2022年5月29日 下午
+                  
+                
+              </p>
+            
+            <div class="markdown-body">
+              
+              <h2 id="导航仿真"><a href="#导航仿真" class="headerlink" title="导航仿真"></a>导航仿真</h2><p>上一篇博文已经介绍了如何配置move_base和amcl，但是大家应该还是对它们没有一个直观的感受和认识，现在我们来进行调用它们结合之前的知识来实现ROS机器人自主导航。</p>
+<h3 id="新建launch启动文件"><a href="#新建launch启动文件" class="headerlink" title="新建launch启动文件"></a>新建launch启动文件</h3><p>在 mbot_navigation 功能包launch目录下新建启动文件，命名为nav_cloister_demo.launch。<br>此launch文件加载了地图配置，启动了move_base节点和AMCL节点：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">launch</span>&gt;</span><br><br>    <span class="hljs-comment">&lt;!-- 设置地图的配置文件 --&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">arg</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;map&quot;</span> <span class="hljs-attr">default</span>=<span class="hljs-string">&quot;cloister_gmapping.yaml&quot;</span> /&gt;</span><br><br>    <span class="hljs-comment">&lt;!-- 运行地图服务器，并且加载设置的地图--&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">node</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;map_server&quot;</span> <span class="hljs-attr">pkg</span>=<span class="hljs-string">&quot;map_server&quot;</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;map_server&quot;</span> <span class="hljs-attr">args</span>=<span class="hljs-string">&quot;$(find mbot_navigation)/maps/$(arg map)&quot;</span>/&gt;</span><br><br>    <span class="hljs-comment">&lt;!-- 运行move_base节点 --&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">include</span> <span class="hljs-attr">file</span>=<span class="hljs-string">&quot;$(find mbot_navigation)/launch/move_base.launch&quot;</span>/&gt;</span><br><br>    <span class="hljs-comment">&lt;!-- 启动AMCL节点 --&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">include</span> <span class="hljs-attr">file</span>=<span class="hljs-string">&quot;$(find mbot_navigation)/launch/amcl.launch&quot;</span> /&gt;</span><br><br>    <span class="hljs-comment">&lt;!-- 对于虚拟定位，需要设置一个/odom与/map之间的静态坐标变换 --&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">node</span> <span class="hljs-attr">pkg</span>=<span class="hljs-string">&quot;tf&quot;</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;static_transform_publisher&quot;</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;map_odom_broadcaster&quot;</span> <span class="hljs-attr">args</span>=<span class="hljs-string">&quot;0 0 0 0 0 0 /map /odom 100&quot;</span> /&gt;</span><br><br>    <span class="hljs-comment">&lt;!-- 运行rviz --&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">node</span> <span class="hljs-attr">pkg</span>=<span class="hljs-string">&quot;rviz&quot;</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;rviz&quot;</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;rviz&quot;</span> <span class="hljs-attr">args</span>=<span class="hljs-string">&quot;-d $(find mbot_navigation)/rviz/nav.rviz&quot;</span>/&gt;</span><br><br><span class="hljs-tag">&lt;/<span class="hljs-name">launch</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="启动导航仿真"><a href="#启动导航仿真" class="headerlink" title="启动导航仿真"></a>启动导航仿真</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 启动仿真环境</span><br>roslaunch mbot_gazebo mbot_laser_nav_gazebo.launch<br><span class="hljs-comment"># 启动导航节点</span><br>roslaunch mbot_navigation nav_cloister_demo.launch <br></code></pre></td></tr></table></figure>
+<p><img src="https://s2.ax1x.com/2019/06/01/V3PVde.png" srcset="/img/loading.gif" lazyload alt="V3PVde.png"></p>
+<h2 id="导航SLAM仿真"><a href="#导航SLAM仿真" class="headerlink" title="导航SLAM仿真"></a>导航SLAM仿真</h2><p>我们现在有通过gmapping功能包完成机器人的SLAM功能，也有通过导航来完成了到达目标点的路径规划。<br>接下来，我们就把SLAM和导航结合起来。<br>之前的激光SLAM建图，我们是通过键盘控制机器人在未知环境中运动来完成建图，这个过程当中人参与的部分是比较多的。现在我们结合导航功能，使机器人自主的去探索未知环境，来完成最终的地图构建。</p>
+<h3 id="新建launch启动文件-1"><a href="#新建launch启动文件-1" class="headerlink" title="新建launch启动文件"></a>新建launch启动文件</h3><p>在 mbot_navigation 功能包launch目录下新建启动文件，命名为exploring_slam_demo.launch：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">launch</span>&gt;</span><br><br>    <span class="hljs-tag">&lt;<span class="hljs-name">include</span> <span class="hljs-attr">file</span>=<span class="hljs-string">&quot;$(find mbot_navigation)/launch/gmapping.launch&quot;</span>/&gt;</span><br><br>    <span class="hljs-comment">&lt;!-- 运行move_base节点 --&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">include</span> <span class="hljs-attr">file</span>=<span class="hljs-string">&quot;$(find mbot_navigation)/launch/move_base.launch&quot;</span> /&gt;</span><br><br>    <span class="hljs-comment">&lt;!-- 运行rviz --&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">node</span> <span class="hljs-attr">pkg</span>=<span class="hljs-string">&quot;rviz&quot;</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;rviz&quot;</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;rviz&quot;</span> <span class="hljs-attr">args</span>=<span class="hljs-string">&quot;-d $(find mbot_navigation)/rviz/nav.rviz&quot;</span>/&gt;</span><br><br><span class="hljs-tag">&lt;/<span class="hljs-name">launch</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="获取坐标点"><a href="#获取坐标点" class="headerlink" title="获取坐标点"></a>获取坐标点</h3><p>编写一个小程序，获取机器人在地图中的坐标点位置，命名为getRobotPos.py:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment">#!/usr/bin/env python</span><br><span class="hljs-keyword">import</span> rospy<br><br><span class="hljs-keyword">from</span> tf_conversions <span class="hljs-keyword">import</span> transformations<br><span class="hljs-keyword">from</span> math <span class="hljs-keyword">import</span> pi<br><span class="hljs-keyword">import</span> tf<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Robot</span>:<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self</span>):<br>        self.tf_listener = tf.TransformListener()<br>        <span class="hljs-keyword">try</span>:<br>            self.tf_listener.waitForTransform(<span class="hljs-string">&#x27;/map&#x27;</span>, <span class="hljs-string">&#x27;/base_link&#x27;</span>, rospy.Time(), rospy.Duration(<span class="hljs-number">1.0</span>))<br>        <span class="hljs-keyword">except</span> (tf.Exception, tf.ConnectivityException, tf.LookupException):<br>            <span class="hljs-keyword">return</span><br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">get_pos</span>(<span class="hljs-params">self</span>):<br>        <span class="hljs-keyword">try</span>:<br>            (trans, rot) = self.tf_listener.lookupTransform(<span class="hljs-string">&#x27;/map&#x27;</span>, <span class="hljs-string">&#x27;/base_link&#x27;</span>, rospy.Time(<span class="hljs-number">0</span>))<br>        <span class="hljs-keyword">except</span> (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):<br>            rospy.loginfo(<span class="hljs-string">&quot;tf Error&quot;</span>)<br>            <span class="hljs-keyword">return</span> <span class="hljs-literal">None</span><br>        euler = transformations.euler_from_quaternion(rot)<br>        <span class="hljs-comment">#print euler[2] / pi * 180</span><br><br>        x = trans[<span class="hljs-number">0</span>]<br>        y = trans[<span class="hljs-number">1</span>]<br>        th = euler[<span class="hljs-number">2</span>] / pi * <span class="hljs-number">180</span><br>        <span class="hljs-keyword">return</span> (x, y, th)<br><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&quot;__main__&quot;</span>:<br>    rospy.init_node(<span class="hljs-string">&#x27;get_pos_demo&#x27;</span>,anonymous=<span class="hljs-literal">True</span>)<br>    robot = Robot()<br>    r = rospy.Rate(<span class="hljs-number">100</span>)<br>    r.sleep()<br>    <span class="hljs-keyword">while</span> <span class="hljs-keyword">not</span> rospy.is_shutdown():<br>        <span class="hljs-built_in">print</span> robot.get_pos()<br>        r.sleep()<br><br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="启动导航SLAM仿真"><a href="#启动导航SLAM仿真" class="headerlink" title="启动导航SLAM仿真"></a>启动导航SLAM仿真</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 启动仿真环境</span><br>roslaunch mbot_gazebo mbot_laser_nav_gazebo.launch<br><span class="hljs-comment"># 启动SLAM+导航节点</span><br>roslaunch mbot_navigation exploring_slam_demo.launch<br><span class="hljs-comment"># 获取机器人坐标点</span><br>rosrun mbot_navigation getRobotPos.py<br></code></pre></td></tr></table></figure>
+<p>通过2D Nav Goal 选择目标点来控制机器人移动，机器人在运动过程中会把周围的环境地图一步步地构建出来。<img src="https://s2.ax1x.com/2019/06/01/V3PEZD.png" srcset="/img/loading.gif" lazyload alt="V3PEZD.png"></p>
+<h2 id="自主探索SLAM仿真"><a href="#自主探索SLAM仿真" class="headerlink" title="自主探索SLAM仿真"></a>自主探索SLAM仿真</h2><h3 id="编写一个小程序，控制机器人自主运动"><a href="#编写一个小程序，控制机器人自主运动" class="headerlink" title="编写一个小程序，控制机器人自主运动"></a>编写一个小程序，控制机器人自主运动</h3><p>在 mbot_navigation 功能包script目录下编写一个小程序，命名为exploring_slam.py:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment">#!/usr/bin/env python </span><br><span class="hljs-comment"># -*- coding: utf-8 -*-</span><br> <br><span class="hljs-keyword">import</span> roslib;<br><span class="hljs-keyword">import</span> rospy<br><span class="hljs-keyword">import</span> actionlib<br><span class="hljs-keyword">from</span> actionlib_msgs.msg <span class="hljs-keyword">import</span> *<br><span class="hljs-keyword">from</span> geometry_msgs.msg <span class="hljs-keyword">import</span> Pose, PoseWithCovarianceStamped, Point, Quaternion, Twist<br><span class="hljs-keyword">from</span> move_base_msgs.msg <span class="hljs-keyword">import</span> MoveBaseAction, MoveBaseGoal<br><span class="hljs-keyword">from</span> random <span class="hljs-keyword">import</span> sample<br><span class="hljs-keyword">from</span> math <span class="hljs-keyword">import</span> <span class="hljs-built_in">pow</span>, sqrt<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">NavTest</span>():<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self</span>):<br>        rospy.init_node(<span class="hljs-string">&#x27;exploring_slam&#x27;</span>, anonymous=<span class="hljs-literal">True</span>)  <br>        rospy.on_shutdown(self.shutdown)  <br><br>        <span class="hljs-comment"># 在每个目标位置暂停的时间 (单位：s)</span><br>        self.rest_time = rospy.get_param(<span class="hljs-string">&quot;~rest_time&quot;</span>, <span class="hljs-number">2</span>)  <br><br>        <span class="hljs-comment"># 是否仿真？  </span><br>        self.fake_test = rospy.get_param(<span class="hljs-string">&quot;~fake_test&quot;</span>, <span class="hljs-literal">True</span>)  <br><br>        <span class="hljs-comment"># 到达目标的状态  </span><br>        goal_states = [<span class="hljs-string">&#x27;PENDING&#x27;</span>, <span class="hljs-string">&#x27;ACTIVE&#x27;</span>, <span class="hljs-string">&#x27;PREEMPTED&#x27;</span>,   <br>                       <span class="hljs-string">&#x27;SUCCEEDED&#x27;</span>, <span class="hljs-string">&#x27;ABORTED&#x27;</span>, <span class="hljs-string">&#x27;REJECTED&#x27;</span>,  <br>                       <span class="hljs-string">&#x27;PREEMPTING&#x27;</span>, <span class="hljs-string">&#x27;RECALLING&#x27;</span>, <span class="hljs-string">&#x27;RECALLED&#x27;</span>,  <br>                       <span class="hljs-string">&#x27;LOST&#x27;</span>]  <br> <br>        <span class="hljs-comment"># 设置目标点的位置    </span><br>        locations = <span class="hljs-built_in">dict</span>()  <br><br>        locations[<span class="hljs-string">&#x27;1&#x27;</span>] = Pose(Point(<span class="hljs-number">4.589</span>, -<span class="hljs-number">0.376</span>, <span class="hljs-number">0.000</span>),  Quaternion(<span class="hljs-number">0.000</span>, <span class="hljs-number">0.000</span>, -<span class="hljs-number">0.447</span>, <span class="hljs-number">0.894</span>))  <br>        locations[<span class="hljs-string">&#x27;2&#x27;</span>] = Pose(Point(<span class="hljs-number">4.231</span>, -<span class="hljs-number">6.050</span>, <span class="hljs-number">0.000</span>),  Quaternion(<span class="hljs-number">0.000</span>, <span class="hljs-number">0.000</span>, -<span class="hljs-number">0.847</span>, <span class="hljs-number">0.532</span>))  <br>        locations[<span class="hljs-string">&#x27;3&#x27;</span>] = Pose(Point(-<span class="hljs-number">0.674</span>, -<span class="hljs-number">5.244</span>, <span class="hljs-number">0.000</span>), Quaternion(<span class="hljs-number">0.000</span>, <span class="hljs-number">0.000</span>, <span class="hljs-number">0.000</span>, <span class="hljs-number">1.000</span>))  <br>        locations[<span class="hljs-string">&#x27;4&#x27;</span>] = Pose(Point(-<span class="hljs-number">5.543</span>, -<span class="hljs-number">4.779</span>, <span class="hljs-number">0.000</span>), Quaternion(<span class="hljs-number">0.000</span>, <span class="hljs-number">0.000</span>, <span class="hljs-number">0.645</span>, <span class="hljs-number">0.764</span>))  <br>        locations[<span class="hljs-string">&#x27;5&#x27;</span>] = Pose(Point(-<span class="hljs-number">4.701</span>, -<span class="hljs-number">0.590</span>, <span class="hljs-number">0.000</span>), Quaternion(<span class="hljs-number">0.000</span>, <span class="hljs-number">0.000</span>, <span class="hljs-number">0.340</span>, <span class="hljs-number">0.940</span>))  <br>        locations[<span class="hljs-string">&#x27;6&#x27;</span>] = Pose(Point(<span class="hljs-number">2.924</span>, <span class="hljs-number">0.018</span>, <span class="hljs-number">0.000</span>),   Quaternion(<span class="hljs-number">0.000</span>, <span class="hljs-number">0.000</span>, <span class="hljs-number">0.000</span>, <span class="hljs-number">1.000</span>))  <br><br>        <span class="hljs-comment"># 发布控制机器人的消息  </span><br>        self.cmd_vel_pub = rospy.Publisher(<span class="hljs-string">&#x27;cmd_vel&#x27;</span>, Twist, queue_size=<span class="hljs-number">5</span>)  <br><br>        <span class="hljs-comment"># 订阅move_base服务器的消息  </span><br>        self.move_base = actionlib.SimpleActionClient(<span class="hljs-string">&quot;move_base&quot;</span>, MoveBaseAction)  <br><br>        rospy.loginfo(<span class="hljs-string">&quot;Waiting for move_base action server...&quot;</span>)  <br><br>        <span class="hljs-comment"># 60s等待时间限制  </span><br>        self.move_base.wait_for_server(rospy.Duration(<span class="hljs-number">60</span>))  <br>        rospy.loginfo(<span class="hljs-string">&quot;Connected to move base server&quot;</span>)  <br>  <br>        <span class="hljs-comment"># 保存机器人的在rviz中的初始位置  </span><br>        initial_pose = PoseWithCovarianceStamped()  <br><br>        <span class="hljs-comment"># 保存成功率、运行时间、和距离的变量  </span><br>        n_locations = <span class="hljs-built_in">len</span>(locations)  <br>        n_goals = <span class="hljs-number">0</span>  <br>        n_successes = <span class="hljs-number">0</span>  <br>        i = n_locations  <br>        distance_traveled = <span class="hljs-number">0</span>  <br>        start_time = rospy.Time.now()  <br>        running_time = <span class="hljs-number">0</span>  <br>        location = <span class="hljs-string">&quot;&quot;</span>  <br>        last_location = <span class="hljs-string">&quot;&quot;</span>    <br> <br>        <span class="hljs-comment"># 确保有初始位置  </span><br>        <span class="hljs-keyword">while</span> initial_pose.header.stamp == <span class="hljs-string">&quot;&quot;</span>:  <br>            rospy.sleep(<span class="hljs-number">1</span>)  <br><br>        rospy.loginfo(<span class="hljs-string">&quot;Starting navigation test&quot;</span>)  <br><br>        <span class="hljs-comment"># 开始主循环，随机导航  </span><br>        <span class="hljs-keyword">while</span> <span class="hljs-keyword">not</span> rospy.is_shutdown():  <br>            <span class="hljs-comment"># 如果已经走完了所有点，再重新开始排序  </span><br>            <span class="hljs-keyword">if</span> i == n_locations:  <br>                i = <span class="hljs-number">0</span>  <br>                sequence = sample(locations, n_locations)  <br> <br>                <span class="hljs-comment"># 如果最后一个点和第一个点相同，则跳过  </span><br>                <span class="hljs-keyword">if</span> sequence[<span class="hljs-number">0</span>] == last_location:  <br>                    i = <span class="hljs-number">1</span>  <br><br>            <span class="hljs-comment"># 在当前的排序中获取下一个目标点  </span><br>            location = sequence[i]  <br><br>            <span class="hljs-comment"># 跟踪行驶距离  </span><br>            <span class="hljs-comment"># 使用更新的初始位置  </span><br>            <span class="hljs-keyword">if</span> initial_pose.header.stamp == <span class="hljs-string">&quot;&quot;</span>:  <br>                distance = sqrt(<span class="hljs-built_in">pow</span>(locations[location].position.x -   <br>                                    locations[last_location].position.x, <span class="hljs-number">2</span>) +  <br>                                <span class="hljs-built_in">pow</span>(locations[location].position.y -   <br>                                    locations[last_location].position.y, <span class="hljs-number">2</span>))  <br>            <span class="hljs-keyword">else</span>:  <br>                rospy.loginfo(<span class="hljs-string">&quot;Updating current pose.&quot;</span>)  <br>                distance = sqrt(<span class="hljs-built_in">pow</span>(locations[location].position.x -   <br>                                    initial_pose.pose.pose.position.x, <span class="hljs-number">2</span>) +  <br>                                <span class="hljs-built_in">pow</span>(locations[location].position.y -   <br>                                    initial_pose.pose.pose.position.y, <span class="hljs-number">2</span>))  <br>                initial_pose.header.stamp = <span class="hljs-string">&quot;&quot;</span>  <br><br>            <span class="hljs-comment"># 存储上一次的位置，计算距离  </span><br>            last_location = location  <br><br>            <span class="hljs-comment"># 计数器加1  </span><br>            i += <span class="hljs-number">1</span>  <br>            n_goals += <span class="hljs-number">1</span>  <br><br>            <span class="hljs-comment"># 设定下一个目标点  </span><br>            self.goal = MoveBaseGoal()  <br>            self.goal.target_pose.pose = locations[location]  <br>            self.goal.target_pose.header.frame_id = <span class="hljs-string">&#x27;map&#x27;</span>  <br>            self.goal.target_pose.header.stamp = rospy.Time.now()  <br><br>            <span class="hljs-comment"># 让用户知道下一个位置  </span><br>            rospy.loginfo(<span class="hljs-string">&quot;Going to: &quot;</span> + <span class="hljs-built_in">str</span>(location))  <br><br>            <span class="hljs-comment"># 向下一个位置进发  </span><br>            self.move_base.send_goal(self.goal)  <br><br>            <span class="hljs-comment"># 五分钟时间限制  </span><br>            finished_within_time = self.move_base.wait_for_result(rospy.Duration(<span class="hljs-number">300</span>))   <br><br>            <span class="hljs-comment"># 查看是否成功到达  </span><br>            <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> finished_within_time:  <br>                self.move_base.cancel_goal()  <br>                rospy.loginfo(<span class="hljs-string">&quot;Timed out achieving goal&quot;</span>)  <br>            <span class="hljs-keyword">else</span>:  <br>                state = self.move_base.get_state()  <br>                <span class="hljs-keyword">if</span> state == GoalStatus.SUCCEEDED:  <br>                    rospy.loginfo(<span class="hljs-string">&quot;Goal succeeded!&quot;</span>)  <br>                    n_successes += <span class="hljs-number">1</span>  <br>                    distance_traveled += distance  <br>                    rospy.loginfo(<span class="hljs-string">&quot;State:&quot;</span> + <span class="hljs-built_in">str</span>(state))  <br>                <span class="hljs-keyword">else</span>:  <br>                  rospy.loginfo(<span class="hljs-string">&quot;Goal failed with error code: &quot;</span> + <span class="hljs-built_in">str</span>(goal_states[state]))  <br><br>            <span class="hljs-comment"># 运行所用时间  </span><br>            running_time = rospy.Time.now() - start_time  <br>            running_time = running_time.secs / <span class="hljs-number">60.0</span>  <br><br>            <span class="hljs-comment"># 输出本次导航的所有信息  </span><br>            rospy.loginfo(<span class="hljs-string">&quot;Success so far: &quot;</span> + <span class="hljs-built_in">str</span>(n_successes) + <span class="hljs-string">&quot;/&quot;</span> +   <br>                          <span class="hljs-built_in">str</span>(n_goals) + <span class="hljs-string">&quot; = &quot;</span> +   <br>                          <span class="hljs-built_in">str</span>(<span class="hljs-number">100</span> * n_successes/n_goals) + <span class="hljs-string">&quot;%&quot;</span>)  <br><br>            rospy.loginfo(<span class="hljs-string">&quot;Running time: &quot;</span> + <span class="hljs-built_in">str</span>(trunc(running_time, <span class="hljs-number">1</span>)) +   <br>                          <span class="hljs-string">&quot; min Distance: &quot;</span> + <span class="hljs-built_in">str</span>(trunc(distance_traveled, <span class="hljs-number">1</span>)) + <span class="hljs-string">&quot; m&quot;</span>)  <br><br>            rospy.sleep(self.rest_time)  <br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">update_initial_pose</span>(<span class="hljs-params">self, initial_pose</span>):<br>        self.initial_pose = initial_pose  <br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">shutdown</span>(<span class="hljs-params">self</span>):<br>        rospy.loginfo(<span class="hljs-string">&quot;Stopping the robot...&quot;</span>)  <br>        self.move_base.cancel_goal()  <br>        rospy.sleep(<span class="hljs-number">2</span>)  <br>        self.cmd_vel_pub.publish(Twist())  <br>        rospy.sleep(<span class="hljs-number">1</span>)  <br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">trunc</span>(<span class="hljs-params">f, n</span>):<br>    slen = <span class="hljs-built_in">len</span>(<span class="hljs-string">&#x27;%.*f&#x27;</span> % (n, f))<br><br>    <span class="hljs-keyword">return</span> <span class="hljs-built_in">float</span>(<span class="hljs-built_in">str</span>(f)[:slen])<br><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&#x27;__main__&#x27;</span>:<br>    <span class="hljs-keyword">try</span>:<br>        NavTest()  <br>        rospy.spin()  <br><br>    <span class="hljs-keyword">except</span> rospy.ROSInterruptException:<br>        rospy.loginfo(<span class="hljs-string">&quot;Exploring SLAM finished.&quot;</span>)<br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="启动自主探索SLAM仿真"><a href="#启动自主探索SLAM仿真" class="headerlink" title="启动自主探索SLAM仿真"></a>启动自主探索SLAM仿真</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 启动仿真环境</span><br>roslaunch mbot_gazebo mbot_laser_nav_gazebo.launch<br><span class="hljs-comment"># 启动SLAM+导航节点</span><br>roslaunch mbot_navigation exploring_slam_demo.launch<br><span class="hljs-comment"># 运行一个小程序，控制机器人运动</span><br>rosrun mbot_navigation exploring_slam.py<br></code></pre></td></tr></table></figure>
+<p><img src="https://s2.ax1x.com/2019/06/01/V3PEZD.png" srcset="/img/loading.gif" lazyload alt="V3PEZD.png"></p>
+
+              
+            </div>
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/ROS/" class="category-chain-item">ROS</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AD%A6%E4%B9%A0-%E4%BB%BF%E7%9C%9F/" class="category-chain-item">ROS机器人学习(仿真)</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/ROS/">#ROS</a>
+      
+        <a href="/tags/ROS%E4%BB%BF%E7%9C%9F/">#ROS仿真</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>ROS机器人学习(八)--ROS机器人自主导航</div>
+      <div>https://kevinloongc.github.io/posts/31300.html</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Kevin Loongc</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2019年4月30日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/posts/40337.html" title="Deepin wine for Ubuntu">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Deepin wine for Ubuntu</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/posts/45733.html" title="ROS机器人学习(七)--ROS中的导航框架">
+                        <span class="hidden-mobile">ROS机器人学习(七)--ROS中的导航框架</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.4.16/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"aafuxXAEvmPa9M6u5J2bcS51-gzGzoHsz","appKey":"d6sAJLHqlK9SsXVkMJiMDJDU","path":"window.location.pathname","placeholder":null,"avatar":"retro","meta":["nick","mail"],"requiredFields":[],"pageSize":10,"lang":"zh-CN","highlight":false,"recordIP":false,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":false},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.0/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script>
+  (function() {
+    var enableLang = CONFIG.code_language.enable && CONFIG.code_language.default;
+    var enableCopy = CONFIG.copy_btn;
+    if (!enableLang && !enableCopy) {
+      return;
+    }
+
+    function getBgClass(ele) {
+      return Fluid.utils.getBackgroundLightness(ele) >= 0 ? 'code-widget-light' : 'code-widget-dark';
+    }
+
+    var copyTmpl = '';
+    copyTmpl += '<div class="code-widget">';
+    copyTmpl += 'LANG';
+    copyTmpl += '</div>';
+    jQuery('.markdown-body pre').each(function() {
+      var $pre = jQuery(this);
+      if ($pre.find('code.mermaid').length > 0) {
+        return;
+      }
+      if ($pre.find('span.line').length > 0) {
+        return;
+      }
+
+      var lang = '';
+
+      if (enableLang) {
+        lang = CONFIG.code_language.default;
+        if ($pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2 && $pre.children().hasClass('hljs')) {
+          lang = $pre[0].children[0].classList[1];
+        } else if ($pre[0].getAttribute('data-language')) {
+          lang = $pre[0].getAttribute('data-language');
+        } else if ($pre.parent().hasClass('sourceCode') && $pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2) {
+          lang = $pre[0].children[0].classList[1];
+          $pre.parent().addClass('code-wrapper');
+        } else if ($pre.parent().hasClass('markdown-body') && $pre[0].classList.length === 0) {
+          $pre.wrap('<div class="code-wrapper"></div>');
+        }
+        lang = lang.toUpperCase().replace('NONE', CONFIG.code_language.default);
+      }
+      $pre.append(copyTmpl.replace('LANG', lang).replace('code-widget">',
+        getBgClass($pre[0]) + (enableCopy ? ' code-widget copy-btn" data-clipboard-snippet><i class="iconfont icon-copy"></i>' : ' code-widget">')));
+
+      if (enableCopy) {
+        Fluid.utils.createScript('https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js', function() {
+          var clipboard = new window.ClipboardJS('.copy-btn', {
+            target: function(trigger) {
+              var nodes = trigger.parentNode.childNodes;
+              for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].tagName === 'CODE') {
+                  return nodes[i];
+                }
+              }
+            }
+          });
+          clipboard.on('success', function(e) {
+            e.clearSelection();
+            e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-copy', 'icon-success');
+            setTimeout(function() {
+              e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-success', 'icon-copy');
+            }, 2000);
+          });
+        });
+      }
+    });
+  })();
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

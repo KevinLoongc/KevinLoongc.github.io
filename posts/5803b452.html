@@ -1,0 +1,936 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Kevin Loongc">
+  <meta name="keywords" content="云杂货店, KevinL, KevinLoongc, QT, ROS, SLAM, 嵌入式">
+  
+    <meta name="description" content="在STM32F103C8T6上成功测试运行，移植修改战舰源码，不用LCD屏幕来测试，只用串口助手来进行指纹模块的测试，具体有录入指纹、删除指纹、刷指纹等操作。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="STM32F103学习笔记——AS608指纹识别模块的使用">
+<meta property="og:url" content="https://kevinloongc.github.io/posts/5803b452.html">
+<meta property="og:site_name" content="云杂货店">
+<meta property="og:description" content="在STM32F103C8T6上成功测试运行，移植修改战舰源码，不用LCD屏幕来测试，只用串口助手来进行指纹模块的测试，具体有录入指纹、删除指纹、刷指纹等操作。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.ax1x.com/2020/02/10/15JwJf.jpg">
+<meta property="article:published_time" content="2019-12-17T02:46:25.000Z">
+<meta property="article:modified_time" content="2022-05-29T04:54:07.964Z">
+<meta property="article:author" content="Kevin Loongc">
+<meta property="article:tag" content="STM32">
+<meta property="article:tag" content="指纹识别">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://s2.ax1x.com/2020/02/10/15JwJf.jpg">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>STM32F103学习笔记——AS608指纹识别模块的使用 - 云杂货店</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"kevinloongc.github.io","root":"/","version":"1.9.0","typing":{"enable":true,"typeSpeed":80,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":false},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>云杂货店</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="STM32F103学习笔记——AS608指纹识别模块的使用"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2019-12-17 10:46" pubdate>
+          2019年12月17日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          34k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          281 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar category-bar" style="margin-right: -1rem">
+    
+
+
+
+
+
+<div class="category-list">
+  
+  
+    
+    
+    
+    <div class="category row nomargin-x">
+      <a class="category-item 
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="STM32"
+        id="heading-77c96659ca42cabf0aadc4168ae3da3f" role="tab" data-toggle="collapse" href="#collapse-77c96659ca42cabf0aadc4168ae3da3f"
+        aria-expanded="true"
+      >
+        STM32
+        <span class="list-group-count">(10)</span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+      <div class="category-collapse collapse show" id="collapse-77c96659ca42cabf0aadc4168ae3da3f"
+           role="tabpanel" aria-labelledby="heading-77c96659ca42cabf0aadc4168ae3da3f">
+        
+        
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/posts/5803b452.html" title="STM32F103学习笔记——AS608指纹识别模块的使用"
+           class="list-group-item list-group-item-action
+           active">
+          <span class="category-post">STM32F103学习笔记——AS608指纹识别模块的使用</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/b1f7002e.html" title="STM32F103学习笔记——MPU6050数据读取与倾角检测"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">STM32F103学习笔记——MPU6050数据读取与倾角检测</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/3dca690f.html" title="STM32F103学习笔记——RC522射频卡"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">STM32F103学习笔记——RC522射频卡</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/2ac21edf.html" title="STM32F103学习笔记——薄膜矩阵键盘扫描"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">STM32F103学习笔记——薄膜矩阵键盘扫描</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/9820a5cb.html" title="STM32F103读写内部flash"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">STM32F103读写内部flash</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/37488.html" title="STM32F429开发板学习笔记"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">STM32F429开发板学习笔记</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/6c941452.html" title="倒立摆系统设计"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">倒立摆系统设计</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/4588.html" title="双轮平衡小车项目"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">双轮平衡小车项目</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/6304ed30.html" title="基于STM32的智能门锁系统设计"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">基于STM32的智能门锁系统设计</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/9e207.html" title="模拟电磁曲射炮设计"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">模拟电磁曲射炮设计</span>
+        </a>
+      
+    
+  </div>
+
+        
+      </div>
+    </div>
+  
+</div>
+
+
+  </aside>
+
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">STM32F103学习笔记——AS608指纹识别模块的使用</h1>
+            
+              <p class="note note-info">
+                
+                  
+                    本文最后更新于：2022年5月29日 下午
+                  
+                
+              </p>
+            
+            <div class="markdown-body">
+              
+              <p>在STM32F103C8T6上成功测试运行，移植修改战舰源码，不用LCD屏幕来测试，只用串口助手来进行指纹模块的测试，具体有录入指纹、删除指纹、刷指纹等操作。</p>
+<span id="more"></span>
+
+<h3 id="一、ATK-AS608指纹模块介绍"><a href="#一、ATK-AS608指纹模块介绍" class="headerlink" title="一、ATK-AS608指纹模块介绍"></a>一、ATK-AS608指纹模块介绍</h3><p>ATK-AS608指纹模块为集成了光路和指纹处理部分的一体化指纹处理模块，具有体积小、功耗低、接口简单的特点，可靠性高、识别速度快、干湿手指适应性好，指纹搜索速度快。ATK-AS608模块通讯接口为USB和UART两种通信接口。详细资料在<a target="_blank" rel="noopener" href="https://pan.baidu.com/s/1iyRFzPl_aPtjznfkL0ImSA">百度网盘</a>，自行下载即可。</p>
+<p><img src="https://s2.ax1x.com/2019/12/18/Q73oRg.png" srcset="/img/loading.gif" lazyload alt="Q73oRg.png"></p>
+<h3 id="二、开始移植代码"><a href="#二、开始移植代码" class="headerlink" title="二、开始移植代码"></a>二、开始移植代码</h3><h4 id="1，串口通讯"><a href="#1，串口通讯" class="headerlink" title="1，串口通讯"></a>1，串口通讯</h4><p>ATK-AS608指纹模块与STM32使用串口2进行通讯，串口3连接电脑进行调式信息输出。</p>
+<p>将C库printf、scanf函数重定向到USART3端口，方便进行调式信息输出输入。</p>
+<h5 id="（1）usart-h"><a href="#（1）usart-h" class="headerlink" title="（1）usart.h"></a>（1）usart.h</h5><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-meta">#<span class="hljs-keyword">ifndef</span> __USART_H</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> __USART_H</span><br><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;stm32f10x.h&quot;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;stdio.h&quot;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;time.h&quot;</span></span><br><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> AS608_MAX_RECV_LEN		400		<span class="hljs-comment">//最大接收缓存字节数</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> AS608_MAX_SEND_LEN		400		<span class="hljs-comment">//最大发送缓存字节数</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> AS608_RX_EN 			1		<span class="hljs-comment">//0,不接收;1,接收.</span></span><br><br><span class="hljs-keyword">extern</span> <span class="hljs-type">uint8_t</span>  AS608_RX_BUF[AS608_MAX_RECV_LEN]; 		<span class="hljs-comment">//接收缓冲,最大USART2_MAX_RECV_LEN字节</span><br><span class="hljs-keyword">extern</span> <span class="hljs-type">uint8_t</span>  AS608_TX_BUF[AS608_MAX_SEND_LEN]; 		<span class="hljs-comment">//发送缓冲,最大USART2_MAX_SEND_LEN字节</span><br><span class="hljs-keyword">extern</span> vu16 AS608_RX_STA;   						<span class="hljs-comment">//接收数据状态</span><br><br><span class="hljs-comment">//Pin definition</span><br><span class="hljs-comment">/*************************************************************************/</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> DEBUG_USART                             USART3</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> DEBUG_USART_CLK                         RCC_APB1Periph_USART3</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> DEBUG_USART_AF                       	RCC_APB2Periph_AFIO</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> DEBUG_USART_GPIO_CLK                 	RCC_APB2Periph_GPIOB</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> DEBUG_USART_BAUDRATE                    115200</span><br><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> DEBUG_USART_RX_GPIO_PORT                GPIOB</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> DEBUG_USART_RX_PIN                      GPIO_Pin_11</span><br><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> DEBUG_USART_TX_GPIO_PORT                GPIOB</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> DEBUG_USART_TX_PIN                      GPIO_Pin_10</span><br><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> DEBUG_USART_IRQ                 		USART3_IRQn</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> DEBUG_USART_IRQHandler					USART3_IRQHandler</span><br><br><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> AS608_USART                             USART2</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> AS608_USART_CLK                         RCC_APB1Periph_USART2</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> AS608_USART_AF                       	RCC_APB2Periph_AFIO</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> AS608_USART_GPIO_CLK                 	RCC_APB2Periph_GPIOA</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> AS608_USART_BAUDRATE                    115200</span><br><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> AS608_USART_RX_GPIO_PORT                GPIOA</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> AS608_USART_RX_PIN                      GPIO_Pin_3</span><br><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> AS608_USART_TX_GPIO_PORT                GPIOA</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> AS608_USART_TX_PIN                      GPIO_Pin_2</span><br><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> AS608_USART_IRQ                 		USART2_IRQn</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> AS608_USART_IRQHandler					USART2_IRQHandler</span><br><span class="hljs-comment">/******************************************************************************/</span><br><br><span class="hljs-type">void</span> <span class="hljs-title function_">USART_Config</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span>;<br><span class="hljs-type">void</span> <span class="hljs-title function_">Usart_SendByte</span><span class="hljs-params">( USART_TypeDef * pUSARTx, <span class="hljs-type">uint8_t</span> ch)</span>;<br><span class="hljs-type">void</span> <span class="hljs-title function_">Usart_SendString</span><span class="hljs-params">( USART_TypeDef * pUSARTx, <span class="hljs-type">char</span> *str)</span>;<br><span class="hljs-type">void</span> <span class="hljs-title function_">Usart_SendHalfWord</span><span class="hljs-params">( USART_TypeDef * pUSARTx, <span class="hljs-type">uint16_t</span> ch)</span>;<br><span class="hljs-type">int</span> <span class="hljs-title function_">fputc</span><span class="hljs-params">(<span class="hljs-type">int</span> ch, FILE *f)</span>;<br><span class="hljs-type">int</span> <span class="hljs-title function_">fgetc</span><span class="hljs-params">(FILE *f)</span>;<br><br><span class="hljs-meta">#<span class="hljs-keyword">endif</span>	<span class="hljs-comment">/* __USART_H */</span></span><br><br></code></pre></td></tr></table></figure>
+
+<h5 id="（2）usart-c"><a href="#（2）usart-c" class="headerlink" title="（2）usart.c"></a>（2）usart.c</h5><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">/**</span><br><span class="hljs-comment">  ******************************************************************************</span><br><span class="hljs-comment">  * @file    uasrt.c</span><br><span class="hljs-comment">  * @author  Soso</span><br><span class="hljs-comment">  * @date    2019-12-17</span><br><span class="hljs-comment">  * @brief   USART1(AS608_USART) and USART3(DEBUG_USART) driver configuration code.</span><br><span class="hljs-comment">			 Redirect c library printf function to USART3 port.</span><br><span class="hljs-comment">  ******************************************************************************</span><br><span class="hljs-comment">  */</span><br><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;usart.h&quot;</span></span><br><br><span class="hljs-comment">//串口接收缓存区 	</span><br><span class="hljs-type">uint8_t</span> AS608_RX_BUF[AS608_MAX_RECV_LEN];	<span class="hljs-comment">//接收缓冲,最大AS608_MAX_RECV_LEN个字节.</span><br><span class="hljs-type">uint8_t</span> AS608_TX_BUF[AS608_MAX_SEND_LEN];	<span class="hljs-comment">//发送缓冲,最大AS608_MAX_SEND_LEN字节</span><br><br><span class="hljs-comment">//通过判断接收连续2个字符之间的时间差不大于10ms来决定是不是一次连续的数据.</span><br><span class="hljs-comment">//如果2个字符接收间隔超过10ms,则认为不是1次连续数据.也就是超过10ms没有接收到</span><br><span class="hljs-comment">//任何数据,则表示此次接收完毕.</span><br><span class="hljs-comment">//接收到的数据状态</span><br><span class="hljs-comment">//[15]:0,没有接收到数据;1,接收到了一批数据.</span><br><span class="hljs-comment">//[14:0]:接收到的数据长度</span><br>vu16 AS608_RX_STA = <span class="hljs-number">0</span>; <br><br><span class="hljs-type">void</span> <span class="hljs-title function_">AS608_USART_IRQHandler</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span><br>&#123;<br>	<span class="hljs-type">uint8_t</span> res;	      <br>	<span class="hljs-keyword">if</span>(USART_GetITStatus(AS608_USART, USART_IT_RXNE) != RESET)<span class="hljs-comment">//接收到数据</span><br>	&#123;	 <br>		res = USART_ReceiveData(AS608_USART);		 <br>		<span class="hljs-keyword">if</span>((AS608_RX_STA&amp;(<span class="hljs-number">1</span>&lt;&lt;<span class="hljs-number">15</span>))==<span class="hljs-number">0</span>)		<span class="hljs-comment">//接收完的一批数据,还没有被处理,则不再接收其他数据</span><br>		&#123; <br>			<span class="hljs-keyword">if</span>(AS608_RX_STA&lt;AS608_MAX_RECV_LEN)	<span class="hljs-comment">//还可以接收数据</span><br>			&#123;<br>				TIM_SetCounter(COUNTER_TIM,<span class="hljs-number">0</span>);	<span class="hljs-comment">//计数器清空          				//计数器清空</span><br>				<span class="hljs-keyword">if</span>(AS608_RX_STA == <span class="hljs-number">0</span>)	<span class="hljs-comment">//使能定时器2的中断 </span><br>				&#123;<br>					TIM_Cmd(COUNTER_TIM,ENABLE);<span class="hljs-comment">//使能定时器2</span><br>				&#125;<br>				AS608_RX_BUF[AS608_RX_STA++]=res;	<span class="hljs-comment">//记录接收到的值	 </span><br>			&#125;<span class="hljs-keyword">else</span> <br>			&#123;<br>				AS608_RX_STA |= <span class="hljs-number">1</span>&lt;&lt;<span class="hljs-number">15</span>;				<span class="hljs-comment">//强制标记接收完成</span><br>			&#125; <br>		&#125;<br>	&#125;  				 											 <br>&#125;<br><br><br><span class="hljs-comment">/* Configuring nested vectored interrupt controller NVIC */</span><br><span class="hljs-type">static</span> <span class="hljs-type">void</span> <span class="hljs-title function_">USART_NVIC_Config</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span><br>&#123;<br>	NVIC_InitTypeDef NVIC_InitStructure;<br><br>	<span class="hljs-comment">/* Nested vector interrupt controller group selection */</span><br>	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);<br><br>	<span class="hljs-comment">/* Preemptio Priority is 1 */</span><br>	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = <span class="hljs-number">1</span>;<br>	<span class="hljs-comment">/* Sub Priority is 1 */</span><br>	NVIC_InitStructure.NVIC_IRQChannelSubPriority = <span class="hljs-number">1</span>;<br>	<span class="hljs-comment">/* Enable interrupt */</span><br>	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;<br>	<br>	<span class="hljs-comment">/* Configure USART as the interrupt source */</span><br>	NVIC_InitStructure.NVIC_IRQChannel = DEBUG_USART_IRQ;<br>	<span class="hljs-comment">/* Initialize configuration NVIC */</span><br>	NVIC_Init(&amp;NVIC_InitStructure);<br>	<span class="hljs-comment">/* Configure USART as the interrupt source */</span><br>	NVIC_InitStructure.NVIC_IRQChannel = AS608_USART_IRQ;<br>	<span class="hljs-comment">/* Initialize configuration NVIC */</span><br>	NVIC_Init(&amp;NVIC_InitStructure);<br>&#125;<br><br><span class="hljs-type">void</span> <span class="hljs-title function_">USART_Config</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span><br>&#123;<br>	GPIO_InitTypeDef GPIO_InitStructure;<br>	USART_InitTypeDef USART_InitStructure;<br><br>	<span class="hljs-comment">/* Enable port alternate function and enable USART GPIO clock */</span><br>	RCC_APB2PeriphClockCmd(DEBUG_USART_AF|DEBUG_USART_GPIO_CLK,ENABLE);<br>	RCC_APB2PeriphClockCmd(AS608_USART_AF|AS608_USART_GPIO_CLK,ENABLE);<br>	<span class="hljs-comment">/* Enable USART Clock */</span><br>	RCC_APB1PeriphClockCmd(DEBUG_USART_CLK,ENABLE);<br>	RCC_APB1PeriphClockCmd(AS608_USART_CLK,ENABLE);<br>	<br>	<span class="hljs-comment">/* Configure the Tx pin for alternate function  */</span><br>	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;<br>	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;<br><br>	GPIO_InitStructure.GPIO_Pin = DEBUG_USART_TX_PIN;<br>	GPIO_Init(DEBUG_USART_TX_GPIO_PORT, &amp;GPIO_InitStructure);<br>	GPIO_InitStructure.GPIO_Pin = AS608_USART_TX_PIN;<br>	GPIO_Init(AS608_USART_RX_GPIO_PORT, &amp;GPIO_InitStructure);<br>	<br>	<span class="hljs-comment">/* Configure the Rx pin for the alternate function */</span><br>	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;<br>	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;<br>	<br>	GPIO_InitStructure.GPIO_Pin = DEBUG_USART_RX_PIN;<br>	GPIO_Init(DEBUG_USART_RX_GPIO_PORT, &amp;GPIO_InitStructure);<br>	GPIO_InitStructure.GPIO_Pin = AS608_USART_RX_PIN;<br>	GPIO_Init(AS608_USART_RX_GPIO_PORT, &amp;GPIO_InitStructure);<br>	<br>	<span class="hljs-comment">/* Configuration USART mode */</span><br>	USART_InitStructure.USART_WordLength = USART_WordLength_8b;<br>	USART_InitStructure.USART_StopBits = USART_StopBits_1;<br>	USART_InitStructure.USART_Parity = USART_Parity_No;<br>	USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;<br>	<span class="hljs-comment">/* USART mode control: simultaneous enable send and receive */</span><br>	USART_InitStructure.USART_Mode = USART_Mode_Tx|USART_Mode_Rx;<br>	<br>	USART_InitStructure.USART_BaudRate = DEBUG_USART_BAUDRATE;<br>	USART_Init(DEBUG_USART, &amp;USART_InitStructure);<br>	USART_InitStructure.USART_BaudRate = AS608_USART_BAUDRATE;<br>	USART_Init(AS608_USART, &amp;USART_InitStructure);<br>	<br>	<span class="hljs-comment">/* Enable serial port receive interrupt */</span><br>	USART_ITConfig(AS608_USART, USART_IT_RXNE, ENABLE);<br>	<br>	<span class="hljs-comment">/* Enable serial */</span><br>	USART_Cmd(DEBUG_USART, ENABLE);<br>	USART_Cmd(AS608_USART, ENABLE);<br>	<br>	USART_NVIC_Config();<br>&#125;<br><br><br><span class="hljs-comment">/*****************  Send a character **********************/</span><br><span class="hljs-type">void</span> <span class="hljs-title function_">Usart_SendByte</span><span class="hljs-params">( USART_TypeDef * pUSARTx, <span class="hljs-type">uint8_t</span> ch)</span><br>&#123;<br>	<span class="hljs-comment">/* Send a byte of data to the USART */</span><br>	USART_SendData(pUSARTx,ch);<br>		<br>	<span class="hljs-comment">/* Waiting for the transmit data register to be empty */</span><br>	<span class="hljs-keyword">while</span> (USART_GetFlagStatus(pUSARTx, USART_FLAG_TXE) == RESET);	<br>&#125;<br><br><span class="hljs-comment">/*****************  Send string **********************/</span><br><span class="hljs-type">void</span> <span class="hljs-title function_">Usart_SendString</span><span class="hljs-params">( USART_TypeDef * pUSARTx, <span class="hljs-type">char</span> *str)</span><br>&#123;<br>	<span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> k=<span class="hljs-number">0</span>;<br>	<span class="hljs-keyword">do</span> <br>	&#123;<br>		Usart_SendByte( pUSARTx, *(str + k) );<br>		k++;<br>	&#125;<span class="hljs-keyword">while</span>(*(str + k)!=<span class="hljs-string">&#x27;\0&#x27;</span>);<br>  <br>	<span class="hljs-comment">/* Waiting for transmission to complete */</span><br>	<span class="hljs-keyword">while</span>(USART_GetFlagStatus(pUSARTx,USART_FLAG_TC)==RESET);<br>&#125;<br><br><span class="hljs-comment">/*****************  Send a 16-digit number **********************/</span><br><span class="hljs-type">void</span> <span class="hljs-title function_">Usart_SendHalfWord</span><span class="hljs-params">( USART_TypeDef * pUSARTx, <span class="hljs-type">uint16_t</span> ch)</span><br>&#123;<br>	<span class="hljs-type">uint8_t</span> temp_h, temp_l;<br>	<br>	<span class="hljs-comment">/* Take out the high eight */</span><br>	temp_h = (ch&amp;<span class="hljs-number">0XFF00</span>)&gt;&gt;<span class="hljs-number">8</span>;<br>	<span class="hljs-comment">/* Take the lower eight */</span><br>	temp_l = ch&amp;<span class="hljs-number">0XFF</span>;<br>	<br>	<span class="hljs-comment">/* Send high eight */</span><br>	USART_SendData(pUSARTx,temp_h);	<br>	<span class="hljs-keyword">while</span> (USART_GetFlagStatus(pUSARTx, USART_FLAG_TXE) == RESET);<br>	<br>	<span class="hljs-comment">/* Send the lower eight digits */</span><br>	USART_SendData(pUSARTx,temp_l);	<br>	<span class="hljs-keyword">while</span> (USART_GetFlagStatus(pUSARTx, USART_FLAG_TXE) == RESET);	<br>&#125;<br><br><span class="hljs-comment">/* Redirect the c library function printf to the serial port, </span><br><span class="hljs-comment">   use the printf function after redirection.	*/</span><br><span class="hljs-type">int</span> <span class="hljs-title function_">fputc</span><span class="hljs-params">(<span class="hljs-type">int</span> ch, FILE *f)</span><br>&#123;<br>	<span class="hljs-comment">/* Send a byte of data to the serial port */</span><br>	USART_SendData(DEBUG_USART, (<span class="hljs-type">uint8_t</span>) ch);<br><br>	<span class="hljs-comment">/* Waiting to send */</span><br>	<span class="hljs-keyword">while</span> (USART_GetFlagStatus(DEBUG_USART, USART_FLAG_TXE) == RESET);		<br><br>	<span class="hljs-keyword">return</span> (ch);<br>&#125;<br><br><span class="hljs-comment">/* Redirect the c library function scanf to the serial port, </span><br><span class="hljs-comment">   rewrite backwards can use scanf, getchar and other functions. */</span><br><span class="hljs-type">int</span> <span class="hljs-title function_">fgetc</span><span class="hljs-params">(FILE *f)</span><br>&#123;<br>	<span class="hljs-type">uint8_t</span> ch;<br>	<span class="hljs-comment">/* Waiting for serial input data */</span><br>	<span class="hljs-keyword">while</span> (USART_GetFlagStatus(DEBUG_USART, USART_FLAG_RXNE) == RESET);<br>	<br>	ch = USART_ReceiveData(DEBUG_USART);<br>	USART_SendData(DEBUG_USART, (<span class="hljs-type">uint8_t</span>)ch);	<span class="hljs-comment">// 串口回显</span><br>	<br>	<span class="hljs-keyword">return</span> (<span class="hljs-type">int</span>)ch;<br>&#125;<br><span class="hljs-comment">/*********************************************END OF FILE*********************************************/</span><br><br></code></pre></td></tr></table></figure>
+
+<h4 id="2，定时器"><a href="#2，定时器" class="headerlink" title="2，定时器"></a>2，定时器</h4><p>STM32C8T6没有定时器4，改用定时器2，10ms定时。</p>
+<h5 id="（1）time-h"><a href="#（1）time-h" class="headerlink" title="（1）time.h"></a>（1）time.h</h5><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-meta">#<span class="hljs-keyword">ifndef</span> __TIME_H</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> __TIME_H</span><br><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;stm32f10x.h&quot;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;usart.h&quot;</span></span><br><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> COUNTER_TIM						TIM2</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> COUNTER_TIM_CLK					RCC_APB1Periph_TIM2</span><br><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> COUNTER_TIM_IRQn				TIM2_IRQn</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> COUNTER_TIM_IRQHandler			TIM2_IRQHandler</span><br><br><span class="hljs-type">void</span> <span class="hljs-title function_">COUNTER_TIM_Init</span><span class="hljs-params">(<span class="hljs-type">uint16_t</span> arr,<span class="hljs-type">uint16_t</span> psc)</span>;<br><br><span class="hljs-meta">#<span class="hljs-keyword">endif</span>	<span class="hljs-comment">/* __TIME_H */</span></span><br><br></code></pre></td></tr></table></figure>
+
+<h5 id="（2）time-c"><a href="#（2）time-c" class="headerlink" title="（2）time.c"></a>（2）time.c</h5><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">/**</span><br><span class="hljs-comment">  ******************************************************************************</span><br><span class="hljs-comment">  * @file    time.c</span><br><span class="hljs-comment">  * @author  Soso</span><br><span class="hljs-comment">  * @date    2019-12-17</span><br><span class="hljs-comment">  * @brief   General timer driver code. </span><br><span class="hljs-comment">  *</span><br><span class="hljs-comment">  ******************************************************************************</span><br><span class="hljs-comment">  */</span><br><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;time.h&quot;</span></span><br><br><span class="hljs-keyword">extern</span> vu16 AS608_RX_STA;<br><br><span class="hljs-comment">//定时器4中断服务程序		    </span><br><span class="hljs-type">void</span> <span class="hljs-title function_">COUNTER_TIM_IRQHandler</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span><br>&#123; 	<br>	<span class="hljs-keyword">if</span> (TIM_GetITStatus(COUNTER_TIM, TIM_IT_Update) != RESET)<span class="hljs-comment">//是更新中断</span><br>	&#123;	 			   <br>		AS608_RX_STA|=<span class="hljs-number">1</span>&lt;&lt;<span class="hljs-number">15</span>;	<span class="hljs-comment">//标记接收完成</span><br>		TIM_ClearITPendingBit(COUNTER_TIM, TIM_IT_Update);  <span class="hljs-comment">//清除TIM2更新中断标志    </span><br>		TIM_Cmd(COUNTER_TIM, DISABLE);  <span class="hljs-comment">//关闭TIM2</span><br>	&#125;	    <br>&#125;<br><br><span class="hljs-comment">// Configuring nested vectored interrupt controller(NVIC)</span><br><span class="hljs-type">static</span> <span class="hljs-type">void</span> <span class="hljs-title function_">TIMx_NVIC_Config</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span><br>&#123;<br>	NVIC_InitTypeDef NVIC_InitStructure;<br>	<span class="hljs-comment">/* Configure NVIC as a priority group 1 */</span><br>	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_1);<br>	<br>	<span class="hljs-comment">/* Configure interrupt source*/</span><br>	NVIC_InitStructure.NVIC_IRQChannel = COUNTER_TIM_IRQn;<br>	<span class="hljs-comment">/* Configuration preemption priority： 1 */</span><br>	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = <span class="hljs-number">1</span>;<br>	<span class="hljs-comment">/* Configure sub-priority： 1 */</span><br>	NVIC_InitStructure.NVIC_IRQChannelSubPriority = <span class="hljs-number">1</span>;<br>	<span class="hljs-comment">/* Enable interrupt channel */</span><br>	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;<br>	NVIC_Init(&amp;NVIC_InitStructure);<br>&#125;<br><br><br><span class="hljs-type">void</span> <span class="hljs-title function_">COUNTER_TIM_Init</span><span class="hljs-params">(<span class="hljs-type">uint16_t</span> arr,<span class="hljs-type">uint16_t</span> psc)</span><br>&#123;<br>	SystemInit();<br>	TIM_TimeBaseInitTypeDef TIM_TimeBaseStructure;<br>	<span class="hljs-comment">// Enable TIM2_CLK </span><br>	RCC_APB1PeriphClockCmd(COUNTER_TIM_CLK,ENABLE);<br>	<br><span class="hljs-comment">/*  eg：arr=1000，psc=720</span><br><span class="hljs-comment">	1, PSC(prescaler) = 720-1</span><br><span class="hljs-comment">	   timer frequency = 72M/(PSC + 1) = 100KHZ</span><br><span class="hljs-comment">	   calculate the time of one pulse = 1/100,000 s</span><br><span class="hljs-comment">	2, ARR (automatic reload register) = 1000-1, counted from 0 to 999, then counted 1000 times.</span><br><span class="hljs-comment">	3, Time = 1000/100,000 = 0.01s = 10ms */</span> <br>	TIM_TimeBaseStructure.TIM_Period = arr<span class="hljs-number">-1</span>;<br>	TIM_TimeBaseStructure.TIM_Prescaler = psc<span class="hljs-number">-1</span>;	<br>	TIM_TimeBaseStructure.TIM_ClockDivision = <span class="hljs-number">0</span>;<br>	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;<br>	TIM_TimeBaseInit(COUNTER_TIM,&amp;TIM_TimeBaseStructure);<br>	<br>	<span class="hljs-comment">// Clear timer update interrupt flag</span><br>	TIM_ClearITPendingBit(COUNTER_TIM,TIM_IT_Update);<br>	<span class="hljs-comment">// Enable timer update interrupt</span><br>	TIM_ITConfig(COUNTER_TIM,TIM_IT_Update,ENABLE);<br>	<span class="hljs-comment">// Initialization disable timer</span><br>	TIM_Cmd(COUNTER_TIM,DISABLE);<br>	<br>	TIMx_NVIC_Config();<br>&#125;<br><br><br><span class="hljs-comment">/*********************************************END OF FILE*********************************************/</span><br><br></code></pre></td></tr></table></figure>
+
+<h4 id="3，AS608模块驱动代码"><a href="#3，AS608模块驱动代码" class="headerlink" title="3，AS608模块驱动代码"></a>3，AS608模块驱动代码</h4><p>这里主要修改STM32F103C8T6所对应的引脚、串口发送函数的定义，下面是完整代码。</p>
+<h5 id="（1）as608-h"><a href="#（1）as608-h" class="headerlink" title="（1）as608.h"></a>（1）as608.h</h5><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-meta">#<span class="hljs-keyword">ifndef</span> __AS608_H</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> __AS608_H</span><br><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;stm32f10x.h&quot;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;usart.h&quot;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;string.h&quot;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;systick.h&quot;</span></span><br><br><span class="hljs-comment">//Pin definition</span><br><span class="hljs-comment">/*************************************************************************/</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> AS608_GPIO_PORT					GPIOA</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> AS608_GPIO_CLK					RCC_APB2Periph_GPIOA</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> AS608_TOUCH_PIN					GPIO_Pin_1</span><br><br><span class="hljs-comment">/*************************************************************************/</span><br><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> PS_Sta   	GPIO_ReadInputDataBit(AS608_GPIO_PORT,AS608_TOUCH_PIN)	<span class="hljs-comment">//读指纹模块状态引脚</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> CharBuffer1 0x01</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> CharBuffer2 0x02</span><br><br><span class="hljs-keyword">extern</span> u32 AS608Addr;	<span class="hljs-comment">//模块地址</span><br><br><span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span>  </span><br><span class="hljs-class">&#123;</span><br>	u16 pageID;		<span class="hljs-comment">//指纹ID</span><br>	u16 mathscore;	<span class="hljs-comment">//匹配得分</span><br>&#125;SearchResult;<br><br><span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span></span><br><span class="hljs-class">&#123;</span><br>	u16 PS_max;		<span class="hljs-comment">//指纹最大容量</span><br>	u8  PS_level;	<span class="hljs-comment">//安全等级</span><br>	u32 PS_addr;<br>	u8  PS_size;	<span class="hljs-comment">//通讯数据包大小</span><br>	u8  PS_N;		<span class="hljs-comment">//波特率基数N</span><br>&#125;SysPara;<br><br><span class="hljs-type">void</span> <span class="hljs-title function_">PS_StaGPIO_Init</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span>;						<span class="hljs-comment">//初始化PA6读状态引脚</span><br>	<br>u8 <span class="hljs-title function_">PS_GetImage</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span>;							<span class="hljs-comment">//录入图像 </span><br>u8 <span class="hljs-title function_">PS_GenChar</span><span class="hljs-params">(u8 BufferID)</span>;						<span class="hljs-comment">//生成特征 </span><br>u8 <span class="hljs-title function_">PS_Match</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span>;								<span class="hljs-comment">//精确比对两枚指纹特征 </span><br>u8 <span class="hljs-title function_">PS_Search</span><span class="hljs-params">(u8 BufferID,u16 StartPage,u16 PageNum,SearchResult *p)</span>;<span class="hljs-comment">//搜索指纹 </span><br>u8 <span class="hljs-title function_">PS_RegModel</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span>;							<span class="hljs-comment">//合并特征（生成模板） </span><br>u8 <span class="hljs-title function_">PS_StoreChar</span><span class="hljs-params">(u8 BufferID,u16 PageID)</span>;		<span class="hljs-comment">//储存模板 </span><br>u8 <span class="hljs-title function_">PS_DeletChar</span><span class="hljs-params">(u16 PageID,u16 N)</span>;				<span class="hljs-comment">//删除模板 </span><br>u8 <span class="hljs-title function_">PS_Empty</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span>;								<span class="hljs-comment">//清空指纹库 </span><br>u8 <span class="hljs-title function_">PS_WriteReg</span><span class="hljs-params">(u8 RegNum,u8 DATA)</span>;				<span class="hljs-comment">//写系统寄存器 </span><br>u8 <span class="hljs-title function_">PS_ReadSysPara</span><span class="hljs-params">(SysPara *p)</span>;					<span class="hljs-comment">//读系统基本参数 </span><br>u8 <span class="hljs-title function_">PS_SetAddr</span><span class="hljs-params">(u32 addr)</span>;						<span class="hljs-comment">//设置模块地址 </span><br>u8 <span class="hljs-title function_">PS_WriteNotepad</span><span class="hljs-params">(u8 NotePageNum,u8 *content)</span>;	<span class="hljs-comment">//写记事本 </span><br>u8 <span class="hljs-title function_">PS_ReadNotepad</span><span class="hljs-params">(u8 NotePageNum,u8 *note)</span>;		<span class="hljs-comment">//读记事 </span><br>u8 <span class="hljs-title function_">PS_HighSpeedSearch</span><span class="hljs-params">(u8 BufferID,u16 StartPage,u16 PageNum,SearchResult *p)</span>;<span class="hljs-comment">//高速搜索 </span><br>u8 <span class="hljs-title function_">PS_ValidTempleteNum</span><span class="hljs-params">(u16 *ValidN)</span>;			<span class="hljs-comment">//读有效模板个数 </span><br>u8 <span class="hljs-title function_">PS_HandShake</span><span class="hljs-params">(u32 *PS_Addr)</span>;					<span class="hljs-comment">//与AS608模块握手</span><br><span class="hljs-type">const</span> <span class="hljs-type">char</span> *<span class="hljs-title function_">EnsureMessage</span><span class="hljs-params">(u8 ensure)</span>;			<span class="hljs-comment">//确认码错误信息解析</span><br><span class="hljs-meta">#<span class="hljs-keyword">endif</span>	<span class="hljs-comment">/* __AS608_H */</span></span><br><br></code></pre></td></tr></table></figure>
+
+<h5 id="（2）as608-c"><a href="#（2）as608-c" class="headerlink" title="（2）as608.c"></a>（2）as608.c</h5><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br><span class="line">270</span><br><span class="line">271</span><br><span class="line">272</span><br><span class="line">273</span><br><span class="line">274</span><br><span class="line">275</span><br><span class="line">276</span><br><span class="line">277</span><br><span class="line">278</span><br><span class="line">279</span><br><span class="line">280</span><br><span class="line">281</span><br><span class="line">282</span><br><span class="line">283</span><br><span class="line">284</span><br><span class="line">285</span><br><span class="line">286</span><br><span class="line">287</span><br><span class="line">288</span><br><span class="line">289</span><br><span class="line">290</span><br><span class="line">291</span><br><span class="line">292</span><br><span class="line">293</span><br><span class="line">294</span><br><span class="line">295</span><br><span class="line">296</span><br><span class="line">297</span><br><span class="line">298</span><br><span class="line">299</span><br><span class="line">300</span><br><span class="line">301</span><br><span class="line">302</span><br><span class="line">303</span><br><span class="line">304</span><br><span class="line">305</span><br><span class="line">306</span><br><span class="line">307</span><br><span class="line">308</span><br><span class="line">309</span><br><span class="line">310</span><br><span class="line">311</span><br><span class="line">312</span><br><span class="line">313</span><br><span class="line">314</span><br><span class="line">315</span><br><span class="line">316</span><br><span class="line">317</span><br><span class="line">318</span><br><span class="line">319</span><br><span class="line">320</span><br><span class="line">321</span><br><span class="line">322</span><br><span class="line">323</span><br><span class="line">324</span><br><span class="line">325</span><br><span class="line">326</span><br><span class="line">327</span><br><span class="line">328</span><br><span class="line">329</span><br><span class="line">330</span><br><span class="line">331</span><br><span class="line">332</span><br><span class="line">333</span><br><span class="line">334</span><br><span class="line">335</span><br><span class="line">336</span><br><span class="line">337</span><br><span class="line">338</span><br><span class="line">339</span><br><span class="line">340</span><br><span class="line">341</span><br><span class="line">342</span><br><span class="line">343</span><br><span class="line">344</span><br><span class="line">345</span><br><span class="line">346</span><br><span class="line">347</span><br><span class="line">348</span><br><span class="line">349</span><br><span class="line">350</span><br><span class="line">351</span><br><span class="line">352</span><br><span class="line">353</span><br><span class="line">354</span><br><span class="line">355</span><br><span class="line">356</span><br><span class="line">357</span><br><span class="line">358</span><br><span class="line">359</span><br><span class="line">360</span><br><span class="line">361</span><br><span class="line">362</span><br><span class="line">363</span><br><span class="line">364</span><br><span class="line">365</span><br><span class="line">366</span><br><span class="line">367</span><br><span class="line">368</span><br><span class="line">369</span><br><span class="line">370</span><br><span class="line">371</span><br><span class="line">372</span><br><span class="line">373</span><br><span class="line">374</span><br><span class="line">375</span><br><span class="line">376</span><br><span class="line">377</span><br><span class="line">378</span><br><span class="line">379</span><br><span class="line">380</span><br><span class="line">381</span><br><span class="line">382</span><br><span class="line">383</span><br><span class="line">384</span><br><span class="line">385</span><br><span class="line">386</span><br><span class="line">387</span><br><span class="line">388</span><br><span class="line">389</span><br><span class="line">390</span><br><span class="line">391</span><br><span class="line">392</span><br><span class="line">393</span><br><span class="line">394</span><br><span class="line">395</span><br><span class="line">396</span><br><span class="line">397</span><br><span class="line">398</span><br><span class="line">399</span><br><span class="line">400</span><br><span class="line">401</span><br><span class="line">402</span><br><span class="line">403</span><br><span class="line">404</span><br><span class="line">405</span><br><span class="line">406</span><br><span class="line">407</span><br><span class="line">408</span><br><span class="line">409</span><br><span class="line">410</span><br><span class="line">411</span><br><span class="line">412</span><br><span class="line">413</span><br><span class="line">414</span><br><span class="line">415</span><br><span class="line">416</span><br><span class="line">417</span><br><span class="line">418</span><br><span class="line">419</span><br><span class="line">420</span><br><span class="line">421</span><br><span class="line">422</span><br><span class="line">423</span><br><span class="line">424</span><br><span class="line">425</span><br><span class="line">426</span><br><span class="line">427</span><br><span class="line">428</span><br><span class="line">429</span><br><span class="line">430</span><br><span class="line">431</span><br><span class="line">432</span><br><span class="line">433</span><br><span class="line">434</span><br><span class="line">435</span><br><span class="line">436</span><br><span class="line">437</span><br><span class="line">438</span><br><span class="line">439</span><br><span class="line">440</span><br><span class="line">441</span><br><span class="line">442</span><br><span class="line">443</span><br><span class="line">444</span><br><span class="line">445</span><br><span class="line">446</span><br><span class="line">447</span><br><span class="line">448</span><br><span class="line">449</span><br><span class="line">450</span><br><span class="line">451</span><br><span class="line">452</span><br><span class="line">453</span><br><span class="line">454</span><br><span class="line">455</span><br><span class="line">456</span><br><span class="line">457</span><br><span class="line">458</span><br><span class="line">459</span><br><span class="line">460</span><br><span class="line">461</span><br><span class="line">462</span><br><span class="line">463</span><br><span class="line">464</span><br><span class="line">465</span><br><span class="line">466</span><br><span class="line">467</span><br><span class="line">468</span><br><span class="line">469</span><br><span class="line">470</span><br><span class="line">471</span><br><span class="line">472</span><br><span class="line">473</span><br><span class="line">474</span><br><span class="line">475</span><br><span class="line">476</span><br><span class="line">477</span><br><span class="line">478</span><br><span class="line">479</span><br><span class="line">480</span><br><span class="line">481</span><br><span class="line">482</span><br><span class="line">483</span><br><span class="line">484</span><br><span class="line">485</span><br><span class="line">486</span><br><span class="line">487</span><br><span class="line">488</span><br><span class="line">489</span><br><span class="line">490</span><br><span class="line">491</span><br><span class="line">492</span><br><span class="line">493</span><br><span class="line">494</span><br><span class="line">495</span><br><span class="line">496</span><br><span class="line">497</span><br><span class="line">498</span><br><span class="line">499</span><br><span class="line">500</span><br><span class="line">501</span><br><span class="line">502</span><br><span class="line">503</span><br><span class="line">504</span><br><span class="line">505</span><br><span class="line">506</span><br><span class="line">507</span><br><span class="line">508</span><br><span class="line">509</span><br><span class="line">510</span><br><span class="line">511</span><br><span class="line">512</span><br><span class="line">513</span><br><span class="line">514</span><br><span class="line">515</span><br><span class="line">516</span><br><span class="line">517</span><br><span class="line">518</span><br><span class="line">519</span><br><span class="line">520</span><br><span class="line">521</span><br><span class="line">522</span><br><span class="line">523</span><br><span class="line">524</span><br><span class="line">525</span><br><span class="line">526</span><br><span class="line">527</span><br><span class="line">528</span><br><span class="line">529</span><br><span class="line">530</span><br><span class="line">531</span><br><span class="line">532</span><br><span class="line">533</span><br><span class="line">534</span><br><span class="line">535</span><br><span class="line">536</span><br><span class="line">537</span><br><span class="line">538</span><br><span class="line">539</span><br><span class="line">540</span><br><span class="line">541</span><br><span class="line">542</span><br><span class="line">543</span><br><span class="line">544</span><br><span class="line">545</span><br><span class="line">546</span><br><span class="line">547</span><br><span class="line">548</span><br><span class="line">549</span><br><span class="line">550</span><br><span class="line">551</span><br><span class="line">552</span><br><span class="line">553</span><br><span class="line">554</span><br><span class="line">555</span><br><span class="line">556</span><br><span class="line">557</span><br><span class="line">558</span><br><span class="line">559</span><br><span class="line">560</span><br><span class="line">561</span><br><span class="line">562</span><br><span class="line">563</span><br><span class="line">564</span><br><span class="line">565</span><br><span class="line">566</span><br><span class="line">567</span><br><span class="line">568</span><br><span class="line">569</span><br><span class="line">570</span><br><span class="line">571</span><br><span class="line">572</span><br><span class="line">573</span><br><span class="line">574</span><br><span class="line">575</span><br><span class="line">576</span><br><span class="line">577</span><br><span class="line">578</span><br><span class="line">579</span><br><span class="line">580</span><br><span class="line">581</span><br><span class="line">582</span><br><span class="line">583</span><br><span class="line">584</span><br><span class="line">585</span><br><span class="line">586</span><br><span class="line">587</span><br><span class="line">588</span><br><span class="line">589</span><br><span class="line">590</span><br><span class="line">591</span><br><span class="line">592</span><br><span class="line">593</span><br><span class="line">594</span><br><span class="line">595</span><br><span class="line">596</span><br><span class="line">597</span><br><span class="line">598</span><br><span class="line">599</span><br><span class="line">600</span><br><span class="line">601</span><br><span class="line">602</span><br><span class="line">603</span><br><span class="line">604</span><br><span class="line">605</span><br><span class="line">606</span><br><span class="line">607</span><br><span class="line">608</span><br><span class="line">609</span><br><span class="line">610</span><br><span class="line">611</span><br><span class="line">612</span><br><span class="line">613</span><br><span class="line">614</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">/**</span><br><span class="hljs-comment">  ******************************************************************************</span><br><span class="hljs-comment">  * @file    as608.c</span><br><span class="hljs-comment">  * @author  Soso</span><br><span class="hljs-comment">  * @date    2019-12-17</span><br><span class="hljs-comment">  * @brief   AS608 fingerprint recognition module driver code.</span><br><span class="hljs-comment">  ******************************************************************************</span><br><span class="hljs-comment">  */</span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;as608.h&quot;</span></span><br><br>u32 AS608Addr = <span class="hljs-number">0XFFFFFFFF</span>; <span class="hljs-comment">//默认</span><br><br><span class="hljs-comment">//初始化PA8为下拉输入		    </span><br><span class="hljs-comment">//读摸出感应状态(触摸感应时输出高电平信号)</span><br><span class="hljs-type">void</span> <span class="hljs-title function_">PS_StaGPIO_Init</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span><br>&#123;   <br>  GPIO_InitTypeDef  GPIO_InitStructure;<br>  RCC_APB2PeriphClockCmd(AS608_GPIO_CLK, ENABLE);<span class="hljs-comment">//使能GPIOA时钟</span><br>  <span class="hljs-comment">//初始化读状态引脚GPIOA</span><br>  GPIO_InitStructure.GPIO_Pin = AS608_TOUCH_PIN;<br>  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPD;<span class="hljs-comment">//输入下拉模式</span><br>  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;<span class="hljs-comment">//50MHz</span><br>  GPIO_Init(AS608_GPIO_PORT, &amp;GPIO_InitStructure);<span class="hljs-comment">//初始化GPIO	</span><br>&#125;<br><br><span class="hljs-comment">//发送包头</span><br><span class="hljs-type">static</span> <span class="hljs-type">void</span> <span class="hljs-title function_">SendHead</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span><br>&#123;<br>	Usart_SendByte(AS608_USART,<span class="hljs-number">0xEF</span>);<br>	Usart_SendByte(AS608_USART,<span class="hljs-number">0x01</span>);<br>&#125;<br><span class="hljs-comment">//发送地址</span><br><span class="hljs-type">static</span> <span class="hljs-type">void</span> <span class="hljs-title function_">SendAddr</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span><br>&#123;<br>	Usart_SendByte(AS608_USART,AS608Addr&gt;&gt;<span class="hljs-number">24</span>);<br>	Usart_SendByte(AS608_USART,AS608Addr&gt;&gt;<span class="hljs-number">16</span>);<br>	Usart_SendByte(AS608_USART,AS608Addr&gt;&gt;<span class="hljs-number">8</span>);<br>	Usart_SendByte(AS608_USART,AS608Addr);<br>&#125;<br><span class="hljs-comment">//发送包标识,</span><br><span class="hljs-type">static</span> <span class="hljs-type">void</span> <span class="hljs-title function_">SendFlag</span><span class="hljs-params">(u8 flag)</span><br>&#123;<br>	Usart_SendByte(AS608_USART,flag);<br>&#125;<br><span class="hljs-comment">//发送包长度</span><br><span class="hljs-type">static</span> <span class="hljs-type">void</span> <span class="hljs-title function_">SendLength</span><span class="hljs-params">(<span class="hljs-type">int</span> length)</span><br>&#123;<br>	Usart_SendByte(AS608_USART,length&gt;&gt;<span class="hljs-number">8</span>);<br>	Usart_SendByte(AS608_USART,length);<br>&#125;<br><span class="hljs-comment">//发送指令码</span><br><span class="hljs-type">static</span> <span class="hljs-type">void</span> <span class="hljs-title function_">Sendcmd</span><span class="hljs-params">(u8 cmd)</span><br>&#123;<br>	Usart_SendByte(AS608_USART,cmd);<br>&#125;<br><span class="hljs-comment">//发送校验和</span><br><span class="hljs-type">static</span> <span class="hljs-type">void</span> <span class="hljs-title function_">SendCheck</span><span class="hljs-params">(u16 check)</span><br>&#123;<br>	Usart_SendByte(AS608_USART,check&gt;&gt;<span class="hljs-number">8</span>);<br>	Usart_SendByte(AS608_USART,check);<br>&#125;<br><span class="hljs-comment">//判断中断接收的数组有没有应答包</span><br><span class="hljs-comment">//waittime为等待中断接收数据的时间（单位1ms）</span><br><span class="hljs-comment">//返回值：数据包首地址</span><br><span class="hljs-type">static</span> u8 *<span class="hljs-title function_">JudgeStr</span><span class="hljs-params">(u16 waittime)</span><br>&#123;<br>	<span class="hljs-type">char</span> *data;<br>	u8 str[<span class="hljs-number">8</span>];<br>	str[<span class="hljs-number">0</span>]=<span class="hljs-number">0xef</span>;<br>	str[<span class="hljs-number">1</span>]=<span class="hljs-number">0x01</span>;<br>	str[<span class="hljs-number">2</span>]=AS608Addr&gt;&gt;<span class="hljs-number">24</span>;<br>	str[<span class="hljs-number">3</span>]=AS608Addr&gt;&gt;<span class="hljs-number">16</span>;<br>	str[<span class="hljs-number">4</span>]=AS608Addr&gt;&gt;<span class="hljs-number">8</span>;<br>	str[<span class="hljs-number">5</span>]=AS608Addr;<br>	str[<span class="hljs-number">6</span>]=<span class="hljs-number">0x07</span>;<br>	str[<span class="hljs-number">7</span>]=<span class="hljs-string">&#x27;\0&#x27;</span>;<br>	AS608_RX_STA=<span class="hljs-number">0</span>;<br>	<span class="hljs-keyword">while</span>(--waittime)<br>	&#123;<br>		delay_ms(<span class="hljs-number">1</span>);<br>		<span class="hljs-keyword">if</span>(AS608_RX_STA&amp;<span class="hljs-number">0X8000</span>)<span class="hljs-comment">//接收到一次数据</span><br>		&#123;<br>			AS608_RX_STA=<span class="hljs-number">0</span>;<br>			data=<span class="hljs-built_in">strstr</span>((<span class="hljs-type">const</span> <span class="hljs-type">char</span>*)AS608_RX_BUF,(<span class="hljs-type">const</span> <span class="hljs-type">char</span>*)str);<br>			<span class="hljs-keyword">if</span>(data)<br>				<span class="hljs-keyword">return</span> (u8*)data;	<br>		&#125;<br>	&#125;<br>	<span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br><br><span class="hljs-comment">//录入图像 PS_GetImage</span><br><span class="hljs-comment">//功能:探测手指，探测到后录入指纹图像存于ImageBuffer。 </span><br><span class="hljs-comment">//模块返回确认字</span><br>u8 <span class="hljs-title function_">PS_GetImage</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span><br>&#123;<br>	u16 temp;<br>	u8  ensure;<br>	u8  *data;<br>	SendHead();<br>	SendAddr();<br>	SendFlag(<span class="hljs-number">0x01</span>);<span class="hljs-comment">//命令包标识</span><br>	SendLength(<span class="hljs-number">0x03</span>);<br>	Sendcmd(<span class="hljs-number">0x01</span>);<br>	temp = <span class="hljs-number">0x01</span>+<span class="hljs-number">0x03</span>+<span class="hljs-number">0x01</span>;<br>	SendCheck(temp);<br>	data = JudgeStr(<span class="hljs-number">2000</span>);<br>	<span class="hljs-keyword">if</span>(data)<br>		ensure = data[<span class="hljs-number">9</span>];<br>	<span class="hljs-keyword">else</span><br>		ensure = <span class="hljs-number">0xff</span>;<br>	<span class="hljs-keyword">return</span> ensure;<br>&#125;<br><br><span class="hljs-comment">//生成特征 PS_GenChar</span><br><span class="hljs-comment">//功能:将ImageBuffer中的原始图像生成指纹特征文件存于CharBuffer1或CharBuffer2			 </span><br><span class="hljs-comment">//参数:BufferID --&gt; charBuffer1:0x01	charBuffer1:0x02												</span><br><span class="hljs-comment">//模块返回确认字</span><br>u8 <span class="hljs-title function_">PS_GenChar</span><span class="hljs-params">(u8 BufferID)</span><br>&#123;<br>	u16 temp;<br>	u8  ensure;<br>	u8  *data;<br>	SendHead();<br>	SendAddr();<br>	SendFlag(<span class="hljs-number">0x01</span>);<span class="hljs-comment">//命令包标识</span><br>	SendLength(<span class="hljs-number">0x04</span>);<br>	Sendcmd(<span class="hljs-number">0x02</span>);<br>	Usart_SendByte(AS608_USART,BufferID);<br>	temp = <span class="hljs-number">0x01</span>+<span class="hljs-number">0x04</span>+<span class="hljs-number">0x02</span>+BufferID;<br>	SendCheck(temp);<br>	data = JudgeStr(<span class="hljs-number">2000</span>);<br>	<span class="hljs-keyword">if</span>(data)<br>		ensure = data[<span class="hljs-number">9</span>];<br>	<span class="hljs-keyword">else</span><br>		ensure = <span class="hljs-number">0xff</span>;<br>	<span class="hljs-keyword">return</span> ensure;<br>&#125;<br><br><span class="hljs-comment">//精确比对两枚指纹特征 PS_Match</span><br><span class="hljs-comment">//功能:精确比对CharBuffer1 与CharBuffer2 中的特征文件 </span><br><span class="hljs-comment">//模块返回确认字</span><br>u8 <span class="hljs-title function_">PS_Match</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span><br>&#123;<br>	u16 temp;<br>	u8  ensure;<br>	u8  *data;<br>	SendHead();<br>	SendAddr();<br>	SendFlag(<span class="hljs-number">0x01</span>);<span class="hljs-comment">//命令包标识</span><br>	SendLength(<span class="hljs-number">0x03</span>);<br>	Sendcmd(<span class="hljs-number">0x03</span>);<br>	temp = <span class="hljs-number">0x01</span>+<span class="hljs-number">0x03</span>+<span class="hljs-number">0x03</span>;<br>	SendCheck(temp);<br>	data = JudgeStr(<span class="hljs-number">2000</span>);<br>	<span class="hljs-keyword">if</span>(data)<br>		ensure = data[<span class="hljs-number">9</span>];<br>	<span class="hljs-keyword">else</span><br>		ensure = <span class="hljs-number">0xff</span>;<br>	<span class="hljs-keyword">return</span> ensure;<br>&#125;<br><br><span class="hljs-comment">//搜索指纹 PS_Search</span><br><span class="hljs-comment">//功能:以CharBuffer1或CharBuffer2中的特征文件搜索整个或部分指纹库.若搜索到，则返回页码。			</span><br><span class="hljs-comment">//参数:  BufferID @ref CharBuffer1	CharBuffer2</span><br><span class="hljs-comment">//说明:  模块返回确认字，页码（相配指纹模板）</span><br>u8 <span class="hljs-title function_">PS_Search</span><span class="hljs-params">(u8 BufferID,u16 StartPage,u16 PageNum,SearchResult *p)</span><br>&#123;<br>	u16 temp;<br>	u8  ensure;<br>	u8  *data;<br>	SendHead();<br>	SendAddr();<br>	SendFlag(<span class="hljs-number">0x01</span>);<span class="hljs-comment">//命令包标识</span><br>	SendLength(<span class="hljs-number">0x08</span>);<br>	Sendcmd(<span class="hljs-number">0x04</span>);<br>	Usart_SendByte(AS608_USART,BufferID);<br>	Usart_SendByte(AS608_USART,StartPage&gt;&gt;<span class="hljs-number">8</span>);<br>	Usart_SendByte(AS608_USART,StartPage);<br>	Usart_SendByte(AS608_USART,PageNum&gt;&gt;<span class="hljs-number">8</span>);<br>	Usart_SendByte(AS608_USART,PageNum);<br>	temp = <span class="hljs-number">0x01</span>+<span class="hljs-number">0x08</span>+<span class="hljs-number">0x04</span>+BufferID+(StartPage&gt;&gt;<span class="hljs-number">8</span>)+(u8)StartPage+(PageNum&gt;&gt;<span class="hljs-number">8</span>)+(u8)PageNum;<br>	SendCheck(temp);<br>	data = JudgeStr(<span class="hljs-number">2000</span>);<br>	<span class="hljs-keyword">if</span>(data)<br>	&#123;<br>		ensure = data[<span class="hljs-number">9</span>];<br>		p-&gt;pageID = (data[<span class="hljs-number">10</span>]&lt;&lt;<span class="hljs-number">8</span>)+data[<span class="hljs-number">11</span>];<br>		p-&gt;mathscore = (data[<span class="hljs-number">12</span>]&lt;&lt;<span class="hljs-number">8</span>)+data[<span class="hljs-number">13</span>];	<br>	&#125;<br>	<span class="hljs-keyword">else</span><br>		ensure = <span class="hljs-number">0xff</span>;<br>	<span class="hljs-keyword">return</span> ensure;	<br>&#125;<br><br><span class="hljs-comment">//合并特征（生成模板）PS_RegModel</span><br><span class="hljs-comment">//功能:将CharBuffer1与CharBuffer2中的特征文件合并生成 模板,结果存于CharBuffer1与CharBuffer2	</span><br><span class="hljs-comment">//说明:  模块返回确认字</span><br>u8 <span class="hljs-title function_">PS_RegModel</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span><br>&#123;<br>	u16 temp;<br>	u8  ensure;<br>	u8  *data;<br>	SendHead();<br>	SendAddr();<br>	SendFlag(<span class="hljs-number">0x01</span>);<span class="hljs-comment">//命令包标识</span><br>	SendLength(<span class="hljs-number">0x03</span>);<br>	Sendcmd(<span class="hljs-number">0x05</span>);<br>	temp = <span class="hljs-number">0x01</span>+<span class="hljs-number">0x03</span>+<span class="hljs-number">0x05</span>;<br>	SendCheck(temp);<br>	data = JudgeStr(<span class="hljs-number">2000</span>);<br>	<span class="hljs-keyword">if</span>(data)<br>		ensure = data[<span class="hljs-number">9</span>];<br>	<span class="hljs-keyword">else</span><br>		ensure = <span class="hljs-number">0xff</span>;<br>	<span class="hljs-keyword">return</span> ensure;		<br>&#125;<br><br><span class="hljs-comment">//储存模板 PS_StoreChar</span><br><span class="hljs-comment">//功能:将 CharBuffer1 或 CharBuffer2 中的模板文件存到 PageID 号flash数据库位置。			</span><br><span class="hljs-comment">//参数:  BufferID @ref charBuffer1:0x01	charBuffer1:0x02</span><br><span class="hljs-comment">//       PageID（指纹库位置号）</span><br><span class="hljs-comment">//说明:  模块返回确认字</span><br>u8 <span class="hljs-title function_">PS_StoreChar</span><span class="hljs-params">(u8 BufferID,u16 PageID)</span><br>&#123;<br>	u16 temp;<br>	u8  ensure;<br>	u8  *data;<br>	SendHead();<br>	SendAddr();<br>	SendFlag(<span class="hljs-number">0x01</span>);<span class="hljs-comment">//命令包标识</span><br>	SendLength(<span class="hljs-number">0x06</span>);<br>	Sendcmd(<span class="hljs-number">0x06</span>);<br>	Usart_SendByte(AS608_USART,BufferID);<br>	Usart_SendByte(AS608_USART,PageID&gt;&gt;<span class="hljs-number">8</span>);<br>	Usart_SendByte(AS608_USART,PageID);<br>	temp = <span class="hljs-number">0x01</span>+<span class="hljs-number">0x06</span>+<span class="hljs-number">0x06</span>+BufferID+(PageID&gt;&gt;<span class="hljs-number">8</span>)+(u8)PageID;<br>	SendCheck(temp);<br>	data = JudgeStr(<span class="hljs-number">2000</span>);<br>	<span class="hljs-keyword">if</span>(data)<br>		ensure = data[<span class="hljs-number">9</span>];<br>	<span class="hljs-keyword">else</span><br>		ensure = <span class="hljs-number">0xff</span>;<br>	<span class="hljs-keyword">return</span> ensure;	<br>&#125;<br><br><span class="hljs-comment">//删除模板 PS_DeletChar</span><br><span class="hljs-comment">//功能:  删除flash数据库中指定ID号开始的N个指纹模板</span><br><span class="hljs-comment">//参数:  PageID(指纹库模板号)，N删除的模板个数。</span><br><span class="hljs-comment">//说明:  模块返回确认字</span><br>u8 <span class="hljs-title function_">PS_DeletChar</span><span class="hljs-params">(u16 PageID,u16 N)</span><br>&#123;<br>	u16 temp;<br>	u8  ensure;<br>	u8  *data;<br>	SendHead();<br>	SendAddr();<br>	SendFlag(<span class="hljs-number">0x01</span>);<span class="hljs-comment">//命令包标识</span><br>	SendLength(<span class="hljs-number">0x07</span>);<br>	Sendcmd(<span class="hljs-number">0x0C</span>);<br>	Usart_SendByte(AS608_USART,PageID&gt;&gt;<span class="hljs-number">8</span>);<br>	Usart_SendByte(AS608_USART,PageID);<br>	Usart_SendByte(AS608_USART,N&gt;&gt;<span class="hljs-number">8</span>);<br>	Usart_SendByte(AS608_USART,N);<br>	temp = <span class="hljs-number">0x01</span>+<span class="hljs-number">0x07</span>+<span class="hljs-number">0x0C</span>+(PageID&gt;&gt;<span class="hljs-number">8</span>)+(u8)PageID+(N&gt;&gt;<span class="hljs-number">8</span>)+(u8)N;<br>	SendCheck(temp);<br>	data = JudgeStr(<span class="hljs-number">2000</span>);<br>	<span class="hljs-keyword">if</span>(data)<br>		ensure = data[<span class="hljs-number">9</span>];<br>	<span class="hljs-keyword">else</span><br>		ensure = <span class="hljs-number">0xff</span>;<br>	<span class="hljs-keyword">return</span> ensure;<br>&#125;<br><br><span class="hljs-comment">//清空指纹库 PS_Empty</span><br><span class="hljs-comment">//功能:  删除flash数据库中所有指纹模板</span><br><span class="hljs-comment">//参数:  无</span><br><span class="hljs-comment">//说明:  模块返回确认字</span><br>u8 <span class="hljs-title function_">PS_Empty</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span><br>&#123;<br>	u16 temp;<br>	u8  ensure;<br>	u8  *data;<br>	SendHead();<br>	SendAddr();<br>	SendFlag(<span class="hljs-number">0x01</span>);<span class="hljs-comment">//命令包标识</span><br>	SendLength(<span class="hljs-number">0x03</span>);<br>	Sendcmd(<span class="hljs-number">0x0D</span>);<br>	temp = <span class="hljs-number">0x01</span>+<span class="hljs-number">0x03</span>+<span class="hljs-number">0x0D</span>;<br>	SendCheck(temp);<br>	data = JudgeStr(<span class="hljs-number">2000</span>);<br>	<span class="hljs-keyword">if</span>(data)<br>		ensure = data[<span class="hljs-number">9</span>];<br>	<span class="hljs-keyword">else</span><br>		ensure = <span class="hljs-number">0xff</span>;<br>	<span class="hljs-keyword">return</span> ensure;<br>&#125;<br><span class="hljs-comment">//写系统寄存器 PS_WriteReg</span><br><span class="hljs-comment">//功能:  写模块寄存器</span><br><span class="hljs-comment">//参数:  寄存器序号RegNum:4\5\6</span><br><span class="hljs-comment">//说明:  模块返回确认字</span><br>u8 <span class="hljs-title function_">PS_WriteReg</span><span class="hljs-params">(u8 RegNum,u8 DATA)</span><br>&#123;<br>	u16 temp;<br>	u8  ensure;<br>	u8  *data;<br>	SendHead();<br>	SendAddr();<br>	SendFlag(<span class="hljs-number">0x01</span>);<span class="hljs-comment">//命令包标识</span><br>	SendLength(<span class="hljs-number">0x05</span>);<br>	Sendcmd(<span class="hljs-number">0x0E</span>);<br>	Usart_SendByte(AS608_USART,RegNum);<br>	Usart_SendByte(AS608_USART,DATA);<br>	temp = RegNum+DATA+<span class="hljs-number">0x01</span>+<span class="hljs-number">0x05</span>+<span class="hljs-number">0x0E</span>;<br>	SendCheck(temp);<br>	data = JudgeStr(<span class="hljs-number">2000</span>);<br>	<span class="hljs-keyword">if</span>(data)<br>		ensure = data[<span class="hljs-number">9</span>];<br>	<span class="hljs-keyword">else</span><br>		ensure = <span class="hljs-number">0xff</span>;<br><span class="hljs-comment">//	if(ensure==0)</span><br><span class="hljs-comment">//		printf(&quot;\r\n设置参数成功！&quot;);</span><br><span class="hljs-comment">//	else</span><br><span class="hljs-comment">//		printf(&quot;\r\n%s&quot;,EnsureMessage(ensure));</span><br>	<span class="hljs-keyword">return</span> ensure;<br>&#125;<br><br><span class="hljs-comment">//读系统基本参数 PS_ReadSysPara</span><br><span class="hljs-comment">//功能:  读取模块的基本参数（波特率，包大小等)</span><br><span class="hljs-comment">//参数:  无</span><br><span class="hljs-comment">//说明:  模块返回确认字 + 基本参数（16bytes）</span><br>u8 <span class="hljs-title function_">PS_ReadSysPara</span><span class="hljs-params">(SysPara *p)</span><br>&#123;<br>	u16 temp;<br>	u8  ensure;<br>	u8  *data;<br>	SendHead();<br>	SendAddr();<br>	SendFlag(<span class="hljs-number">0x01</span>);<span class="hljs-comment">//命令包标识</span><br>	SendLength(<span class="hljs-number">0x03</span>);<br>	Sendcmd(<span class="hljs-number">0x0F</span>);<br>	temp = <span class="hljs-number">0x01</span>+<span class="hljs-number">0x03</span>+<span class="hljs-number">0x0F</span>;<br>	SendCheck(temp);<br>	data = JudgeStr(<span class="hljs-number">1000</span>);<br>	<span class="hljs-keyword">if</span>(data)<br>	&#123;<br>		ensure = data[<span class="hljs-number">9</span>];<br>		p-&gt;PS_max = (data[<span class="hljs-number">14</span>]&lt;&lt;<span class="hljs-number">8</span>)+data[<span class="hljs-number">15</span>];<br>		p-&gt;PS_level = data[<span class="hljs-number">17</span>];<br>		p-&gt;PS_addr = (data[<span class="hljs-number">18</span>]&lt;&lt;<span class="hljs-number">24</span>)+(data[<span class="hljs-number">19</span>]&lt;&lt;<span class="hljs-number">16</span>)+(data[<span class="hljs-number">20</span>]&lt;&lt;<span class="hljs-number">8</span>)+data[<span class="hljs-number">21</span>];<br>		p-&gt;PS_size = data[<span class="hljs-number">23</span>];<br>		p-&gt;PS_N = data[<span class="hljs-number">25</span>];<br>	&#125;		<br>	<span class="hljs-keyword">else</span><br>		ensure=<span class="hljs-number">0xff</span>;<br><span class="hljs-comment">//	if(ensure==0x00)</span><br><span class="hljs-comment">//	&#123;</span><br><span class="hljs-comment">//		printf(&quot;\r\n模块最大指纹容量=%d&quot;,p-&gt;PS_max);</span><br><span class="hljs-comment">//		printf(&quot;\r\n对比等级=%d&quot;,p-&gt;PS_level);</span><br><span class="hljs-comment">//		printf(&quot;\r\n地址=%x&quot;,p-&gt;PS_addr);</span><br><span class="hljs-comment">//		printf(&quot;\r\n波特率=%d&quot;,p-&gt;PS_N*9600);</span><br><span class="hljs-comment">//	&#125;</span><br><span class="hljs-comment">//	else </span><br><span class="hljs-comment">//		printf(&quot;\r\n%s&quot;,EnsureMessage(ensure));</span><br>	<span class="hljs-keyword">return</span> ensure;<br>&#125;<br><br><span class="hljs-comment">//设置模块地址 PS_SetAddr</span><br><span class="hljs-comment">//功能:  设置模块地址</span><br><span class="hljs-comment">//参数:  PS_addr</span><br><span class="hljs-comment">//说明:  模块返回确认字</span><br>u8 <span class="hljs-title function_">PS_SetAddr</span><span class="hljs-params">(u32 PS_addr)</span><br>&#123;<br>	u16 temp;<br>	u8  ensure;<br>	u8  *data;<br>	SendHead();<br>	SendAddr();<br>	SendFlag(<span class="hljs-number">0x01</span>);<span class="hljs-comment">//命令包标识</span><br>	SendLength(<span class="hljs-number">0x07</span>);<br>	Sendcmd(<span class="hljs-number">0x15</span>);<br>	Usart_SendByte(AS608_USART,PS_addr&gt;&gt;<span class="hljs-number">24</span>);<br>	Usart_SendByte(AS608_USART,PS_addr&gt;&gt;<span class="hljs-number">16</span>);<br>	Usart_SendByte(AS608_USART,PS_addr&gt;&gt;<span class="hljs-number">8</span>);<br>	Usart_SendByte(AS608_USART,PS_addr);<br>	temp = <span class="hljs-number">0x01</span>+<span class="hljs-number">0x07</span>+<span class="hljs-number">0x15</span>+(u8)(PS_addr&gt;&gt;<span class="hljs-number">24</span>)+(u8)(PS_addr&gt;&gt;<span class="hljs-number">16</span>)+(u8)(PS_addr&gt;&gt;<span class="hljs-number">8</span>) +(u8)PS_addr;				<br>	SendCheck(temp);<br>	AS608Addr = PS_addr;<span class="hljs-comment">//发送完指令，更换地址</span><br>	data = JudgeStr(<span class="hljs-number">2000</span>);<br>	<span class="hljs-keyword">if</span>(data)<br>		ensure = data[<span class="hljs-number">9</span>];<br>	<span class="hljs-keyword">else</span><br>		ensure = <span class="hljs-number">0xff</span>;	<br><span class="hljs-comment">//	if(ensure==0x00)</span><br><span class="hljs-comment">//		printf(&quot;\r\n设置地址成功！&quot;);</span><br><span class="hljs-comment">//	else</span><br><span class="hljs-comment">//		printf(&quot;\r\n%s&quot;,EnsureMessage(ensure));</span><br>	<span class="hljs-keyword">return</span> ensure;<br>&#125;<br><br><span class="hljs-comment">//功能： 模块内部为用户开辟了256bytes的FLASH空间用于存用户记事本,</span><br><span class="hljs-comment">//	该记事本逻辑上被分成 16 个页。</span><br><span class="hljs-comment">//参数:  NotePageNum(0~15),Byte32(要写入内容，32个字节)</span><br><span class="hljs-comment">//说明:  模块返回确认字</span><br>u8 <span class="hljs-title function_">PS_WriteNotepad</span><span class="hljs-params">(u8 NotePageNum,u8 *Byte32)</span><br>&#123;<br>	u16 temp;<br>	u8  ensure,i;<br>	u8  *data;<br>	SendHead();<br>	SendAddr();<br>	SendFlag(<span class="hljs-number">0x01</span>);<span class="hljs-comment">//命令包标识</span><br>	SendLength(<span class="hljs-number">36</span>);<br>	Sendcmd(<span class="hljs-number">0x18</span>);<br>	Usart_SendByte(AS608_USART,NotePageNum);<br>	<span class="hljs-keyword">for</span>(i=<span class="hljs-number">0</span>;i&lt;<span class="hljs-number">32</span>;i++)<br>	 &#123;<br>		 Usart_SendByte(AS608_USART,Byte32[i]);<br>		 temp += Byte32[i];<br>	 &#125;<br>	temp = <span class="hljs-number">0x01</span>+<span class="hljs-number">36</span>+<span class="hljs-number">0x18</span>+NotePageNum+temp;<br>	SendCheck(temp);<br>	data = JudgeStr(<span class="hljs-number">2000</span>);<br>	<span class="hljs-keyword">if</span>(data)<br>		ensure = data[<span class="hljs-number">9</span>];<br>	<span class="hljs-keyword">else</span><br>		ensure = <span class="hljs-number">0xff</span>;<br>	<span class="hljs-keyword">return</span> ensure;<br>&#125;<br><br><span class="hljs-comment">//读记事PS_ReadNotepad</span><br><span class="hljs-comment">//功能：  读取FLASH用户区的128bytes数据</span><br><span class="hljs-comment">//参数:  NotePageNum(0~15)</span><br><span class="hljs-comment">//说明:  模块返回确认字+用户信息</span><br>u8 <span class="hljs-title function_">PS_ReadNotepad</span><span class="hljs-params">(u8 NotePageNum,u8 *Byte32)</span><br>&#123;<br>	u16 temp;<br>	u8  ensure,i;<br>	u8  *data;<br>	SendHead();<br>	SendAddr();<br>	SendFlag(<span class="hljs-number">0x01</span>);<span class="hljs-comment">//命令包标识</span><br>	SendLength(<span class="hljs-number">0x04</span>);<br>	Sendcmd(<span class="hljs-number">0x19</span>);<br>	Usart_SendByte(AS608_USART,NotePageNum);<br>	temp = <span class="hljs-number">0x01</span>+<span class="hljs-number">0x04</span>+<span class="hljs-number">0x19</span>+NotePageNum;<br>	SendCheck(temp);<br>	data = JudgeStr(<span class="hljs-number">2000</span>);<br>	<span class="hljs-keyword">if</span>(data)<br>	&#123;<br>		ensure = data[<span class="hljs-number">9</span>];<br>		<span class="hljs-keyword">for</span>(i=<span class="hljs-number">0</span>;i&lt;<span class="hljs-number">32</span>;i++)<br>		&#123;<br>			Byte32[i] = data[<span class="hljs-number">10</span>+i];<br>		&#125;<br>	&#125;<br>	<span class="hljs-keyword">else</span><br>		ensure = <span class="hljs-number">0xff</span>;<br>	<span class="hljs-keyword">return</span> ensure;<br>&#125;<br><br><span class="hljs-comment">//高速搜索PS_HighSpeedSearch</span><br><span class="hljs-comment">//功能：以 CharBuffer1或CharBuffer2中的特征文件高速搜索整个或部分指纹库。</span><br><span class="hljs-comment">//		  若搜索到，则返回页码,该指令对于的确存在于指纹库中 ，且登录时质量</span><br><span class="hljs-comment">//		  很好的指纹，会很快给出搜索结果。</span><br><span class="hljs-comment">//参数:  BufferID， StartPage(起始页)，PageNum（页数）</span><br><span class="hljs-comment">//说明:  模块返回确认字+页码（相配指纹模板）</span><br>u8 <span class="hljs-title function_">PS_HighSpeedSearch</span><span class="hljs-params">(u8 BufferID,u16 StartPage,u16 PageNum,SearchResult *p)</span><br>&#123;<br>	u16 temp;<br>	u8  ensure;<br>	u8  *data;<br>	SendHead();<br>	SendAddr();<br>	SendFlag(<span class="hljs-number">0x01</span>);<span class="hljs-comment">//命令包标识</span><br>	SendLength(<span class="hljs-number">0x08</span>);<br>	Sendcmd(<span class="hljs-number">0x1b</span>);<br>	Usart_SendByte(AS608_USART,BufferID);<br>	Usart_SendByte(AS608_USART,StartPage&gt;&gt;<span class="hljs-number">8</span>);<br>	Usart_SendByte(AS608_USART,StartPage);<br>	Usart_SendByte(AS608_USART,PageNum&gt;&gt;<span class="hljs-number">8</span>);<br>	Usart_SendByte(AS608_USART,PageNum);<br>	temp = <span class="hljs-number">0x01</span>+<span class="hljs-number">0x08</span>+<span class="hljs-number">0x1b</span>+BufferID+(StartPage&gt;&gt;<span class="hljs-number">8</span>)+(u8)StartPage+(PageNum&gt;&gt;<span class="hljs-number">8</span>)+(u8)PageNum;<br>	SendCheck(temp);<br>	data = JudgeStr(<span class="hljs-number">2000</span>);<br> 	<span class="hljs-keyword">if</span>(data)<br>	&#123;<br>		ensure = data[<span class="hljs-number">9</span>];<br>		p-&gt;pageID = (data[<span class="hljs-number">10</span>]&lt;&lt;<span class="hljs-number">8</span>) +data[<span class="hljs-number">11</span>];<br>		p-&gt;mathscore = (data[<span class="hljs-number">12</span>]&lt;&lt;<span class="hljs-number">8</span>) +data[<span class="hljs-number">13</span>];<br>	&#125;<br>	<span class="hljs-keyword">else</span><br>		ensure=<span class="hljs-number">0xff</span>;<br>	<span class="hljs-keyword">return</span> ensure;<br>&#125;<br><br><span class="hljs-comment">//读有效模板个数 PS_ValidTempleteNum</span><br><span class="hljs-comment">//功能：读有效模板个数</span><br><span class="hljs-comment">//参数: 无</span><br><span class="hljs-comment">//说明: 模块返回确认字+有效模板个数ValidN</span><br>u8 <span class="hljs-title function_">PS_ValidTempleteNum</span><span class="hljs-params">(u16 *ValidN)</span><br>&#123;<br>	u16 temp;<br>	u8  ensure;<br>	u8  *data;<br>	SendHead();<br>	SendAddr();<br>	SendFlag(<span class="hljs-number">0x01</span>);	<span class="hljs-comment">//命令包标识</span><br>	SendLength(<span class="hljs-number">0x03</span>);<br>	Sendcmd(<span class="hljs-number">0x1d</span>);<br>	temp = <span class="hljs-number">0x01</span>+<span class="hljs-number">0x03</span>+<span class="hljs-number">0x1d</span>;<br>	SendCheck(temp);<br>	data=JudgeStr(<span class="hljs-number">2000</span>);<br>	<span class="hljs-keyword">if</span>(data)<br>	&#123;<br>		ensure=data[<span class="hljs-number">9</span>];<br>		*ValidN = (data[<span class="hljs-number">10</span>]&lt;&lt;<span class="hljs-number">8</span>) +data[<span class="hljs-number">11</span>];<br>	&#125;		<br>	<span class="hljs-keyword">else</span><br>		ensure=<span class="hljs-number">0xff</span>;<br>	<br><span class="hljs-comment">//	if(ensure==0x00)</span><br><span class="hljs-comment">//	&#123;</span><br><span class="hljs-comment">//		printf(&quot;\r\n有效指纹个数=%d&quot;,(data[10]&lt;&lt;8)+data[11]);</span><br><span class="hljs-comment">//	&#125;</span><br><span class="hljs-comment">//	else</span><br><span class="hljs-comment">//		printf(&quot;\r\n%s&quot;,EnsureMessage(ensure));</span><br>	<span class="hljs-keyword">return</span> ensure;<br>&#125;<br><br><span class="hljs-comment">//与AS608握手 PS_HandShake</span><br><span class="hljs-comment">//参数: PS_Addr地址指针</span><br><span class="hljs-comment">//说明: 模块返新地址（正确地址）	</span><br>u8 <span class="hljs-title function_">PS_HandShake</span><span class="hljs-params">(u32 *PS_Addr)</span><br>&#123;<br>	SendHead();<br>	SendAddr();<br>	Usart_SendByte(AS608_USART,<span class="hljs-number">0X01</span>);<br>	Usart_SendByte(AS608_USART,<span class="hljs-number">0X00</span>);<br>	Usart_SendByte(AS608_USART,<span class="hljs-number">0X00</span>);	<br>	delay_ms(<span class="hljs-number">200</span>);<br>	<span class="hljs-keyword">if</span>(AS608_RX_STA&amp;<span class="hljs-number">0X8000</span>)<span class="hljs-comment">//接收到数据</span><br>	&#123;<br>		<span class="hljs-comment">//判断是不是模块返回的应答包	</span><br>		<span class="hljs-keyword">if</span>(	AS608_RX_BUF[<span class="hljs-number">0</span>]==<span class="hljs-number">0XEF</span>&amp;&amp;AS608_RX_BUF[<span class="hljs-number">1</span>]==<span class="hljs-number">0X01</span>&amp;&amp;AS608_RX_BUF[<span class="hljs-number">6</span>]==<span class="hljs-number">0X07</span>)<br>		&#123;<br>			*PS_Addr=(AS608_RX_BUF[<span class="hljs-number">2</span>]&lt;&lt;<span class="hljs-number">24</span>) + (AS608_RX_BUF[<span class="hljs-number">3</span>]&lt;&lt;<span class="hljs-number">16</span>)<br>					+(AS608_RX_BUF[<span class="hljs-number">4</span>]&lt;&lt;<span class="hljs-number">8</span>) + (AS608_RX_BUF[<span class="hljs-number">5</span>]);<br>			AS608_RX_STA = <span class="hljs-number">0</span>;<br>			<span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>		&#125;<br>		AS608_RX_STA=<span class="hljs-number">0</span>;					<br>	&#125;<br>	<span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;		<br>&#125;<br><br><span class="hljs-comment">//模块应答包确认码信息解析</span><br><span class="hljs-comment">//功能：解析确认码错误信息返回信息</span><br><span class="hljs-comment">//参数: ensure</span><br><span class="hljs-type">const</span> <span class="hljs-type">char</span> *<span class="hljs-title function_">EnsureMessage</span><span class="hljs-params">(u8 ensure)</span><br>&#123;<br>	<span class="hljs-type">const</span> <span class="hljs-type">char</span> *p;<br>	<span class="hljs-keyword">switch</span>(ensure)<br>	&#123;<br>		<span class="hljs-keyword">case</span>  <span class="hljs-number">0x00</span>:<br>			p=<span class="hljs-string">&quot;OK&quot;</span>;<span class="hljs-keyword">break</span>;		<br>		<span class="hljs-keyword">case</span>  <span class="hljs-number">0x01</span>:<br>			p=<span class="hljs-string">&quot;数据包接收错误&quot;</span>;<span class="hljs-keyword">break</span>;<br>		<span class="hljs-keyword">case</span>  <span class="hljs-number">0x02</span>:<br>			p=<span class="hljs-string">&quot;传感器上没有手指&quot;</span>;<span class="hljs-keyword">break</span>;<br>		<span class="hljs-keyword">case</span>  <span class="hljs-number">0x03</span>:<br>			p=<span class="hljs-string">&quot;录入指纹图像失败&quot;</span>;<span class="hljs-keyword">break</span>;<br>		<span class="hljs-keyword">case</span>  <span class="hljs-number">0x04</span>:<br>			p=<span class="hljs-string">&quot;指纹图像太干、太淡而生不成特征&quot;</span>;<span class="hljs-keyword">break</span>;<br>		<span class="hljs-keyword">case</span>  <span class="hljs-number">0x05</span>:<br>			p=<span class="hljs-string">&quot;指纹图像太湿、太糊而生不成特征&quot;</span>;<span class="hljs-keyword">break</span>;<br>		<span class="hljs-keyword">case</span>  <span class="hljs-number">0x06</span>:<br>			p=<span class="hljs-string">&quot;指纹图像太乱而生不成特征&quot;</span>;<span class="hljs-keyword">break</span>;<br>		<span class="hljs-keyword">case</span>  <span class="hljs-number">0x07</span>:<br>			p=<span class="hljs-string">&quot;指纹图像正常，但特征点太少（或面积太小）而生不成特征&quot;</span>;<span class="hljs-keyword">break</span>;<br>		<span class="hljs-keyword">case</span>  <span class="hljs-number">0x08</span>:<br>			p=<span class="hljs-string">&quot;指纹不匹配&quot;</span>;<span class="hljs-keyword">break</span>;<br>		<span class="hljs-keyword">case</span>  <span class="hljs-number">0x09</span>:<br>			p=<span class="hljs-string">&quot;没搜索到指纹&quot;</span>;<span class="hljs-keyword">break</span>;<br>		<span class="hljs-keyword">case</span>  <span class="hljs-number">0x0a</span>:<br>			p=<span class="hljs-string">&quot;特征合并失败&quot;</span>;<span class="hljs-keyword">break</span>;<br>		<span class="hljs-keyword">case</span>  <span class="hljs-number">0x0b</span>:<br>			p=<span class="hljs-string">&quot;访问指纹库时地址序号超出指纹库范围&quot;</span>;<br>		<span class="hljs-keyword">case</span>  <span class="hljs-number">0x10</span>:<br>			p=<span class="hljs-string">&quot;删除模板失败&quot;</span>;<span class="hljs-keyword">break</span>;<br>		<span class="hljs-keyword">case</span>  <span class="hljs-number">0x11</span>:<br>			p=<span class="hljs-string">&quot;清空指纹库失败&quot;</span>;<span class="hljs-keyword">break</span>;	<br>		<span class="hljs-keyword">case</span>  <span class="hljs-number">0x15</span>:<br>			p=<span class="hljs-string">&quot;缓冲区内没有有效原始图而生不成图像&quot;</span>;<span class="hljs-keyword">break</span>;<br>		<span class="hljs-keyword">case</span>  <span class="hljs-number">0x18</span>:<br>			p=<span class="hljs-string">&quot;读写 FLASH 出错&quot;</span>;<span class="hljs-keyword">break</span>;<br>		<span class="hljs-keyword">case</span>  <span class="hljs-number">0x19</span>:<br>			p=<span class="hljs-string">&quot;未定义错误&quot;</span>;<span class="hljs-keyword">break</span>;<br>		<span class="hljs-keyword">case</span>  <span class="hljs-number">0x1a</span>:<br>			p=<span class="hljs-string">&quot;无效寄存器号&quot;</span>;<span class="hljs-keyword">break</span>;<br>		<span class="hljs-keyword">case</span>  <span class="hljs-number">0x1b</span>:<br>			p=<span class="hljs-string">&quot;寄存器设定内容错误&quot;</span>;<span class="hljs-keyword">break</span>;<br>		<span class="hljs-keyword">case</span>  <span class="hljs-number">0x1c</span>:<br>			p=<span class="hljs-string">&quot;记事本页码指定错误&quot;</span>;<span class="hljs-keyword">break</span>;<br>		<span class="hljs-keyword">case</span>  <span class="hljs-number">0x1f</span>:<br>			p=<span class="hljs-string">&quot;指纹库满&quot;</span>;<span class="hljs-keyword">break</span>;<br>		<span class="hljs-keyword">case</span>  <span class="hljs-number">0x20</span>:<br>			p=<span class="hljs-string">&quot;地址错误&quot;</span>;<span class="hljs-keyword">break</span>;<br>		<span class="hljs-keyword">default</span> :<br>			p=<span class="hljs-string">&quot;模块返回确认码有误&quot;</span>;<span class="hljs-keyword">break</span>;<br>	&#125;<br> <span class="hljs-keyword">return</span> p;	<br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+<h4 id="4，延时函数配置模块"><a href="#4，延时函数配置模块" class="headerlink" title="4，延时函数配置模块"></a>4，延时函数配置模块</h4><h5 id="（1）systick-h"><a href="#（1）systick-h" class="headerlink" title="（1）systick.h"></a>（1）systick.h</h5><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-meta">#<span class="hljs-keyword">ifndef</span> __SYSTICK_H</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> __SYSTICK_H</span><br><br><span class="hljs-meta">#<span class="hljs-keyword">include</span><span class="hljs-string">&quot;stm32f10x.h&quot;</span></span><br><br><span class="hljs-type">void</span> <span class="hljs-title function_">delay_us</span><span class="hljs-params">(u32 i)</span>;<br><span class="hljs-type">void</span> <span class="hljs-title function_">delay_ms</span><span class="hljs-params">(u32 i)</span>;<br><br><br><span class="hljs-meta">#<span class="hljs-keyword">endif</span>	<span class="hljs-comment">/* __SYSTICK_DELAY_H */</span></span><br><br></code></pre></td></tr></table></figure>
+
+<h5 id="（2）systick-c"><a href="#（2）systick-c" class="headerlink" title="（2）systick.c"></a>（2）systick.c</h5><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;systick.h&quot;</span></span><br><br><span class="hljs-type">void</span> <span class="hljs-title function_">delay_us</span><span class="hljs-params">(u32 i)</span><br>&#123;<br>	u32 temp;<br>	SysTick-&gt;LOAD=<span class="hljs-number">9</span>*i;		 <span class="hljs-comment">//Set the reload value, at 72MHZ</span><br>	SysTick-&gt;CTRL=<span class="hljs-number">0X01</span>;		 <span class="hljs-comment">//Enable, reduce to zero is no action, use external clock source</span><br>	SysTick-&gt;VAL=<span class="hljs-number">0</span>;		   	 <span class="hljs-comment">//Clear counter</span><br>	<span class="hljs-keyword">do</span><br>	&#123;<br>		temp=SysTick-&gt;CTRL;		<span class="hljs-comment">//Read current countdown value</span><br>	&#125;<br>	<span class="hljs-keyword">while</span>((temp&amp;<span class="hljs-number">0x01</span>)&amp;&amp;(!(temp&amp;(<span class="hljs-number">1</span>&lt;&lt;<span class="hljs-number">16</span>))));	 <span class="hljs-comment">//Waiting time to arrive</span><br>	SysTick-&gt;CTRL=<span class="hljs-number">0</span>;	<span class="hljs-comment">//Close counter</span><br>	SysTick-&gt;VAL=<span class="hljs-number">0</span>;		<span class="hljs-comment">//Empty counter</span><br>&#125;<br><span class="hljs-type">void</span> <span class="hljs-title function_">delay_ms</span><span class="hljs-params">(u32 i)</span><br>&#123;<br>	u32 temp;<br>	SysTick-&gt;LOAD=<span class="hljs-number">9000</span>*i;	<span class="hljs-comment">//Set the reload value, at 72MHZ</span><br>	SysTick-&gt;CTRL=<span class="hljs-number">0X01</span>;		<span class="hljs-comment">//Enable, reduce to zero is no action, use external clock source</span><br>	SysTick-&gt;VAL=<span class="hljs-number">0</span>;			<span class="hljs-comment">//Clear counter</span><br>	<span class="hljs-keyword">do</span><br>	&#123;<br>		temp=SysTick-&gt;CTRL;	   <span class="hljs-comment">//Read current countdown value</span><br>	&#125;<br>	<span class="hljs-keyword">while</span>((temp&amp;<span class="hljs-number">0x01</span>)&amp;&amp;(!(temp&amp;(<span class="hljs-number">1</span>&lt;&lt;<span class="hljs-number">16</span>))));	<span class="hljs-comment">//Waiting time to arrive</span><br>	SysTick-&gt;CTRL=<span class="hljs-number">0</span>;	<span class="hljs-comment">//Close counter</span><br>	SysTick-&gt;VAL=<span class="hljs-number">0</span>;		<span class="hljs-comment">//Empty counter</span><br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+<h4 id="5，主函数main-c"><a href="#5，主函数main-c" class="headerlink" title="5，主函数main.c"></a>5，主函数main.c</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br><span class="line">270</span><br><span class="line">271</span><br><span class="line">272</span><br><span class="line">273</span><br><span class="line">274</span><br><span class="line">275</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">/**</span><br><span class="hljs-comment">  ******************************************************************************</span><br><span class="hljs-comment">  * @file    main.c</span><br><span class="hljs-comment">  * @author  Soso</span><br><span class="hljs-comment">  * @date    2019-12-17</span><br><span class="hljs-comment">  * @brief   STM32f103 fingerprint identification system, </span><br><span class="hljs-comment">  *			 serial port display interface information.</span><br><span class="hljs-comment">  ******************************************************************************</span><br><span class="hljs-comment">  */</span><br>  <br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;stm32f10x.h&quot;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;time.h&quot;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;as608.h&quot;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;usart.h&quot;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;systick.h&quot;</span></span><br><br>SysPara AS608Para;	<span class="hljs-comment">//指纹模块AS608参数</span><br><span class="hljs-type">uint16_t</span> ValidN = <span class="hljs-number">0</span>;	<span class="hljs-comment">//模块内有效模板个数</span><br><span class="hljs-type">int</span> InputNum = <span class="hljs-number">-1</span>;<br><br><span class="hljs-type">void</span> <span class="hljs-title function_">ShowErrMessage</span><span class="hljs-params">(<span class="hljs-type">uint8_t</span> ensure)</span>;<br><span class="hljs-type">void</span> <span class="hljs-title function_">ShowMenu</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span>;		<span class="hljs-comment">// Main display menu</span><br><span class="hljs-type">void</span> <span class="hljs-title function_">Show_DelFR_Menu</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span>;	<span class="hljs-comment">// Delete display menu</span><br><span class="hljs-type">void</span> <span class="hljs-title function_">Add_FR</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span>;			<span class="hljs-comment">// Add figerprint</span><br><span class="hljs-type">void</span> <span class="hljs-title function_">Press_FR</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span>;		<span class="hljs-comment">// Press fingerprint</span><br><span class="hljs-type">void</span> <span class="hljs-title function_">Del_FR</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span>;			<span class="hljs-comment">// Delete fingerprint</span><br><br><span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span><br>&#123;<br>	<span class="hljs-type">uint8_t</span> ensure;<br>	<br>	COUNTER_TIM_Init(<span class="hljs-number">1000</span>,<span class="hljs-number">720</span>);	<span class="hljs-comment">// 10ms</span><br>	USART_Config();<br>	PS_StaGPIO_Init();	<span class="hljs-comment">//初始化读FR状态引脚</span><br>	<br>	<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;\r\n----------------------------------------------------\r\n\r\n&quot;</span>);<br>	<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;AS608 Fingerprint module test.\r\n&quot;</span>);<br>	<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;		Author: @Soso\r\n&quot;</span>);<br>	<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Connect with AS608....\r\n&quot;</span>);<br>	<span class="hljs-keyword">while</span>(PS_HandShake(&amp;AS608Addr))	<span class="hljs-comment">//与AS608模块握手</span><br>	&#123;<br>		<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Cannot connect with AS608!\r\n&quot;</span>);<br>		delay_ms(<span class="hljs-number">1000</span>);<br>		<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Try to connect again....\r\n&quot;</span>);	<br>		delay_ms(<span class="hljs-number">1000</span>);	  <br>	&#125;<br>	<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Connect success!\r\n&quot;</span>);		<span class="hljs-comment">//通讯成功</span><br>	<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Baudrate:%d   Addr:0x%x\r\n&quot;</span>,AS608_USART_BAUDRATE,AS608Addr);	<span class="hljs-comment">//显示波特率</span><br>	delay_ms(<span class="hljs-number">100</span>);<br>	ensure=PS_ValidTempleteNum(&amp;ValidN);<span class="hljs-comment">//读库指纹个数</span><br>	<span class="hljs-keyword">if</span>(ensure!=<span class="hljs-number">0x00</span>)<br>		ShowErrMessage(ensure);			<span class="hljs-comment">//显示确认码错误信息	</span><br>	ensure=PS_ReadSysPara(&amp;AS608Para);  <span class="hljs-comment">//读AS608模块参数</span><br>	<span class="hljs-keyword">if</span>(ensure==<span class="hljs-number">0x00</span>)<br>		<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;RemainNum:%d    Level:%d\r\n&quot;</span>,AS608Para.PS_max-ValidN,AS608Para.PS_level);	<span class="hljs-comment">//显示剩余指纹数量和安全等级</span><br>	<span class="hljs-keyword">else</span><br>		ShowErrMessage(ensure);	<br>	<br>	ShowMenu();<br><br>	<br>	<span class="hljs-keyword">while</span>(<span class="hljs-number">1</span>)<br>	&#123;<br>		<span class="hljs-keyword">if</span>(InputNum == <span class="hljs-number">1</span>)	<span class="hljs-comment">//录指纹</span><br>		&#123;<br>			Add_FR();<br>			ShowMenu();<br>		&#125;<br>		<span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(InputNum == <span class="hljs-number">2</span>)<br>		&#123;<br>			Del_FR();<br>			ShowMenu();<br>		&#125;<br>		<span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(InputNum == <span class="hljs-number">3</span>)<br>		&#123;<br>			Press_FR();	<span class="hljs-comment">//刷指纹</span><br>			ShowMenu();			<br>		&#125;<br>		<br>	&#125;<br>&#125;<br><br><br><span class="hljs-comment">//显示确认码错误信息</span><br><span class="hljs-type">void</span> <span class="hljs-title function_">ShowErrMessage</span><span class="hljs-params">(<span class="hljs-type">uint8_t</span> ensure)</span><br>&#123;<br>	<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%s\r\n&quot;</span>,EnsureMessage(ensure));<br>&#125;<br><span class="hljs-comment">// 显示主目录界面</span><br><span class="hljs-type">void</span> <span class="hljs-title function_">ShowMenu</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span><br>&#123;<br>	<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;\r\n----------------------------------------------------\r\n\r\n&quot;</span>);<br>	<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Welcome to AS608 fingerprint module.\r\n&quot;</span>);<br>	<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;1. Add fingerprint.\r\n&quot;</span>);<br>	<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;2. Delete fingerprint.\r\n&quot;</span>);<br>	<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;3. Identification fingerprint.\r\n&quot;</span>);<br>	<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Please select an option: &quot;</span>);<br>	<span class="hljs-built_in">scanf</span>(<span class="hljs-string">&quot;%d&quot;</span>,&amp;InputNum);<br>&#125;<br><span class="hljs-comment">// 显示删除指纹界面</span><br><span class="hljs-type">void</span> <span class="hljs-title function_">Show_DelFR_Menu</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span><br>&#123;<br>	<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;\r\n----------------------------------------------------\r\n\r\n&quot;</span>);<br>	<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;		Delete fingerprint\r\n&quot;</span>);<br>	<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Input 555 clear the fingerprint library.\r\n&quot;</span>);<br>	<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Input 666 back to main menu.\r\n&quot;</span>);<br>	<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Input ID and press Enter(0=&lt; ID &lt;=299): &quot;</span>);	<span class="hljs-comment">//显示输入ID并按下“Enter”</span><br>&#125;<br><br><span class="hljs-comment">//录指纹</span><br><span class="hljs-type">void</span> <span class="hljs-title function_">Add_FR</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span><br>&#123;<br>	<span class="hljs-type">uint8_t</span> i=<span class="hljs-number">0</span>,ensure,processnum=<span class="hljs-number">0</span>;<br>	<span class="hljs-type">int</span> ID;<br>	<br>	<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;\r\n----------------------------------------------------\r\n\r\n&quot;</span>);<br>	<span class="hljs-keyword">while</span>(<span class="hljs-number">1</span>)<br>	&#123;<br>		<span class="hljs-keyword">switch</span>(processnum)<br>		&#123;<br>			<span class="hljs-keyword">case</span> <span class="hljs-number">0</span>:<br>				i++;<br>				<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Pleas touch finger!\r\n&quot;</span>);	<span class="hljs-comment">//请按手指</span><br>				<span class="hljs-keyword">while</span>(!PS_Sta);	<span class="hljs-comment">//等待手指按下</span><br>				ensure=PS_GetImage();<br>				<span class="hljs-keyword">if</span>(ensure==<span class="hljs-number">0x00</span>) <br>				&#123;<br>					ensure=PS_GenChar(CharBuffer1);<span class="hljs-comment">//生成特征</span><br>					<span class="hljs-keyword">if</span>(ensure==<span class="hljs-number">0x00</span>)<br>					&#123;<br>						<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Fingerprint correct.\r\n&quot;</span>);<span class="hljs-comment">//指纹正确</span><br>						i=<span class="hljs-number">0</span>;<br>						processnum=<span class="hljs-number">1</span>;<span class="hljs-comment">//跳到第二步						</span><br>					&#125;<span class="hljs-keyword">else</span> ShowErrMessage(ensure);				<br>				&#125;<span class="hljs-keyword">else</span> ShowErrMessage(ensure);						<br>				<span class="hljs-keyword">break</span>;<br>			<br>			<span class="hljs-keyword">case</span> <span class="hljs-number">1</span>:<br>				i++;<br>				<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Pleas touch finger again!\r\n&quot;</span>);<span class="hljs-comment">//再按一次手指</span><br>				<span class="hljs-keyword">while</span>(GPIO_ReadInputDataBit(AS608_GPIO_PORT,AS608_TOUCH_PIN) == <span class="hljs-number">0</span>);<span class="hljs-comment">//等待手指按下</span><br>				ensure=PS_GetImage();<br>				<span class="hljs-keyword">if</span>(ensure==<span class="hljs-number">0x00</span>) <br>				&#123;<br>					ensure=PS_GenChar(CharBuffer2);<span class="hljs-comment">//生成特征			</span><br>					<span class="hljs-keyword">if</span>(ensure==<span class="hljs-number">0x00</span>)<br>					&#123;<br>						<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Fingerprint correct\r\n&quot;</span>);<span class="hljs-comment">//指纹正确</span><br>						i=<span class="hljs-number">0</span>;<br>						processnum=<span class="hljs-number">2</span>;<span class="hljs-comment">//跳到第三步</span><br>					&#125;<span class="hljs-keyword">else</span> ShowErrMessage(ensure);	<br>				&#125;<span class="hljs-keyword">else</span> ShowErrMessage(ensure);		<br>				<span class="hljs-keyword">break</span>;<br><br>			<span class="hljs-keyword">case</span> <span class="hljs-number">2</span>:<br>				<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Compare twice fingerprint\r\n&quot;</span>);<span class="hljs-comment">//对比两次指纹</span><br>				ensure=PS_Match();<br>				<span class="hljs-keyword">if</span>(ensure==<span class="hljs-number">0x00</span>) <br>				&#123;<br>					<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Twice fingerprint are same.\r\n&quot;</span>);<span class="hljs-comment">//两次指纹是一样的</span><br>					processnum=<span class="hljs-number">3</span>;<span class="hljs-comment">//跳到第四步</span><br>				&#125;<br>				<span class="hljs-keyword">else</span> <br>				&#123;<br>					<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Compare fail,pleas touch again!\r\n&quot;</span>);<span class="hljs-comment">//对比失败，请重新按手指</span><br>					ShowErrMessage(ensure);<br>					i=<span class="hljs-number">0</span>;<br>					processnum=<span class="hljs-number">0</span>;<span class="hljs-comment">//跳回第一步		</span><br>				&#125;<br>				<span class="hljs-keyword">break</span>;<br><br>			<span class="hljs-keyword">case</span> <span class="hljs-number">3</span>:<br>				<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Generate fingerprint template.\r\n&quot;</span>);<span class="hljs-comment">//产生一个指纹模板</span><br>				ensure=PS_RegModel();<br>				<span class="hljs-keyword">if</span>(ensure==<span class="hljs-number">0x00</span>) <br>				&#123;<br>					<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Generate fingerprint success.\r\n&quot;</span>);<span class="hljs-comment">//生成指纹模板成功</span><br>					processnum=<span class="hljs-number">4</span>;<span class="hljs-comment">//跳到第五步</span><br>				&#125;<br>				<span class="hljs-keyword">else</span><br>				&#123;<br>					processnum=<span class="hljs-number">0</span>;<br>					ShowErrMessage(ensure);<br>				&#125;<br>				<span class="hljs-keyword">break</span>;<br>				<br>			<span class="hljs-keyword">case</span> <span class="hljs-number">4</span>:<br>				<span class="hljs-keyword">do</span><br>				&#123;<br>					<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Intput ID and save with ENTER(0=&lt; ID &lt;=299): &quot;</span>);<span class="hljs-comment">//输入ID并按“Enter”保存</span><br>					<span class="hljs-built_in">scanf</span>(<span class="hljs-string">&quot;%d&quot;</span>,&amp;ID);<br>				&#125;<span class="hljs-keyword">while</span>(!(ID&lt;<span class="hljs-number">300</span>));<span class="hljs-comment">//输入DI必须小于300</span><br>				ensure=PS_StoreChar(CharBuffer2,ID);<span class="hljs-comment">//储存模板</span><br>				<span class="hljs-keyword">if</span>(ensure==<span class="hljs-number">0x00</span>) <br>				&#123;			<br>					<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;\r\nAdd fingerprint success!!!\r\n&quot;</span>);<span class="hljs-comment">//添加指纹成功</span><br>					PS_ValidTempleteNum(&amp;ValidN);<span class="hljs-comment">//读库指纹个数</span><br>					<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Number of remaining fingerprints: %d\r\n&quot;</span>,AS608Para.PS_max-ValidN);<span class="hljs-comment">//显示剩余指纹个数	</span><br>					<span class="hljs-keyword">return</span> ;<br>				&#125;<br>				<span class="hljs-keyword">else</span><br>				&#123;<br>					processnum=<span class="hljs-number">0</span>;<br>					ShowErrMessage(ensure);<br>				&#125;					<br>				<span class="hljs-keyword">break</span>;				<br>		&#125;<br>		<span class="hljs-keyword">if</span>(i==<span class="hljs-number">5</span>)	<span class="hljs-comment">//超过5次没有按手指则退出</span><br>		&#123;<br>			<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Warning: No finger press.\r\n&quot;</span>);<br>			<span class="hljs-keyword">break</span>;	<br>		&#125;				<br>	&#125;<br>&#125;<br><br><span class="hljs-comment">//刷指纹</span><br><span class="hljs-type">void</span> <span class="hljs-title function_">Press_FR</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span><br>&#123;<br>	SearchResult seach;<br>	<span class="hljs-type">uint8_t</span> ensure;<br>	<br>	<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;\r\n----------------------------------------------------\r\n\r\n&quot;</span>);<br>	<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Please press your finger.\r\n&quot;</span>);<br>	<span class="hljs-keyword">while</span>(!PS_Sta);<span class="hljs-comment">//等待手指按下</span><br>	ensure=PS_GetImage();<br>	<span class="hljs-keyword">if</span>(ensure==<span class="hljs-number">0x00</span>)<span class="hljs-comment">//获取图像成功 </span><br>	&#123;	<br>		ensure=PS_GenChar(CharBuffer1);<br>		<span class="hljs-keyword">if</span>(ensure==<span class="hljs-number">0x00</span>) <span class="hljs-comment">//生成特征成功</span><br>		&#123;		<br>			ensure=PS_HighSpeedSearch(CharBuffer1,<span class="hljs-number">0</span>,<span class="hljs-number">300</span>,&amp;seach);<br>			<span class="hljs-keyword">if</span>(ensure==<span class="hljs-number">0x00</span>)<span class="hljs-comment">//搜索成功</span><br>			&#123;				<br>				<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Search fingerprint success.\r\n&quot;</span>);<span class="hljs-comment">//搜索指纹成功				</span><br>				<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Match ID:%d  Match score:%d\r\n&quot;</span>,seach.pageID,seach.mathscore);<span class="hljs-comment">//显示匹配指纹的ID和分数</span><br>			&#125;<br>			<span class="hljs-keyword">else</span> <br>				ShowErrMessage(ensure);					<br>		&#125;<br>		<span class="hljs-keyword">else</span><br>			ShowErrMessage(ensure);<br>	&#125;<br>&#125;<br><br><span class="hljs-comment">//删除指纹</span><br><span class="hljs-type">void</span> <span class="hljs-title function_">Del_FR</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span><br>&#123;<br>	<span class="hljs-type">uint8_t</span>  ensure;<br>	<span class="hljs-type">int</span> num;<br><br>	Show_DelFR_Menu();	<span class="hljs-comment">// 显示删除指纹界面</span><br>	<span class="hljs-built_in">scanf</span>(<span class="hljs-string">&quot;%d&quot;</span>,&amp;num);	<span class="hljs-comment">//获取返回的数值</span><br>	<br>	<span class="hljs-keyword">if</span>(num==<span class="hljs-number">555</span>)<br>		<span class="hljs-keyword">goto</span> MENU ; <span class="hljs-comment">//返回主页面</span><br>	<span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(num==<span class="hljs-number">666</span>)<br>		ensure=PS_Empty();<span class="hljs-comment">//清空指纹库</span><br>	<span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(num&gt;=<span class="hljs-number">0</span> &amp;&amp; num &lt; <span class="hljs-number">300</span>)<br>		ensure=PS_DeletChar(num,<span class="hljs-number">1</span>);<span class="hljs-comment">//删除单个指纹</span><br>	<span class="hljs-keyword">if</span>(ensure==<span class="hljs-number">0</span>)<br>	&#123;<br>		<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;\r\nDelete fingerprint success!!!\r\n&quot;</span>);<span class="hljs-comment">//删除指纹成功		</span><br>	&#125;<br>	<span class="hljs-keyword">else</span><br>		ShowErrMessage(ensure);	<br>	PS_ValidTempleteNum(&amp;ValidN);<span class="hljs-comment">//读库指纹个数</span><br>	<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Number of remaining fingerprints: %d\r\n&quot;</span>,AS608Para.PS_max-ValidN);<span class="hljs-comment">//显示剩余指纹个数</span><br><br>MENU:<br>	InputNum = <span class="hljs-number">0</span>;<br>	ShowMenu();<br>&#125;<br><br><span class="hljs-comment">/*********************************************END OF FILE*********************************************/</span><br><br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="三、硬件接线说明"><a href="#三、硬件接线说明" class="headerlink" title="三、硬件接线说明"></a>三、硬件接线说明</h3><figure class="highlight livescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs livescript">【 ！】 引脚分配<br>			<br>		   STM32			串口模块<br>			PB11<span class="hljs-function"><span class="hljs-params">(Rx)</span>	-&gt;</span>     Tx<br>			PB10<span class="hljs-function"><span class="hljs-params">(Tx)</span>	-&gt;</span>     Rx<br>			+<span class="hljs-number">3.3</span>V   	-&gt;     +<span class="hljs-number">3.3</span>V<br>			GND			-&gt;     GND<br>			波特率：<span class="hljs-number">115200</span><br>			<br>		   STM32			ATK-AS608<br>		    +<span class="hljs-number">3.3</span>V		-&gt;     Vi<br>			PA3<span class="hljs-function"><span class="hljs-params">(Rx)</span>		-&gt;</span>     Tx<br>			PA2<span class="hljs-function"><span class="hljs-params">(Tx)</span>     -&gt;</span>     Rx<br>			GND			-&gt;     GND<br>			PA1			-&gt;     WAK<br>			+<span class="hljs-number">3.3</span>V		-&gt;     Vt<br>			波特率：<span class="hljs-number">115200</span><br>			<br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="四、最终效果"><a href="#四、最终效果" class="headerlink" title="四、最终效果"></a>四、最终效果</h3><p><img src="https://s2.ax1x.com/2019/12/18/Q73TzQ.jpg" srcset="/img/loading.gif" lazyload alt="Q73TzQ.jpg"></p>
+
+              
+            </div>
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F/" class="category-chain-item">嵌入式</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F/STM32/" class="category-chain-item">STM32</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/STM32/">#STM32</a>
+      
+        <a href="/tags/%E6%8C%87%E7%BA%B9%E8%AF%86%E5%88%AB/">#指纹识别</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>STM32F103学习笔记——AS608指纹识别模块的使用</div>
+      <div>https://kevinloongc.github.io/posts/5803b452.html</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Kevin Loongc</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2019年12月17日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/posts/3dca690f.html" title="STM32F103学习笔记——RC522射频卡">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">STM32F103学习笔记——RC522射频卡</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/posts/2ac21edf.html" title="STM32F103学习笔记——薄膜矩阵键盘扫描">
+                        <span class="hidden-mobile">STM32F103学习笔记——薄膜矩阵键盘扫描</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.4.16/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"aafuxXAEvmPa9M6u5J2bcS51-gzGzoHsz","appKey":"d6sAJLHqlK9SsXVkMJiMDJDU","path":"window.location.pathname","placeholder":null,"avatar":"retro","meta":["nick","mail"],"requiredFields":[],"pageSize":10,"lang":"zh-CN","highlight":false,"recordIP":false,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":false},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.0/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script>
+  (function() {
+    var enableLang = CONFIG.code_language.enable && CONFIG.code_language.default;
+    var enableCopy = CONFIG.copy_btn;
+    if (!enableLang && !enableCopy) {
+      return;
+    }
+
+    function getBgClass(ele) {
+      return Fluid.utils.getBackgroundLightness(ele) >= 0 ? 'code-widget-light' : 'code-widget-dark';
+    }
+
+    var copyTmpl = '';
+    copyTmpl += '<div class="code-widget">';
+    copyTmpl += 'LANG';
+    copyTmpl += '</div>';
+    jQuery('.markdown-body pre').each(function() {
+      var $pre = jQuery(this);
+      if ($pre.find('code.mermaid').length > 0) {
+        return;
+      }
+      if ($pre.find('span.line').length > 0) {
+        return;
+      }
+
+      var lang = '';
+
+      if (enableLang) {
+        lang = CONFIG.code_language.default;
+        if ($pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2 && $pre.children().hasClass('hljs')) {
+          lang = $pre[0].children[0].classList[1];
+        } else if ($pre[0].getAttribute('data-language')) {
+          lang = $pre[0].getAttribute('data-language');
+        } else if ($pre.parent().hasClass('sourceCode') && $pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2) {
+          lang = $pre[0].children[0].classList[1];
+          $pre.parent().addClass('code-wrapper');
+        } else if ($pre.parent().hasClass('markdown-body') && $pre[0].classList.length === 0) {
+          $pre.wrap('<div class="code-wrapper"></div>');
+        }
+        lang = lang.toUpperCase().replace('NONE', CONFIG.code_language.default);
+      }
+      $pre.append(copyTmpl.replace('LANG', lang).replace('code-widget">',
+        getBgClass($pre[0]) + (enableCopy ? ' code-widget copy-btn" data-clipboard-snippet><i class="iconfont icon-copy"></i>' : ' code-widget">')));
+
+      if (enableCopy) {
+        Fluid.utils.createScript('https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js', function() {
+          var clipboard = new window.ClipboardJS('.copy-btn', {
+            target: function(trigger) {
+              var nodes = trigger.parentNode.childNodes;
+              for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].tagName === 'CODE') {
+                  return nodes[i];
+                }
+              }
+            }
+          });
+          clipboard.on('success', function(e) {
+            e.clearSelection();
+            e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-copy', 'icon-success');
+            setTimeout(function() {
+              e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-success', 'icon-copy');
+            }, 2000);
+          });
+        });
+      }
+    });
+  })();
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

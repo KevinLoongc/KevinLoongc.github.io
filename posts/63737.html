@@ -1,0 +1,920 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Kevin Loongc">
+  <meta name="keywords" content="云杂货店, KevinL, KevinLoongc, QT, ROS, SLAM, 嵌入式">
+  
+    <meta name="description" content="1、安装ArbotiX功能包进入你的ros工作空间目录，下载安装ArbotiX功能包(Kinetic版本) 1git clone https:&#x2F;&#x2F;github.com&#x2F;vanadiumlabs&#x2F;arbotix_ros.git    2、下载键盘控制功能包mbot_teleop1）进入DownGit 2）复制下面的链接放进去：https:&#x2F;&#x2F;github.com&#x2F;Magicalsoso&#x2F;Ros-Be">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ROS机器人学习(三)--使用ArbotiX控制机器人模型">
+<meta property="og:url" content="https://kevinloongc.github.io/posts/63737.html">
+<meta property="og:site_name" content="云杂货店">
+<meta property="og:description" content="1、安装ArbotiX功能包进入你的ros工作空间目录，下载安装ArbotiX功能包(Kinetic版本) 1git clone https:&#x2F;&#x2F;github.com&#x2F;vanadiumlabs&#x2F;arbotix_ros.git    2、下载键盘控制功能包mbot_teleop1）进入DownGit 2）复制下面的链接放进去：https:&#x2F;&#x2F;github.com&#x2F;Magicalsoso&#x2F;Ros-Be">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.ax1x.com/2019/06/01/V1zXhq.png">
+<meta property="article:published_time" content="2019-04-25T08:36:25.000Z">
+<meta property="article:modified_time" content="2022-05-29T04:45:50.857Z">
+<meta property="article:author" content="Kevin Loongc">
+<meta property="article:tag" content="ROS">
+<meta property="article:tag" content="ROS仿真">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://s2.ax1x.com/2019/06/01/V1zXhq.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>ROS机器人学习(三)--使用ArbotiX控制机器人模型 - 云杂货店</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"kevinloongc.github.io","root":"/","version":"1.9.0","typing":{"enable":true,"typeSpeed":80,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":false},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>云杂货店</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="ROS机器人学习(三)--使用ArbotiX控制机器人模型"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2019-04-25 16:36" pubdate>
+          2019年4月25日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.2k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          18 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar category-bar" style="margin-right: -1rem">
+    
+
+
+
+
+
+<div class="category-list">
+  
+  
+    
+    
+    
+    <div class="category row nomargin-x">
+      <a class="category-item 
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="ROS机器人学习(仿真)"
+        id="heading-df4232a118b44301d781bcce00f5128c" role="tab" data-toggle="collapse" href="#collapse-df4232a118b44301d781bcce00f5128c"
+        aria-expanded="true"
+      >
+        ROS机器人学习(仿真)
+        <span class="list-group-count">(9)</span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+      <div class="category-collapse collapse show" id="collapse-df4232a118b44301d781bcce00f5128c"
+           role="tabpanel" aria-labelledby="heading-df4232a118b44301d781bcce00f5128c">
+        
+        
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/posts/4133.html" title="ROS机器人学习(一)--URDF建模"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">ROS机器人学习(一)--URDF建模</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/45733.html" title="ROS机器人学习(七)--ROS中的导航框架"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">ROS机器人学习(七)--ROS中的导航框架</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/63737.html" title="ROS机器人学习(三)--使用ArbotiX控制机器人模型"
+           class="list-group-item list-group-item-action
+           active">
+          <span class="category-post">ROS机器人学习(三)--使用ArbotiX控制机器人模型</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/9050.html" title="ROS机器人学习(二)--URDF模型优化"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">ROS机器人学习(二)--URDF模型优化</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/9594.html" title="ROS机器人学习(五)--机器人SLAM导航必备条件"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">ROS机器人学习(五)--机器人SLAM导航必备条件</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/31300.html" title="ROS机器人学习(八)--ROS机器人自主导航"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">ROS机器人学习(八)--ROS机器人自主导航</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/42632.html" title="ROS机器人学习(六)--ROS SLAM功能包应用方法"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">ROS机器人学习(六)--ROS SLAM功能包应用方法</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/64089.html" title="ROS机器人学习(四)--Gazebo物理仿真环境搭建"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">ROS机器人学习(四)--Gazebo物理仿真环境搭建</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/57691.html" title="ROS机器人学习--ros_control"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">ROS机器人学习--ros_control</span>
+        </a>
+      
+    
+  </div>
+
+        
+      </div>
+    </div>
+  
+</div>
+
+
+  </aside>
+
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">ROS机器人学习(三)--使用ArbotiX控制机器人模型</h1>
+            
+              <p class="note note-info">
+                
+                  
+                    本文最后更新于：2022年5月29日 下午
+                  
+                
+              </p>
+            
+            <div class="markdown-body">
+              
+              <h3 id="1、安装ArbotiX功能包"><a href="#1、安装ArbotiX功能包" class="headerlink" title="1、安装ArbotiX功能包"></a>1、安装ArbotiX功能包</h3><p>进入你的ros工作空间目录，下载安装ArbotiX功能包(Kinetic版本)</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">git <span class="hljs-built_in">clone</span> https://github.com/vanadiumlabs/arbotix_ros.git<br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="2、下载键盘控制功能包mbot-teleop"><a href="#2、下载键盘控制功能包mbot-teleop" class="headerlink" title="2、下载键盘控制功能包mbot_teleop"></a>2、下载键盘控制功能包mbot_teleop</h3><p>1）进入<a target="_blank" rel="noopener" href="https://www.itsvse.com/downgit/#/home">DownGit</a></p>
+<p>2）复制下面的链接放进去：<br><a target="_blank" rel="noopener" href="https://github.com/Magicalsoso/Ros-Beginner-tutorial/tree/master/mbot_teleop">https://github.com/Magicalsoso/Ros-Beginner-tutorial/tree/master/mbot_teleop</a></p>
+<p>3）点击下载，解压到你的ros工作空间。</p>
+<h3 id="3、编译"><a href="#3、编译" class="headerlink" title="3、编译"></a>3、编译</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">cd</span> ~/catkin_ws        <br>catkin_make<br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="4、配置ArbotiX控制器"><a href="#4、配置ArbotiX控制器" class="headerlink" title="4、配置ArbotiX控制器"></a>4、配置ArbotiX控制器</h3><h4 id="1）创建配置文件"><a href="#1）创建配置文件" class="headerlink" title="1）创建配置文件"></a>1）创建配置文件</h4><p>在你机器人功能包的config文件夹下，创建配置文件fake_mbot_arbotix.yaml，该文件描述了控制器的参数。</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">controllers:</span> &#123;<br>   <span class="hljs-attr">base_controller:</span> &#123;<br>       <span class="hljs-attr">type:</span> <span class="hljs-string">diff_controller</span>, <br>       <span class="hljs-attr">base_frame_id:</span> <span class="hljs-string">base_footprint</span>, <br>       <span class="hljs-attr">base_width:</span> <span class="hljs-number">0.26</span>, <br>       <span class="hljs-attr">ticks_meter:</span> <span class="hljs-number">4100</span>, <br>       <span class="hljs-attr">Kp:</span> <span class="hljs-number">12</span>, <br>       <span class="hljs-attr">Kd:</span> <span class="hljs-number">12</span>, <br>       <span class="hljs-attr">Ki:</span> <span class="hljs-number">0</span>, <br>       <span class="hljs-attr">Ko:</span> <span class="hljs-number">50</span>, <br>       <span class="hljs-attr">accel_limit:</span> <span class="hljs-number">1.0</span> <br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>此文件在arbotix功能包中arbotix_python的源文件diff_controller.py进行载入数据，如果自己不去自定义会有相应的默认值。<img src="https://s2.ax1x.com/2019/06/01/V1zzcT.png" srcset="/img/loading.gif" lazyload alt="V1zzcT.png"></p>
+<h4 id="2）新建launch文件"><a href="#2）新建launch文件" class="headerlink" title="2）新建launch文件"></a>2）新建launch文件</h4><p>进入launch文件夹创建 arbotix_mbot_with_xacro.launch 文件。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs launch">&lt;launch&gt;<br>	&lt;arg name=&quot;model&quot; default=&quot;$(find xacro)/xacro --inorder &#x27;$(find mbot_description)/urdf/mbot_with_laser.xacro&#x27;&quot; /&gt;<br>	&lt;arg name=&quot;gui&quot; default=&quot;true&quot; /&gt;<br> <br>	&lt;param name=&quot;robot_description&quot; command=&quot;$(arg model)&quot; /&gt;<br> <br>	&lt;!-- 设置GUI参数，显示关节控制插件 --&gt;<br>	&lt;param name=&quot;use_gui&quot; value=&quot;$(arg gui)&quot;/&gt;<br> <br>	&lt;node name=&quot;arbotix&quot; pkg=&quot;arbotix_python&quot; type=&quot;arbotix_driver&quot; output=&quot;screen&quot;&gt;<br>		&lt;rosparam file=&quot;$(find mbot_description)/config/fake_mbot_arbotix.yaml&quot; command=&quot;load&quot;/&gt;<br>		&lt;param name=&quot;sim&quot; value=&quot;true&quot;/&gt;<br>	&lt;/node&gt;<br> <br>	&lt;!-- 运行joint_state_publisher节点，发布机器人的关节状态  --&gt;<br>	&lt;node name=&quot;joint_state_publisher&quot; pkg=&quot;joint_state_publisher&quot; type=&quot;joint_state_publisher&quot; /&gt;<br> <br>	&lt;!-- 运行robot_state_publisher节点，发布tf  --&gt;<br>	&lt;node name=&quot;robot_state_publisher&quot; pkg=&quot;robot_state_publisher&quot; type=&quot;robot_state_publisher&quot; /&gt;<br> <br>	&lt;!-- 运行rviz可视化界面 --&gt;<br>	&lt;node name=&quot;rviz&quot; pkg=&quot;rviz&quot; type=&quot;rviz&quot; args=&quot;-d $(find mbot_description)/config/mbot_arbotix.rviz&quot; required=&quot;true&quot; /&gt;<br> <br>&lt;/launch&gt;<br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="5、启动仿真器"><a href="#5、启动仿真器" class="headerlink" title="5、启动仿真器"></a>5、启动仿真器</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">roslaunch mbot_description arbotix_mbot_with_xacro.launch<br></code></pre></td></tr></table></figure>
+<p>启动后还要进行一些配置才会有如下显示效果，按左下角的 Add 添加Odometry选项，并设置为下图所示。 </p>
+<p><img src="https://s2.ax1x.com/2019/06/01/V1zx3V.png" srcset="/img/loading.gif" lazyload alt="V1zx3V.png"></p>
+<h3 id="6、启动键盘控制"><a href="#6、启动键盘控制" class="headerlink" title="6、启动键盘控制"></a>6、启动键盘控制</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">roslaunch mbot_teleop mbot_teleop.launch<br></code></pre></td></tr></table></figure>
+<p><img src="https://s2.ax1x.com/2019/06/01/V1zv90.png" srcset="/img/loading.gif" lazyload alt="V1zv90.png"></p>
+<h3 id="7、控制小车移动"><a href="#7、控制小车移动" class="headerlink" title="7、控制小车移动"></a>7、控制小车移动</h3><p>现在可以通过键盘控制小车进行移动了</p>
+<p><img src="https://s2.ax1x.com/2019/06/01/V1zXhq.png" srcset="/img/loading.gif" lazyload alt="V1zXhq.png"></p>
+
+              
+            </div>
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/ROS/" class="category-chain-item">ROS</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AD%A6%E4%B9%A0-%E4%BB%BF%E7%9C%9F/" class="category-chain-item">ROS机器人学习(仿真)</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/ROS/">#ROS</a>
+      
+        <a href="/tags/ROS%E4%BB%BF%E7%9C%9F/">#ROS仿真</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>ROS机器人学习(三)--使用ArbotiX控制机器人模型</div>
+      <div>https://kevinloongc.github.io/posts/63737.html</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Kevin Loongc</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2019年4月25日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/posts/17178.html" title="ROS下gazebo不能加载模型">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">ROS下gazebo不能加载模型</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/posts/54885.html" title="ROS建图导航小车whbot">
+                        <span class="hidden-mobile">ROS建图导航小车whbot</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.4.16/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"aafuxXAEvmPa9M6u5J2bcS51-gzGzoHsz","appKey":"d6sAJLHqlK9SsXVkMJiMDJDU","path":"window.location.pathname","placeholder":null,"avatar":"retro","meta":["nick","mail"],"requiredFields":[],"pageSize":10,"lang":"zh-CN","highlight":false,"recordIP":false,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":false},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.0/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script>
+  (function() {
+    var enableLang = CONFIG.code_language.enable && CONFIG.code_language.default;
+    var enableCopy = CONFIG.copy_btn;
+    if (!enableLang && !enableCopy) {
+      return;
+    }
+
+    function getBgClass(ele) {
+      return Fluid.utils.getBackgroundLightness(ele) >= 0 ? 'code-widget-light' : 'code-widget-dark';
+    }
+
+    var copyTmpl = '';
+    copyTmpl += '<div class="code-widget">';
+    copyTmpl += 'LANG';
+    copyTmpl += '</div>';
+    jQuery('.markdown-body pre').each(function() {
+      var $pre = jQuery(this);
+      if ($pre.find('code.mermaid').length > 0) {
+        return;
+      }
+      if ($pre.find('span.line').length > 0) {
+        return;
+      }
+
+      var lang = '';
+
+      if (enableLang) {
+        lang = CONFIG.code_language.default;
+        if ($pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2 && $pre.children().hasClass('hljs')) {
+          lang = $pre[0].children[0].classList[1];
+        } else if ($pre[0].getAttribute('data-language')) {
+          lang = $pre[0].getAttribute('data-language');
+        } else if ($pre.parent().hasClass('sourceCode') && $pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2) {
+          lang = $pre[0].children[0].classList[1];
+          $pre.parent().addClass('code-wrapper');
+        } else if ($pre.parent().hasClass('markdown-body') && $pre[0].classList.length === 0) {
+          $pre.wrap('<div class="code-wrapper"></div>');
+        }
+        lang = lang.toUpperCase().replace('NONE', CONFIG.code_language.default);
+      }
+      $pre.append(copyTmpl.replace('LANG', lang).replace('code-widget">',
+        getBgClass($pre[0]) + (enableCopy ? ' code-widget copy-btn" data-clipboard-snippet><i class="iconfont icon-copy"></i>' : ' code-widget">')));
+
+      if (enableCopy) {
+        Fluid.utils.createScript('https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js', function() {
+          var clipboard = new window.ClipboardJS('.copy-btn', {
+            target: function(trigger) {
+              var nodes = trigger.parentNode.childNodes;
+              for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].tagName === 'CODE') {
+                  return nodes[i];
+                }
+              }
+            }
+          });
+          clipboard.on('success', function(e) {
+            e.clearSelection();
+            e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-copy', 'icon-success');
+            setTimeout(function() {
+              e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-success', 'icon-copy');
+            }, 2000);
+          });
+        });
+      }
+    });
+  })();
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

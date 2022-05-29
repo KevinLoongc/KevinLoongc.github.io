@@ -1,0 +1,1104 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Kevin Loongc">
+  <meta name="keywords" content="云杂货店, KevinL, KevinLoongc, QT, ROS, SLAM, 嵌入式">
+  
+    <meta name="description" content="本文是博主在学习野火STM32F429开发板时记录的笔记。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="STM32F429开发板学习笔记">
+<meta property="og:url" content="https://kevinloongc.github.io/posts/37488.html">
+<meta property="og:site_name" content="云杂货店">
+<meta property="og:description" content="本文是博主在学习野火STM32F429开发板时记录的笔记。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.ax1x.com/2020/02/10/15AYhq.jpg">
+<meta property="article:published_time" content="2019-04-20T00:46:25.000Z">
+<meta property="article:modified_time" content="2022-05-29T04:53:49.501Z">
+<meta property="article:author" content="Kevin Loongc">
+<meta property="article:tag" content="笔记">
+<meta property="article:tag" content="STM32">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://s2.ax1x.com/2020/02/10/15AYhq.jpg">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>STM32F429开发板学习笔记 - 云杂货店</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"kevinloongc.github.io","root":"/","version":"1.9.0","typing":{"enable":true,"typeSpeed":80,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":false},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>云杂货店</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="STM32F429开发板学习笔记"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2019-04-20 08:46" pubdate>
+          2019年4月20日 早上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          3.2k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          27 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar category-bar" style="margin-right: -1rem">
+    
+
+
+
+
+
+<div class="category-list">
+  
+  
+    
+    
+    
+    <div class="category row nomargin-x">
+      <a class="category-item 
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="STM32"
+        id="heading-77c96659ca42cabf0aadc4168ae3da3f" role="tab" data-toggle="collapse" href="#collapse-77c96659ca42cabf0aadc4168ae3da3f"
+        aria-expanded="true"
+      >
+        STM32
+        <span class="list-group-count">(10)</span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+      <div class="category-collapse collapse show" id="collapse-77c96659ca42cabf0aadc4168ae3da3f"
+           role="tabpanel" aria-labelledby="heading-77c96659ca42cabf0aadc4168ae3da3f">
+        
+        
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/posts/5803b452.html" title="STM32F103学习笔记——AS608指纹识别模块的使用"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">STM32F103学习笔记——AS608指纹识别模块的使用</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/b1f7002e.html" title="STM32F103学习笔记——MPU6050数据读取与倾角检测"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">STM32F103学习笔记——MPU6050数据读取与倾角检测</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/3dca690f.html" title="STM32F103学习笔记——RC522射频卡"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">STM32F103学习笔记——RC522射频卡</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/2ac21edf.html" title="STM32F103学习笔记——薄膜矩阵键盘扫描"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">STM32F103学习笔记——薄膜矩阵键盘扫描</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/9820a5cb.html" title="STM32F103读写内部flash"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">STM32F103读写内部flash</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/37488.html" title="STM32F429开发板学习笔记"
+           class="list-group-item list-group-item-action
+           active">
+          <span class="category-post">STM32F429开发板学习笔记</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/6c941452.html" title="倒立摆系统设计"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">倒立摆系统设计</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/4588.html" title="双轮平衡小车项目"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">双轮平衡小车项目</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/6304ed30.html" title="基于STM32的智能门锁系统设计"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">基于STM32的智能门锁系统设计</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/9e207.html" title="模拟电磁曲射炮设计"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">模拟电磁曲射炮设计</span>
+        </a>
+      
+    
+  </div>
+
+        
+      </div>
+    </div>
+  
+</div>
+
+
+  </aside>
+
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">STM32F429开发板学习笔记</h1>
+            
+              <p class="note note-info">
+                
+                  
+                    本文最后更新于：2022年5月29日 下午
+                  
+                
+              </p>
+            
+            <div class="markdown-body">
+              
+              <p>本文是博主在学习野火STM32F429开发板时记录的笔记。</p>
+<span id="more"></span>
+
+<h3 id="新建工程模板——固件库流程"><a href="#新建工程模板——固件库流程" class="headerlink" title="新建工程模板——固件库流程"></a>新建工程模板——固件库流程</h3><p>  <center>2018-01-28</center><br>1-先在本地新建一个文件夹，用于存储固件库文件;</p>
+<p> （Doc、Libraries、Listings、Output、Project、User）</p>
+<p>2-在工程里面添加组，然后在里面添加文件;</p>
+<p>  （STARUP、CMSIS、STM32F4xx_StdPeriph_Driver、User、Doc）</p>
+<p>3-编译，会出现很多错误，打开stm32f4xx.h文件;</p>
+<p>4-在工具链中的C/C++选项卡里面指定头文件的目录;</p>
+<p>  （把所有的.h文件目录都添加进来）</p>
+<p>5-在工具链中的C/C++选项卡里面添加这两个宏：</p>
+<p>  USE_STDPERIPH_DRIVER,STM32F429_439xx,</p>
+<p>6-把一下文件屏蔽掉，不编译它;</p>
+<p>  （stm32f4xx_cec.c,stm32f4xx_dsi.c,stm32f4xx_flash_ramfurc.c，stm32f4xx_fsmc.c,stm32f4xx_qspi.c）</p>
+<p>7-修改stm32f4xx_it.c文件;</p>
+<p>  （删除：#include “main.h”,TimingDelay_Decrement();）</p>
+<p>8-配置仿真器</p>
+<br>
+### GPIO
+  <center>1/24/2018</center>
+#### GPIO输出初始化顺序
+
+<p>    1-打开GPIO端口的时钟</p>
+<p>    2-配置MODER寄存器</p>
+<p>    3-确定是推挽输出还是开漏输出（输出类型寄存器：OTYPER）</p>
+<p>    4-配置输出速度（输出速度寄存器：OSPEEDR）</p>
+<p>    5-内部上拉/下拉电阻要不要开启（上拉/下拉寄存器：PUPDR）</p>
+<p>    6-具体要输出的内容（置位复位寄存器：BSRR、数据输出寄存器：ODR）</p>
+<p> <br></p>
+<h4 id="GPIO输入初始化"><a href="#GPIO输入初始化" class="headerlink" title="GPIO输入初始化"></a>GPIO输入初始化</h4><p>    1-打开GPIO端口的时钟</p>
+<p>    2-选定具体的引脚号</p>
+<p>    3-配置为输入（MODER寄存器）</p>
+<p>    4-配置为下拉/上拉/浮空（[PUPDR寄存器]具体情况而定）</p>
+<br>
+#### 推挽输出
+
+<p>    1.可以输出高低电平，高电平由VDD决定，低电平由VSS决定</p>
+<p>    2.两个三极管受两路互补信号控制，一个导通时另一个截止。开关效率高，电流大、驱动能力强。</p>
+<p>    3.输出高电平时，电流输出到负载，叫灌电流，可以理解为推；</p>
+<p>      输出低电平时，负载电流流向芯片，叫拉电流，即挽。</p>
+<p> <br></p>
+<h4 id="开漏输出"><a href="#开漏输出" class="headerlink" title="开漏输出"></a>开漏输出</h4><p>    1.只能输出低电平，不能输出高电平</p>
+<p>    2.如果要输出高电平，则需要外接上拉</p>
+<p>    3.具有“线与”功能，一个为低，全部为低（多用于I2C和SMBUS总线）</p>
+<p> <br></p>
+<h4 id="施密特触发器"><a href="#施密特触发器" class="headerlink" title="施密特触发器"></a>施密特触发器</h4><p>    把信号更准确地分辨出为二进制的1或者0</p>
+<p> （高于阈值电压都为1,；低于阈值电压都为0）</p>
+<p> <br></p>
+<h4 id="typedef指令："><a href="#typedef指令：" class="headerlink" title="typedef指令："></a>typedef指令：</h4><p>    相当于给一个已有的类型起了一个新的名字，然后可以像使用旧类型名一样使用新类型名来声明变量。</p>
+<p>    注意：并没有创建任何新类型，它只是为某个已存在的类型增加一个方便使用的标签。</p>
+<br>
+#### 三原色配色
+
+<p>    红 + 黄 = 橙</p>
+<p>    黄 + 蓝 = 绿</p>
+<p>    蓝 + 红 = 紫</p>
+<br>
+### 定时器
+  <center>2018-03-18</center>
+#### 定时器分类
+基本定时器、通用定时器、高级定时器
+
+<br>
+#### 定时器资源
+429有2个高级定时器（TIM1和TIM8）、10个通用定时器、2个基本定时器（TIM6和TIM7）
+<br>
+#### 基本定时器（TIM6和TIM7）
+
+<p>    1-计数器16bit，只能向上计数；</p>
+<p>    2-没有外部GPIO，式内部资源，只能定时；</p>
+<p>    3-时钟来自PCLK1，可实现1~65536分频；</p>
+<p><br> </p>
+<h4 id="影子寄存器"><a href="#影子寄存器" class="headerlink" title="影子寄存器"></a>影子寄存器</h4><p>    1-PSC和ARR都有影子寄存器；</p>
+<p>    2-起到缓冲的作用，用户值-&gt;寄存器-&gt;影子寄存器-&gt;起作用，</p>
+<p>      如果不使用影子寄存器则用户在写到寄存器之后则立刻起作用。</p>
+<p>    ARR影子，TIMx_CR1:APRE位控制。</p>
+<p><br> </p>
+<h4 id="定时时间的计算"><a href="#定时时间的计算" class="headerlink" title="定时时间的计算"></a>定时时间的计算</h4><p>    1、PSC（分频因子）=9000-1，定时器频率=90M/(PSC+1)=10000HZ，计算一次脉冲的时间=1/10000 s</p>
+<p>    2、ARR（自动重载寄存器）=4999,从0计数到4999，则计了5000次</p>
+<p>    3、T=5000/10000=0.5S</p>
+<br>
+#### Timer编程要点：
+
+<p>    1-配置时间初始化结构体</p>
+<p>    2-开启定时器更新中断</p>
+<p>    3-配置中断优先级</p>
+<p>    4-使能定时器</p>
+<p>    5-编写中断服务函数</p>
+<p>    6-编写main函数</p>
+<br>
+### 中断(EXTI)
+<center>2018-03-19</center>
+#### 中断编程的顺序
+
+<ol>
+<li><p>使能中断请求；（跟具体的外设寄存器相关）</p>
+</li>
+<li><p>配置中断优先级分组；</p>
+<p>优先级设定：NVIC-&gt;IPRx;优先级分组：SCB-&gt;AIRCR:PRIGROUP[10:8]</p>
+</li>
+<li><p>配置NVIC寄存器，初始化NVIC_InitTypeDef;</p>
+</li>
+<li><p>编写中断服务函数，编写在stm32f4xx_it.c.（函数名在启动文件查找）</p>
+</li>
+</ol>
+<p> <br></p>
+<h4 id="EXTI初始化结构体：（EXTI-InitTypeDef）"><a href="#EXTI初始化结构体：（EXTI-InitTypeDef）" class="headerlink" title="EXTI初始化结构体：（EXTI_InitTypeDef）"></a>EXTI初始化结构体：（EXTI_InitTypeDef）</h4><ol>
+<li><p>EXTI_Line：用于产生 中断/事件 线</p>
+</li>
+<li><p>EXTI_Mode：EXTI模式（中断/事件）</p>
+</li>
+<li><p>EXTI_Trigger：触发（上/下/上下 沿）</p>
+</li>
+<li><p>EXTI_LineCmd：使能或者失能（IMR/EMR）</p>
+</li>
+</ol>
+<br>
+#### EXTI编程要点（按键检测——中断方式）
+
+<p>    1-初始化要连接到EXTI的GPIO</p>
+<p>    2-初始化EXTI用于产生中断/事件</p>
+<p>    3-初始化NVIC，用于处理中断</p>
+<p>    4-编写中断服务函数</p>
+<p>    5-main函数</p>
+<br>
+### SysTick:系统定时器
+ <center>2018-03-21</center>
+SysTick：系统定时器，24位，只能递减。
+
+<p>唯一的固件库函数：__STATIC_INLINE unit32_t SysTick_Config(uint32_t ticks);</p>
+<p> <br></p>
+<h4 id="编程要点"><a href="#编程要点" class="headerlink" title="编程要点"></a>编程要点</h4><p>    1-初始化LED相关的GPIO</p>
+<p>    2-配置SysTick(STK_CTRL寄存器)</p>
+<p>    3-编写中断服务函数</p>
+<p>    4-main函数</p>
+<br>
+### 串口通信
+ <center>2018-03-28</center>
+波特率 = fplck/8*(2-OVER8)*USARTDIV
+
+<p>波特率寄存器：USART_BRR</p>
+<p>USARTDIV：无符号定点数</p>
+<p>FPLCK：串口时钟，注区分APB2和APB1两条总线</p>
+<p>OVER8：过采样模式（寄存器：USART_CR1）</p>
+<br>
+#### UART编程要点
+
+<p>    1-初始化串口需要用到的GPIO，GPIO_InitTypeDef,</p>
+<p>      GPIO_PinAFConfig();</p>
+<p>    2-初始化串口，USART_InitTypeDef</p>
+<p>    3-中断配置</p>
+<p>    4-使能串口</p>
+<p>    5-编写发送和接受函数</p>
+<p>    6-编写中断服务函数</p>
+<br>
+### DMA(Data Memory Access，直接存储器访问)
+ <center>2018-03-30</center>
+DMA1：P->M，M->P
+
+<p>DMA2：P-&gt;M,M-&gt;P，M-&gt;M</p>
+<br>
+#### 编程要点
+
+<p>M to M:</p>
+<p>    1-在Flash中定义好要传输的数据，在SRAM中定义好用来接收Flash数据的变量</p>
+<p>    2-确定使用DMA2，哪个数据流，哪个通道？</p>
+<p>    3-初始化DMA（DMA_DeInit（）），主要是配置DMA初始化结构体（DMA_InitTypeDef）</p>
+<p>    4-使能DMA</p>
+<p>    5-编写数据比较函数</p>
+<p>    6-编写main函数</p>
+<p>M to P：</p>
+<p>    1-初始化串口</p>
+<p>    2-配置DMA初始化结构体</p>
+<p>    3-编写main函数（开启串口发送DMA请求）</p>
+<br>
+### I2C编程要点
+<center>2018-03-31</center>
+    1-配置通讯使用的目标引脚为开漏模式；
+
+<p>    2-使能I2C外设的时钟；</p>
+<p>    3-配置I2C外设的模式、地址、速率等参数并使能I2C外设；</p>
+<p>    4-编写基本I2C按字节收发函数；</p>
+<p>    5-编写读写EEPROM存储内容的函数；</p>
+<p>    6-编写测试程序，对读写数据进行校验。</p>
+<p> </p>
+<p>eg.我们的 PCLK1=45MHz，想要配置 400Kbit/s 的速率，计算方式如下：</p>
+<p>    PCLK时钟周期： TPCLK1 = 1/45000000</p>
+<p>    目标SCL时钟周期： TSCL = 1/400000</p>
+<p>    SCL时钟周期内的高电平时间： THIGH = TSCL/3</p>
+<p>    （CCR寄存器的DUTY为0：SCL时钟周期内的低电平时间： TLOW = 2*TSCL/3）</p>
+<p>    计算CCR的值： CCR = THIGH/TPCLK1 = 37.5</p>
+<br>
+### SPI编程要点
+<center>2018-04-08</center>
+    1-初始化通讯使用的目标引脚及端口时钟；
+
+<p>    2-使能SPI外设的时钟；</p>
+<p>    3-配置SPI外设的模式、地址、速率等参数并使能SPI外设；</p>
+<p>    4-编写基本SPI按字节收发的函数；</p>
+<p>    5-编写对FLASH擦除及读写操作的函数；</p>
+<p>    6-编写main函数
+    </p>
+
+              
+            </div>
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F/" class="category-chain-item">嵌入式</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F/STM32/" class="category-chain-item">STM32</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E7%AC%94%E8%AE%B0/">#笔记</a>
+      
+        <a href="/tags/STM32/">#STM32</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>STM32F429开发板学习笔记</div>
+      <div>https://kevinloongc.github.io/posts/37488.html</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Kevin Loongc</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2019年4月20日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/posts/f2ded1dc.html" title="51单片机学习摘要">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">51单片机学习摘要</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/posts/17311.html" title="STM8S103F3P6核心板学习笔记">
+                        <span class="hidden-mobile">STM8S103F3P6核心板学习笔记</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.4.16/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"aafuxXAEvmPa9M6u5J2bcS51-gzGzoHsz","appKey":"d6sAJLHqlK9SsXVkMJiMDJDU","path":"window.location.pathname","placeholder":null,"avatar":"retro","meta":["nick","mail"],"requiredFields":[],"pageSize":10,"lang":"zh-CN","highlight":false,"recordIP":false,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":false},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.0/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script>
+  (function() {
+    var enableLang = CONFIG.code_language.enable && CONFIG.code_language.default;
+    var enableCopy = CONFIG.copy_btn;
+    if (!enableLang && !enableCopy) {
+      return;
+    }
+
+    function getBgClass(ele) {
+      return Fluid.utils.getBackgroundLightness(ele) >= 0 ? 'code-widget-light' : 'code-widget-dark';
+    }
+
+    var copyTmpl = '';
+    copyTmpl += '<div class="code-widget">';
+    copyTmpl += 'LANG';
+    copyTmpl += '</div>';
+    jQuery('.markdown-body pre').each(function() {
+      var $pre = jQuery(this);
+      if ($pre.find('code.mermaid').length > 0) {
+        return;
+      }
+      if ($pre.find('span.line').length > 0) {
+        return;
+      }
+
+      var lang = '';
+
+      if (enableLang) {
+        lang = CONFIG.code_language.default;
+        if ($pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2 && $pre.children().hasClass('hljs')) {
+          lang = $pre[0].children[0].classList[1];
+        } else if ($pre[0].getAttribute('data-language')) {
+          lang = $pre[0].getAttribute('data-language');
+        } else if ($pre.parent().hasClass('sourceCode') && $pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2) {
+          lang = $pre[0].children[0].classList[1];
+          $pre.parent().addClass('code-wrapper');
+        } else if ($pre.parent().hasClass('markdown-body') && $pre[0].classList.length === 0) {
+          $pre.wrap('<div class="code-wrapper"></div>');
+        }
+        lang = lang.toUpperCase().replace('NONE', CONFIG.code_language.default);
+      }
+      $pre.append(copyTmpl.replace('LANG', lang).replace('code-widget">',
+        getBgClass($pre[0]) + (enableCopy ? ' code-widget copy-btn" data-clipboard-snippet><i class="iconfont icon-copy"></i>' : ' code-widget">')));
+
+      if (enableCopy) {
+        Fluid.utils.createScript('https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js', function() {
+          var clipboard = new window.ClipboardJS('.copy-btn', {
+            target: function(trigger) {
+              var nodes = trigger.parentNode.childNodes;
+              for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].tagName === 'CODE') {
+                  return nodes[i];
+                }
+              }
+            }
+          });
+          clipboard.on('success', function(e) {
+            e.clearSelection();
+            e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-copy', 'icon-success');
+            setTimeout(function() {
+              e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-success', 'icon-copy');
+            }, 2000);
+          });
+        });
+      }
+    });
+  })();
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

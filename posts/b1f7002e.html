@@ -1,0 +1,941 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Kevin Loongc">
+  <meta name="keywords" content="云杂货店, KevinL, KevinLoongc, QT, ROS, SLAM, 嵌入式">
+  
+    <meta name="description" content="使用STM32F103C8T6读取mpu6050的数据，转换成角度值，在串口中显示调式信息。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="STM32F103学习笔记——MPU6050数据读取与倾角检测">
+<meta property="og:url" content="https://kevinloongc.github.io/posts/b1f7002e.html">
+<meta property="og:site_name" content="云杂货店">
+<meta property="og:description" content="使用STM32F103C8T6读取mpu6050的数据，转换成角度值，在串口中显示调式信息。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.ax1x.com/2019/11/23/Mb36pt.png">
+<meta property="article:published_time" content="2019-08-02T02:46:25.000Z">
+<meta property="article:modified_time" content="2022-05-29T04:54:05.644Z">
+<meta property="article:author" content="Kevin Loongc">
+<meta property="article:tag" content="STM32">
+<meta property="article:tag" content="MPU6050">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://s2.ax1x.com/2019/11/23/Mb36pt.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>STM32F103学习笔记——MPU6050数据读取与倾角检测 - 云杂货店</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"kevinloongc.github.io","root":"/","version":"1.9.0","typing":{"enable":true,"typeSpeed":80,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":false},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>云杂货店</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="STM32F103学习笔记——MPU6050数据读取与倾角检测"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2019-08-02 10:46" pubdate>
+          2019年8月2日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          17k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          146 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar category-bar" style="margin-right: -1rem">
+    
+
+
+
+
+
+<div class="category-list">
+  
+  
+    
+    
+    
+    <div class="category row nomargin-x">
+      <a class="category-item 
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="STM32"
+        id="heading-77c96659ca42cabf0aadc4168ae3da3f" role="tab" data-toggle="collapse" href="#collapse-77c96659ca42cabf0aadc4168ae3da3f"
+        aria-expanded="true"
+      >
+        STM32
+        <span class="list-group-count">(10)</span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+      <div class="category-collapse collapse show" id="collapse-77c96659ca42cabf0aadc4168ae3da3f"
+           role="tabpanel" aria-labelledby="heading-77c96659ca42cabf0aadc4168ae3da3f">
+        
+        
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/posts/5803b452.html" title="STM32F103学习笔记——AS608指纹识别模块的使用"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">STM32F103学习笔记——AS608指纹识别模块的使用</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/b1f7002e.html" title="STM32F103学习笔记——MPU6050数据读取与倾角检测"
+           class="list-group-item list-group-item-action
+           active">
+          <span class="category-post">STM32F103学习笔记——MPU6050数据读取与倾角检测</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/3dca690f.html" title="STM32F103学习笔记——RC522射频卡"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">STM32F103学习笔记——RC522射频卡</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/2ac21edf.html" title="STM32F103学习笔记——薄膜矩阵键盘扫描"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">STM32F103学习笔记——薄膜矩阵键盘扫描</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/9820a5cb.html" title="STM32F103读写内部flash"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">STM32F103读写内部flash</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/37488.html" title="STM32F429开发板学习笔记"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">STM32F429开发板学习笔记</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/6c941452.html" title="倒立摆系统设计"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">倒立摆系统设计</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/4588.html" title="双轮平衡小车项目"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">双轮平衡小车项目</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/6304ed30.html" title="基于STM32的智能门锁系统设计"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">基于STM32的智能门锁系统设计</span>
+        </a>
+      
+    
+      
+      
+        <a href="/posts/9e207.html" title="模拟电磁曲射炮设计"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">模拟电磁曲射炮设计</span>
+        </a>
+      
+    
+  </div>
+
+        
+      </div>
+    </div>
+  
+</div>
+
+
+  </aside>
+
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">STM32F103学习笔记——MPU6050数据读取与倾角检测</h1>
+            
+              <p class="note note-info">
+                
+                  
+                    本文最后更新于：2022年5月29日 下午
+                  
+                
+              </p>
+            
+            <div class="markdown-body">
+              
+              <p>使用STM32F103C8T6读取mpu6050的数据，转换成角度值，在串口中显示调式信息。</p>
+<span id="more"></span>
+
+<h3 id="一、前言"><a href="#一、前言" class="headerlink" title="一、前言"></a>一、前言</h3><p>由于项目需要检测物体倾斜角度，我们选择了陀螺仪 MPU6050 来进行角度检测。但是查找资料发现，这个小小的陀螺仪传感器涉及到一大堆令我一脸懵逼的名词，例如：「卡尔曼滤波」、「协方差阵列」「加速度陀螺仪融合」、「四元素欧拉角」、「陀螺仪积分」、「内部的 DMP」等，看着这些，如果是完全萌新的话，我想可能立刻就扔掉它跑路了。</p>
+<p>但是，如果只是想得到「简单」的坐标夹角，完全没必要涉及到上面的那些名词，用高中三角函数知识已足够了。当你遇到更高精度数据的需求时，也没必要自己从零开始，直接移植现成的库即可。</p>
+<p>不多说，直接上手实验，本文章将介绍一种<strong>简陋方法计算粗略的角度</strong>。</p>
+<h3 id="二、软件程序设计"><a href="#二、软件程序设计" class="headerlink" title="二、软件程序设计"></a>二、软件程序设计</h3><h4 id="1，I2C-基本配置"><a href="#1，I2C-基本配置" class="headerlink" title="1，I2C 基本配置"></a>1，I2C 基本配置</h4><p>MPU6050 与 MCU 通过 I2C 总线进行通讯。用软件模拟的方式实现 I2C 底层基本时序函数，包括起始、停止信号的产生，以及发送/接收单字节数据、检测/发送应答信号。</p>
+<h5 id="（1）i2c-gpio-h"><a href="#（1）i2c-gpio-h" class="headerlink" title="（1）i2c_gpio.h"></a>（1）i2c_gpio.h</h5><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-meta">#<span class="hljs-keyword">ifndef</span> __I2C_GPIO_H</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> __I2C_GPIO_H</span><br><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;stm32f10x.h&quot;</span></span><br><br><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> PIN_SCL					GPIO_Pin_12</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> PIN_SDA					GPIO_Pin_11</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> I2C_GPIO_PORT			GPIOA</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> I2C_GPIO_CLK			RCC_APB2Periph_GPIOA</span><br><br><br><span class="hljs-comment">//SDA的方向设置</span><br><span class="hljs-type">void</span> <span class="hljs-title function_">SDA_IN</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span>; <br><span class="hljs-type">void</span> <span class="hljs-title function_">SDA_OUT</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span>;<br> <br><span class="hljs-comment">//I2C所有操作函数</span><br><span class="hljs-type">void</span> <span class="hljs-title function_">I2C_Config</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span>;                 <span class="hljs-comment">//初始化I2C的IO口     </span><br><span class="hljs-type">void</span> <span class="hljs-title function_">I2C_Start</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span>;                  <span class="hljs-comment">//发送I2C开始信号</span><br><span class="hljs-type">void</span> <span class="hljs-title function_">I2C_Stop</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span>;                   <span class="hljs-comment">//发送I2C停止信号</span><br><span class="hljs-type">void</span> <span class="hljs-title function_">I2C_Send_Byte</span><span class="hljs-params">(u8 txd)</span>;            <span class="hljs-comment">//I2C发送一个字节</span><br><span class="hljs-type">uint8_t</span> <span class="hljs-title function_">I2C_Read_Byte</span><span class="hljs-params">(<span class="hljs-type">unsigned</span> <span class="hljs-type">char</span> ack)</span>;   <span class="hljs-comment">//I2C读取一个字节</span><br><span class="hljs-type">uint8_t</span> <span class="hljs-title function_">I2C_Wait_Ack</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span>;                 <span class="hljs-comment">//I2C等待ACK信号</span><br><span class="hljs-type">void</span> <span class="hljs-title function_">I2C_Ack</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span>;                    <span class="hljs-comment">//I2C发送ACK信号</span><br><span class="hljs-type">void</span> <span class="hljs-title function_">I2C_NAck</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span>;                   <span class="hljs-comment">//I2C不发送ACK信号</span><br><span class="hljs-type">void</span> <span class="hljs-title function_">delay_us</span><span class="hljs-params">(u32 m)</span>;                              <span class="hljs-comment">//延时函数</span><br><br><span class="hljs-meta">#<span class="hljs-keyword">endif</span>	<span class="hljs-comment">/* __I2C_GPIO_H */</span></span><br><br></code></pre></td></tr></table></figure>
+
+<h5 id="（2）i2c-gpio-c"><a href="#（2）i2c-gpio-c" class="headerlink" title="（2）i2c_gpio.c"></a>（2）i2c_gpio.c</h5><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">/**</span><br><span class="hljs-comment">  ***************************************************************************************</span><br><span class="hljs-comment">  * @file    i2c_gpio.c</span><br><span class="hljs-comment">  * @author  Soso</span><br><span class="hljs-comment">  * @date    2019-08-02</span><br><span class="hljs-comment">  * @brief   GPIO simulation i2c configuration.</span><br><span class="hljs-comment">  ***************************************************************************************</span><br><span class="hljs-comment">  */</span><br><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;i2c_gpio.h&quot;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;systick.h&quot;</span></span><br><br><br><span class="hljs-type">void</span> <span class="hljs-title function_">I2C_Config</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span><br>&#123;          <br>	GPIO_InitTypeDef GPIO_InitStructure;<br>	RCC_APB2PeriphClockCmd( I2C_GPIO_CLK, ENABLE ); <span class="hljs-comment">//使能A口时钟</span><br><br>	GPIO_InitStructure.GPIO_Pin = PIN_SCL | PIN_SDA;<br>	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;       <span class="hljs-comment">//推挽输出</span><br>	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;<br>	GPIO_Init(I2C_GPIO_PORT, &amp;GPIO_InitStructure);<br>	<br>	GPIO_SetBits(I2C_GPIO_PORT,PIN_SCL);<br>	GPIO_SetBits(I2C_GPIO_PORT,PIN_SDA);<br>&#125;<br> <br><br><span class="hljs-comment">//产生I2C开始信号</span><br><span class="hljs-type">void</span> <span class="hljs-title function_">I2C_Start</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span><br>&#123;<br>   SDA_OUT();                    <span class="hljs-comment">//sda线输出</span><br>   GPIO_SetBits(GPIOA,PIN_SDA);  <span class="hljs-comment">//SDA =1</span><br>   delay_us(<span class="hljs-number">10</span>);<br>   GPIO_SetBits(GPIOA,PIN_SCL);  <span class="hljs-comment">//SCL=1</span><br>   delay_us(<span class="hljs-number">10</span>);<br>   GPIO_ResetBits(GPIOA,PIN_SDA);<span class="hljs-comment">//SDA=0</span><br>   delay_us(<span class="hljs-number">10</span>);<br>   GPIO_ResetBits(GPIOA,PIN_SCL);<span class="hljs-comment">//SCL=0</span><br>&#125;  <br> <br><br><span class="hljs-comment">//产生I2C停止信号</span><br><span class="hljs-type">void</span> <span class="hljs-title function_">I2C_Stop</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span><br>&#123;<br>   SDA_OUT();  <span class="hljs-comment">//sda线输出</span><br>   GPIO_ResetBits(GPIOA,PIN_SDA);   <br>   delay_us(<span class="hljs-number">10</span>);<br>   GPIO_SetBits(GPIOA,PIN_SCL); <br>   delay_us(<span class="hljs-number">10</span>);<br>   GPIO_SetBits(GPIOA,PIN_SDA); <br>   delay_us(<span class="hljs-number">10</span>);<br>   GPIO_ResetBits(GPIOA, PIN_SCL);<span class="hljs-comment">//SCL=0; </span><br>   delay_us(<span class="hljs-number">10</span>);          <br>&#125;<br><br><br><span class="hljs-comment">//等待应答信号到来</span><br><span class="hljs-comment">//返回值：1，接收应答失败</span><br><span class="hljs-comment">//        0，接收应答成功</span><br><span class="hljs-type">uint8_t</span> <span class="hljs-title function_">I2C_Wait_Ack</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span><br>&#123;<br>   <span class="hljs-type">uint8_t</span> ucErrTime=<span class="hljs-number">0</span>;<br>   SDA_IN();      <span class="hljs-comment">//SDA设置为输入  </span><br>   GPIO_SetBits(GPIOA,PIN_SDA);<br>   delay_us(<span class="hljs-number">5</span>);    <br>   GPIO_SetBits(GPIOA,PIN_SCL); <br>   delay_us(<span class="hljs-number">5</span>);  <br>   <span class="hljs-keyword">while</span>(GPIO_ReadInputDataBit(GPIOA,PIN_SDA))<br>   &#123;<br>      ucErrTime++;<br>      <span class="hljs-keyword">if</span>(ucErrTime&gt;<span class="hljs-number">250</span>)<br>      &#123;<br>         I2C_Stop();<br>         <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;<br>      &#125;<br>   &#125;<br>   GPIO_ResetBits(GPIOA, PIN_SCL);    <br>   <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;  <br>&#125;<br><br> <br><span class="hljs-comment">//产生ACK应答</span><br><span class="hljs-type">void</span> <span class="hljs-title function_">I2C_Ack</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span><br>&#123;<br>   GPIO_ResetBits(GPIOA,PIN_SCL);<br>   SDA_OUT();<br>   GPIO_ResetBits(GPIOA,PIN_SDA);<br>   delay_us(<span class="hljs-number">5</span>);<br>   GPIO_SetBits(GPIOA,PIN_SCL);<br>   delay_us(<span class="hljs-number">5</span>);<br>   GPIO_ResetBits(GPIOA,PIN_SCL);<br>&#125;<br> <br><br><span class="hljs-comment">//不产生ACK应答      </span><br><span class="hljs-type">void</span> <span class="hljs-title function_">I2C_NAck</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span><br>&#123;<br>   GPIO_ResetBits(GPIOA,PIN_SCL);<br>   SDA_OUT();<br>   GPIO_SetBits(GPIOA,PIN_SDA);<br>   delay_us(<span class="hljs-number">5</span>);<br>   GPIO_SetBits(GPIOA,PIN_SCL); <br>   delay_us(<span class="hljs-number">5</span>);<br>   GPIO_ResetBits(GPIOA,PIN_SCL);<br>&#125;  <br><br>             <br><span class="hljs-comment">//I2C发送一个字节</span><br><span class="hljs-comment">//返回从机有无应答</span><br><span class="hljs-comment">//1，有应答</span><br><span class="hljs-comment">//0，无应答     </span><br><span class="hljs-type">void</span> <span class="hljs-title function_">I2C_Send_Byte</span><span class="hljs-params">(u8 txd)</span><br>&#123;                        <br>    u8 t;   <br>    SDA_OUT();      <br>    GPIO_ResetBits(GPIOA,PIN_SCL);<span class="hljs-comment">//拉低时钟开始数据传输</span><br>    <span class="hljs-keyword">for</span>(t=<span class="hljs-number">0</span>;t&lt;<span class="hljs-number">8</span>;t++)<br>    &#123;              <br>		<span class="hljs-keyword">if</span>((txd&amp;<span class="hljs-number">0x80</span>)==<span class="hljs-number">0x80</span>)   <br>			GPIO_SetBits(GPIOA, PIN_SDA);	<span class="hljs-comment">//SDA=1，写 1                </span><br>		<span class="hljs-keyword">else</span>  <br>			GPIO_ResetBits(GPIOA, PIN_SDA);	<span class="hljs-comment">//SDA=0，写 0 </span><br>		txd&lt;&lt;=<span class="hljs-number">1</span>;    <br>		delay_us(<span class="hljs-number">5</span>);   <span class="hljs-comment">//对TEA5767这三个延时都是必须的  </span><br>		GPIO_SetBits(GPIOA,PIN_SCL); <br>		delay_us(<span class="hljs-number">5</span>); <br>		GPIO_ResetBits(GPIOA,PIN_SCL);<br>		delay_us(<span class="hljs-number">5</span>);<br>    &#125;  <br>&#125;     <br><br> <br><span class="hljs-comment">//读1个字节，ack=1时，发送ACK，ack=0，发送nACK   </span><br><span class="hljs-type">uint8_t</span> <span class="hljs-title function_">I2C_Read_Byte</span><span class="hljs-params">(<span class="hljs-type">unsigned</span> <span class="hljs-type">char</span> ack)</span><br>&#123;<br>    <span class="hljs-type">unsigned</span> <span class="hljs-type">char</span> i,receive=<span class="hljs-number">0</span>;<br>    SDA_IN();<span class="hljs-comment">//SDA设置为输入</span><br>    <span class="hljs-keyword">for</span>(i=<span class="hljs-number">0</span>;i&lt;<span class="hljs-number">8</span>;i++ )<br> &#123;<br>        GPIO_ResetBits(GPIOA,PIN_SCL);<br>        delay_us(<span class="hljs-number">5</span>);<br>        GPIO_SetBits(GPIOA,PIN_SCL);<br>        receive&lt;&lt;=<span class="hljs-number">1</span>;<br>        <span class="hljs-keyword">if</span>(GPIO_ReadInputDataBit(GPIOA,PIN_SDA))receive++;   <br>        delay_us(<span class="hljs-number">5</span>); <br>    &#125;      <br>    <span class="hljs-keyword">if</span> (!ack)<br>        I2C_NAck();<span class="hljs-comment">//发送nACK</span><br>    <span class="hljs-keyword">else</span><br>        I2C_Ack(); <span class="hljs-comment">//发送ACK   </span><br>    <span class="hljs-keyword">return</span> receive;<br>&#125;<br><br><br><span class="hljs-type">void</span> <span class="hljs-title function_">SDA_IN</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span><br>&#123;<br>   GPIO_InitTypeDef GPIO_InitStruct;<br>   GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IPU;    <span class="hljs-comment">//上拉输入</span><br>   GPIO_InitStruct.GPIO_Speed = GPIO_Speed_50MHz;<br>   GPIO_InitStruct.GPIO_Pin = PIN_SDA;<br>   GPIO_Init(GPIOA, &amp;GPIO_InitStruct );<br>&#125;<br><br><br><span class="hljs-type">void</span> <span class="hljs-title function_">SDA_OUT</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span><br>&#123;<br>   GPIO_InitTypeDef GPIO_InitStruct;<br>   GPIO_InitStruct.GPIO_Mode = GPIO_Mode_Out_PP; <br>   GPIO_InitStruct.GPIO_Speed = GPIO_Speed_50MHz;<br>   GPIO_InitStruct.GPIO_Pin = PIN_SDA;<br>   GPIO_Init(GPIOA, &amp;GPIO_InitStruct );<br>&#125;<br><span class="hljs-comment">/*********************************************END OF FILE*********************************************/</span><br><br></code></pre></td></tr></table></figure>
+
+<h4 id="2，MPU6050配置"><a href="#2，MPU6050配置" class="headerlink" title="2，MPU6050配置"></a>2，MPU6050配置</h4><p>MCU 作为主机与传感器通讯前需要发送 7 位的从机设备地址，<strong>设备地址的惯用套路是固定高位，并通过引脚电平确定低位。</strong>查阅寄存器手册得知，117 号寄存器 <code>WHO AM I</code> 决定着设备地址的高 6 位，上电复位值为 <code>110100</code>，最低 1 位则由外部引脚 <code>AD0</code> 决定（即一块电路板最多只能有两个 MPU6050）。查看模块或开发板电路图确定芯片 AD0 的电平（一般为低）最终得到 7 位的 I2C 从机设备地址为 <code>1101 000（0xD0）</code>，在 <code>mpu6050.h</code> 文件中宏定义为 <code>DEV_ADDR</code> 。</p>
+<p><img src="https://s2.ax1x.com/2019/11/24/ML4bYF.jpg" srcset="/img/loading.gif" lazyload alt="ML4bYF.jpg"></p>
+<h5 id="（1）mpu6050-h"><a href="#（1）mpu6050-h" class="headerlink" title="（1）mpu6050.h"></a>（1）mpu6050.h</h5><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-meta">#<span class="hljs-keyword">ifndef</span> __MPU6050_H</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> __MPU6050_H</span><br><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;stm32f10x.h&quot;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;i2c_gpio.h&quot;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;math.h&gt;</span></span><br><br><br><span class="hljs-comment">/* 坐标角度结构体 */</span><br><span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Angle</span></span><br><span class="hljs-class">&#123;</span><br>    <span class="hljs-type">double</span> X_Angle;<br>    <span class="hljs-type">double</span> Y_Angle;<br>    <span class="hljs-type">double</span> Z_Angle;<br>    <br>&#125;MPU6050_Angle;<br><br><br><span class="hljs-comment">/* 传感器数据修正值（消除芯片固定误差，根据硬件进行调整） */</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> X_ACCEL_OFFSET 0 </span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> Y_ACCEL_OFFSET 0 </span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> Z_ACCEL_OFFSET 0 </span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> X_GYRO_OFFSET 0 </span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> Y_GYRO_OFFSET 0 </span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> Z_GYRO_OFFSET 0</span><br><br><br><span class="hljs-comment">/*******************************************************/</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> DEV_ADDR		0xD0 <span class="hljs-comment">// 6050 器件地址 </span></span><br><span class="hljs-comment">//----------------------------------------- </span><br><span class="hljs-comment">// 定义MPU6050内部地址 </span><br><span class="hljs-comment">//----------------------------------------- </span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> SMPLRT_DIV		0x19 <span class="hljs-comment">//陀螺仪采样率，典型值：0x07(125Hz) </span></span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> CONFIG			0x1A <span class="hljs-comment">//低通滤波频率，典型值：0x06(5Hz) </span></span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> GYRO_CONFIG		0x1B <span class="hljs-comment">//陀螺仪自检及测量范围，典型值：0x18(不自检，2000deg/s) </span></span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> ACCEL_CONFIG	0x1C <span class="hljs-comment">//加速计自检、测量范围及高通滤波频率，典型值：0x01(不自检，2G，5Hz) </span></span><br><br><span class="hljs-comment">/* 加速度相关寄存器地址 */</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> ACCEL_XOUT_H	0x3B </span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> ACCEL_XOUT_L	0x3C </span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> ACCEL_YOUT_H	0x3D </span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> ACCEL_YOUT_L	0x3E </span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> ACCEL_ZOUT_H	0x3F </span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> ACCEL_ZOUT_L	0x40 </span><br><br><span class="hljs-comment">/* 温度相关寄存器地址 */</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> TEMP_OUT_H		0x41 </span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> TEMP_OUT_L		0x42 </span><br><br><span class="hljs-comment">/* 陀螺仪相关寄存器地址 */</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> GYRO_XOUT_H		0x43</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> GYRO_XOUT_L		0x44 </span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> GYRO_YOUT_H 	0x45 </span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> GYRO_YOUT_L 	0x46 </span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> GYRO_ZOUT_H 	0x47 </span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> GYRO_ZOUT_L 	0x48 </span><br><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> PWR_MGMT_1		0x6B  <span class="hljs-comment">//电源管理，典型值：0x00(正常启用) </span></span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> WHO_AM_I		0x75 <span class="hljs-comment">//IIC地址寄存器(默认数值0x68，只读) </span></span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> SlaveAddress	0xD0 <span class="hljs-comment">//IIC写入时的地址字节数据，+1为读取 </span></span><br><br><span class="hljs-comment">/*******************************************************/</span><br><br><span class="hljs-type">void</span> <span class="hljs-title function_">MPU6050_WR_Reg</span><span class="hljs-params">(<span class="hljs-type">uint8_t</span> regAddr, <span class="hljs-type">uint8_t</span> regData)</span>;<br><span class="hljs-type">uint8_t</span> <span class="hljs-title function_">MPU6050_RD_Reg</span><span class="hljs-params">(<span class="hljs-type">uint8_t</span> regAddr)</span>;<br><span class="hljs-type">void</span> <span class="hljs-title function_">MPU6050_Init</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span>;<br><span class="hljs-type">int16_t</span> <span class="hljs-title function_">MPU6050_Get_Data</span><span class="hljs-params">(<span class="hljs-type">uint8_t</span> regAddr)</span>;<br><span class="hljs-type">void</span> <span class="hljs-title function_">MPU6050_Get_Angle</span><span class="hljs-params">(MPU6050_Angle *data)</span>;<br><br><span class="hljs-meta">#<span class="hljs-keyword">endif</span>	<span class="hljs-comment">/* __MPU6050_H */</span></span><br><br></code></pre></td></tr></table></figure>
+
+<h5 id="（2）mpu6050-c"><a href="#（2）mpu6050-c" class="headerlink" title="（2）mpu6050.c"></a>（2）mpu6050.c</h5><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">/**</span><br><span class="hljs-comment">  ***************************************************************************************、</span><br><span class="hljs-comment">  * @file    mpu6050.c</span><br><span class="hljs-comment">  * @author  Soso</span><br><span class="hljs-comment">  * @date    2019-08-02</span><br><span class="hljs-comment">  * @brief   mpu6050 configuration.</span><br><span class="hljs-comment">  ***************************************************************************************</span><br><span class="hljs-comment">  */</span><br><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;mpu6050.h&quot;</span></span><br><br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment">  * @brief  MPU6050 write register function.</span><br><span class="hljs-comment">  * @param  regAddr：Register address</span><br><span class="hljs-comment">  * @param  regData：Register value to be written</span><br><span class="hljs-comment">  * @retval None</span><br><span class="hljs-comment">  */</span><br><span class="hljs-type">void</span> <span class="hljs-title function_">MPU6050_WR_Reg</span><span class="hljs-params">(<span class="hljs-type">uint8_t</span> regAddr, <span class="hljs-type">uint8_t</span> regData)</span><br>&#123;<br>    <span class="hljs-comment">/* 发送起始信号 */</span><br>    I2C_Start();<br>    <br>    <span class="hljs-comment">/* 发送设备地址 */</span>        <br>    I2C_Send_Byte(DEV_ADDR);<br>    <span class="hljs-keyword">if</span> (I2C_Wait_Ack())<br>        <span class="hljs-keyword">goto</span> stop;<br>    <br>    <span class="hljs-comment">/* 发送寄存器地址 */</span><br>    I2C_Send_Byte(regAddr);<br>    <span class="hljs-keyword">if</span> (I2C_Wait_Ack())<br>        <span class="hljs-keyword">goto</span> stop;<br>    <br>    <span class="hljs-comment">/* 写数据到寄存器 */</span><br>    I2C_Send_Byte(regData);<br>    <span class="hljs-keyword">if</span> (I2C_Wait_Ack())<br>        <span class="hljs-keyword">goto</span> stop;<br>    I2C_Stop();<br>	<br>stop:<br>    I2C_Stop();<br>&#125;<br><br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment">  * @brief  MPU6050 read register function.</span><br><span class="hljs-comment">  * @param  regAddr：Register address</span><br><span class="hljs-comment">  * @retval Register address data</span><br><span class="hljs-comment">  */</span><br><span class="hljs-type">uint8_t</span> <span class="hljs-title function_">MPU6050_RD_Reg</span><span class="hljs-params">(<span class="hljs-type">uint8_t</span> regAddr)</span><br>&#123;<br>    <span class="hljs-type">uint8_t</span> regData;<br>    <br>    <span class="hljs-comment">/* 发送起始信号 */</span><br>    I2C_Start();<br>    <br>    <span class="hljs-comment">/* 发送设备地址 */</span>        <br>    I2C_Send_Byte(DEV_ADDR);<br>    <span class="hljs-keyword">if</span> (I2C_Wait_Ack())<br>        <span class="hljs-keyword">goto</span> stop;<br>    <br>    <span class="hljs-comment">/* 发送寄存器地址 */</span><br>    I2C_Send_Byte(regAddr);<br>    <span class="hljs-keyword">if</span> (I2C_Wait_Ack())<br>        <span class="hljs-keyword">goto</span> stop;<br>    <br>    <span class="hljs-comment">/* 发送重复起始信号 */</span><br>    I2C_Start();<br>    <br>    <span class="hljs-comment">/* 发送读模式设备地址 */</span>     <br>    I2C_Send_Byte(DEV_ADDR | <span class="hljs-number">0x01</span>);<br>    <span class="hljs-keyword">if</span> (I2C_Wait_Ack())<br>        <span class="hljs-keyword">goto</span> stop;<br>    <br>    <span class="hljs-comment">/* 读寄存器数据 */</span><br>    regData = I2C_Read_Byte(<span class="hljs-number">0</span>);<br>	I2C_Stop();<br>	<br>stop:<br>    I2C_Stop();<br>    <br>    <span class="hljs-keyword">return</span> regData;<br>&#125;<br><br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment">  * @brief  MPU6050 initialization function.</span><br><span class="hljs-comment">  * @param  None</span><br><span class="hljs-comment">  * @retval None</span><br><span class="hljs-comment">  */</span><br><span class="hljs-type">void</span> <span class="hljs-title function_">MPU6050_Init</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span><br>&#123; <br>	I2C_Config();<br>	<br>    MPU6050_WR_Reg(PWR_MGMT_1, <span class="hljs-number">0x00</span>);    <span class="hljs-comment">//解除休眠状态     </span><br>    MPU6050_WR_Reg(SMPLRT_DIV, <span class="hljs-number">0x07</span>);    <span class="hljs-comment">//陀螺仪采样率，典型值：0x07(125Hz)     </span><br>    MPU6050_WR_Reg(CONFIG, <span class="hljs-number">0x06</span>);        <span class="hljs-comment">//低通滤波频率，典型值：0x06(5Hz)     </span><br>    MPU6050_WR_Reg(GYRO_CONFIG, <span class="hljs-number">0x18</span>);   <span class="hljs-comment">//陀螺仪自检及测量范围，典型值：0x18(不自检，2000deg/s)     </span><br>    MPU6050_WR_Reg(ACCEL_CONFIG, <span class="hljs-number">0x01</span>);  <span class="hljs-comment">//加速计自检、测量范围及高通滤波频率，典型值：0x01(不自检，2G，5Hz) </span><br>&#125;<br><br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment">  * @brief  MPU6050 get data function.</span><br><span class="hljs-comment">  * @param  regAddr：Register address</span><br><span class="hljs-comment">  * @retval Register data</span><br><span class="hljs-comment">  */</span><br><span class="hljs-type">int16_t</span> <span class="hljs-title function_">MPU6050_Get_Data</span><span class="hljs-params">(<span class="hljs-type">uint8_t</span> regAddr)</span><br>&#123;<br>    <span class="hljs-type">uint8_t</span> Data_H, Data_L;<br>    <span class="hljs-type">uint16_t</span> data;<br>    <br>    Data_H = MPU6050_RD_Reg(regAddr);<br>    Data_L = MPU6050_RD_Reg(regAddr + <span class="hljs-number">1</span>);<br>    data = (Data_H &lt;&lt; <span class="hljs-number">8</span>) | Data_L;  <span class="hljs-comment">// 合成数据 </span><br>	<br>    <span class="hljs-keyword">return</span> data;<br>&#125;<br><br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment">  * @brief  Get MPU6050 angle function.</span><br><span class="hljs-comment">  * @param  data: MPU6050_Angle Structure</span><br><span class="hljs-comment">  * @retval None</span><br><span class="hljs-comment">  */</span><br><span class="hljs-type">void</span> <span class="hljs-title function_">MPU6050_Get_Angle</span><span class="hljs-params">(MPU6050_Angle *data)</span><br>&#123;   <br>    <span class="hljs-comment">/* 计算x, y, z 轴倾角，返回弧度值*/</span><br>    data-&gt;X_Angle = <span class="hljs-built_in">acos</span>((MPU6050_Get_Data(ACCEL_XOUT_H) + X_ACCEL_OFFSET) / <span class="hljs-number">16384.0</span>);<br>    data-&gt;Y_Angle = <span class="hljs-built_in">acos</span>((MPU6050_Get_Data(ACCEL_YOUT_H) + Y_ACCEL_OFFSET) / <span class="hljs-number">16384.0</span>);<br>    data-&gt;Z_Angle = <span class="hljs-built_in">acos</span>((MPU6050_Get_Data(ACCEL_ZOUT_H) + Z_ACCEL_OFFSET) / <span class="hljs-number">16384.0</span>);<br><br>    <span class="hljs-comment">/* 弧度值转换为角度值 */</span><br>    data-&gt;X_Angle = data-&gt;X_Angle * <span class="hljs-number">57.29577</span>;<br>    data-&gt;Y_Angle = data-&gt;Y_Angle * <span class="hljs-number">57.29577</span>;<br>    data-&gt;Z_Angle = data-&gt;Z_Angle * <span class="hljs-number">57.29577</span>;<br>&#125; <br><br><span class="hljs-comment">/*********************************************END OF FILE*********************************************/</span><br><br></code></pre></td></tr></table></figure>
+
+
+
+<h4 id="3，串口模块配置"><a href="#3，串口模块配置" class="headerlink" title="3，串口模块配置"></a>3，串口模块配置</h4><h5 id="（1）usart-h"><a href="#（1）usart-h" class="headerlink" title="（1）usart.h"></a>（1）usart.h</h5><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-meta">#<span class="hljs-keyword">ifndef</span> __USART_H</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> __USART_H</span><br><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;stm32f10x.h&quot;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;stdio.h&quot;</span></span><br><br><span class="hljs-comment">//Pin definition</span><br><span class="hljs-comment">/*******************************************************/</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> DEBUG_USART                             USART3</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> DEBUG_USART_CLK                         RCC_APB1Periph_USART3</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> DEBUG_USART_AF                       	RCC_APB2Periph_AFIO</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> DEBUG_USART_GPIO_CLK                 	RCC_APB2Periph_GPIOB</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> DEBUG_USART_BAUDRATE                    115200</span><br><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> DEBUG_USART_RX_GPIO_PORT                GPIOB</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> DEBUG_USART_RX_PIN                      GPIO_Pin_11</span><br><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> DEBUG_USART_TX_GPIO_PORT                GPIOB</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> DEBUG_USART_TX_PIN                      GPIO_Pin_10</span><br><br><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> DEBUG_USART_IRQ                 		USART3_IRQn</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> DEBUG_USART_IRQHandler					USART3_IRQHandler</span><br><br><span class="hljs-comment">/************************************************************/</span><br><br><span class="hljs-type">void</span> <span class="hljs-title function_">USART_Config</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span>;<br><span class="hljs-type">void</span> <span class="hljs-title function_">Usart_SendByte</span><span class="hljs-params">( USART_TypeDef * pUSARTx, <span class="hljs-type">uint8_t</span> ch)</span>;<br><span class="hljs-type">void</span> <span class="hljs-title function_">Usart_SendString</span><span class="hljs-params">( USART_TypeDef * pUSARTx, <span class="hljs-type">char</span> *str)</span>;<br><br><span class="hljs-type">void</span> <span class="hljs-title function_">Usart_SendHalfWord</span><span class="hljs-params">( USART_TypeDef * pUSARTx, <span class="hljs-type">uint16_t</span> ch)</span>;<br><br><span class="hljs-meta">#<span class="hljs-keyword">endif</span>	<span class="hljs-comment">/* __USART_H */</span></span><br><br></code></pre></td></tr></table></figure>
+
+<h5 id="（2）usart-c"><a href="#（2）usart-c" class="headerlink" title="（2）usart.c"></a>（2）usart.c</h5><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">/**</span><br><span class="hljs-comment">  ******************************************************************************</span><br><span class="hljs-comment">  * @file    uasrt.c</span><br><span class="hljs-comment">  * @author  Soso</span><br><span class="hljs-comment">  * @date    2018-09-16</span><br><span class="hljs-comment">  * @brief   Redirect c library printf function to usart port, interrupt receiving mode.</span><br><span class="hljs-comment">  ******************************************************************************</span><br><span class="hljs-comment">  */</span><br><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;usart.h&quot;</span></span><br><br><br><span class="hljs-comment">/* Configuring nested vectored interrupt controller NVIC */</span><br><span class="hljs-type">static</span> <span class="hljs-type">void</span> <span class="hljs-title function_">NVIC_Configuration</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span><br>&#123;<br>	NVIC_InitTypeDef NVIC_InitStructure;<br><br>	<span class="hljs-comment">/* Nested vector interrupt controller group selection */</span><br>	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);<br><br>	<span class="hljs-comment">/* Preemptio Priority is 1 */</span><br>	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = <span class="hljs-number">1</span>;<br>	<span class="hljs-comment">/* Sub Priority is 1 */</span><br>	NVIC_InitStructure.NVIC_IRQChannelSubPriority = <span class="hljs-number">1</span>;<br>	<span class="hljs-comment">/* Enable interrupt */</span><br>	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;<br>	<br>	<span class="hljs-comment">/* Configure USART as the interrupt source */</span><br>	NVIC_InitStructure.NVIC_IRQChannel = DEBUG_USART_IRQ;<br>	<span class="hljs-comment">/* Initialize configuration NVIC */</span><br>	NVIC_Init(&amp;NVIC_InitStructure);<br>&#125;<br><br><span class="hljs-type">void</span> <span class="hljs-title function_">USART_Config</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span><br>&#123;<br>	GPIO_InitTypeDef GPIO_InitStructure;<br>	USART_InitTypeDef USART_InitStructure;<br><br>	<span class="hljs-comment">/* Enable port alternate function and enable USART GPIO clock */</span><br>	RCC_APB2PeriphClockCmd(DEBUG_USART_AF|DEBUG_USART_GPIO_CLK,ENABLE);<br>	<span class="hljs-comment">/* Enable USART Clock */</span><br>	RCC_APB1PeriphClockCmd(DEBUG_USART_CLK,ENABLE);<br>	<br>	<span class="hljs-comment">/* Configure the Tx pin for alternate function  */</span><br>	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;<br>	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;<br><br>	GPIO_InitStructure.GPIO_Pin = DEBUG_USART_TX_PIN;<br>	GPIO_Init(DEBUG_USART_TX_GPIO_PORT, &amp;GPIO_InitStructure);<br>	<br>	<span class="hljs-comment">/* Configure the Rx pin for the alternate function */</span><br>	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;<br>	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;<br>	<br>	GPIO_InitStructure.GPIO_Pin = DEBUG_USART_RX_PIN;<br>	GPIO_Init(DEBUG_USART_RX_GPIO_PORT, &amp;GPIO_InitStructure);<br>	<br>	<span class="hljs-comment">/* Configuration USART mode */</span><br>	USART_InitStructure.USART_WordLength = USART_WordLength_8b;<br>	USART_InitStructure.USART_StopBits = USART_StopBits_1;<br>	USART_InitStructure.USART_Parity = USART_Parity_No;<br>	USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;<br>	<span class="hljs-comment">/* USART mode control: simultaneous enable send and receive */</span><br>	USART_InitStructure.USART_Mode = USART_Mode_Tx|USART_Mode_Rx;<br>	<br>	USART_InitStructure.USART_BaudRate = DEBUG_USART_BAUDRATE;<br>	USART_Init(DEBUG_USART, &amp;USART_InitStructure);<br>	<br>	<span class="hljs-comment">/* Configure the serial port to receive interrupts. */</span><br>	NVIC_Configuration();<br>	<br>	<span class="hljs-comment">/* Enable serial port receive interrupt */</span><br>	USART_ITConfig(DEBUG_USART, USART_IT_RXNE, ENABLE);<br>	<br>	<span class="hljs-comment">/* Enable serial */</span><br>	USART_Cmd(DEBUG_USART, ENABLE);<br>&#125;<br><br><br><span class="hljs-comment">/*****************  Send a character **********************/</span><br><span class="hljs-type">void</span> <span class="hljs-title function_">Usart_SendByte</span><span class="hljs-params">( USART_TypeDef * pUSARTx, <span class="hljs-type">uint8_t</span> ch)</span><br>&#123;<br>	<span class="hljs-comment">/* Send a byte of data to the USART */</span><br>	USART_SendData(pUSARTx,ch);<br>		<br>	<span class="hljs-comment">/* Waiting for the transmit data register to be empty */</span><br>	<span class="hljs-keyword">while</span> (USART_GetFlagStatus(pUSARTx, USART_FLAG_TXE) == RESET);	<br>&#125;<br><br><span class="hljs-comment">/*****************  Send string **********************/</span><br><span class="hljs-type">void</span> <span class="hljs-title function_">Usart_SendString</span><span class="hljs-params">( USART_TypeDef * pUSARTx, <span class="hljs-type">char</span> *str)</span><br>&#123;<br>	<span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> k=<span class="hljs-number">0</span>;<br>  <span class="hljs-keyword">do</span> <br>  &#123;<br>      Usart_SendByte( pUSARTx, *(str + k) );<br>      k++;<br>  &#125; <span class="hljs-keyword">while</span>(*(str + k)!=<span class="hljs-string">&#x27;\0&#x27;</span>);<br>  <br>  <span class="hljs-comment">/* Waiting for transmission to complete */</span><br>  <span class="hljs-keyword">while</span>(USART_GetFlagStatus(pUSARTx,USART_FLAG_TC)==RESET)<br>  &#123;&#125;<br>&#125;<br><br><span class="hljs-comment">/*****************  Send a 16-digit number **********************/</span><br><span class="hljs-type">void</span> <span class="hljs-title function_">Usart_SendHalfWord</span><span class="hljs-params">( USART_TypeDef * pUSARTx, <span class="hljs-type">uint16_t</span> ch)</span><br>&#123;<br>	<span class="hljs-type">uint8_t</span> temp_h, temp_l;<br>	<br>	<span class="hljs-comment">/* Take out the high eight */</span><br>	temp_h = (ch&amp;<span class="hljs-number">0XFF00</span>)&gt;&gt;<span class="hljs-number">8</span>;<br>	<span class="hljs-comment">/* Take the lower eight */</span><br>	temp_l = ch&amp;<span class="hljs-number">0XFF</span>;<br>	<br>	<span class="hljs-comment">/* Send high eight */</span><br>	USART_SendData(pUSARTx,temp_h);	<br>	<span class="hljs-keyword">while</span> (USART_GetFlagStatus(pUSARTx, USART_FLAG_TXE) == RESET);<br>	<br>	<span class="hljs-comment">/* Send the lower eight digits */</span><br>	USART_SendData(pUSARTx,temp_l);	<br>	<span class="hljs-keyword">while</span> (USART_GetFlagStatus(pUSARTx, USART_FLAG_TXE) == RESET);	<br>&#125;<br><br><span class="hljs-comment">/* Redirect the c library function printf to the serial port, </span><br><span class="hljs-comment">   use the printf function after redirection.	*/</span><br><span class="hljs-type">int</span> <span class="hljs-title function_">fputc</span><span class="hljs-params">(<span class="hljs-type">int</span> ch, FILE *f)</span><br>&#123;<br>	<span class="hljs-comment">/* Send a byte of data to the serial port */</span><br>	USART_SendData(DEBUG_USART, (<span class="hljs-type">uint8_t</span>) ch);<br><br>	<span class="hljs-comment">/* Waiting to send */</span><br>	<span class="hljs-keyword">while</span> (USART_GetFlagStatus(DEBUG_USART, USART_FLAG_TXE) == RESET);		<br><br>	<span class="hljs-keyword">return</span> (ch);<br>&#125;<br><br><span class="hljs-comment">/* Redirect the c library function scanf to the serial port, </span><br><span class="hljs-comment">   rewrite backwards can use scanf, getchar and other functions. */</span><br><span class="hljs-type">int</span> <span class="hljs-title function_">fgetc</span><span class="hljs-params">(FILE *f)</span><br>&#123;<br>	<span class="hljs-comment">/* Waiting for serial input data */</span><br>	<span class="hljs-keyword">while</span> (USART_GetFlagStatus(DEBUG_USART, USART_FLAG_RXNE) == RESET);<br><br>	<span class="hljs-keyword">return</span> (<span class="hljs-type">int</span>)USART_ReceiveData(DEBUG_USART);<br>&#125;<br><span class="hljs-comment">/*********************************************END OF FILE*********************************************/</span><br><br></code></pre></td></tr></table></figure>
+
+<h4 id="4，延时函数配置"><a href="#4，延时函数配置" class="headerlink" title="4，延时函数配置"></a>4，延时函数配置</h4><h5 id="（1）systick-h"><a href="#（1）systick-h" class="headerlink" title="（1）systick.h"></a>（1）systick.h</h5><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-meta">#<span class="hljs-keyword">ifndef</span> __SYSTICK_H</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> __SYSTICK_H</span><br><br><span class="hljs-meta">#<span class="hljs-keyword">include</span><span class="hljs-string">&quot;stm32f10x.h&quot;</span></span><br><br><span class="hljs-type">void</span> <span class="hljs-title function_">delay_us</span><span class="hljs-params">(u32 i)</span>;<br><span class="hljs-type">void</span> <span class="hljs-title function_">delay_ms</span><span class="hljs-params">(u32 i)</span>;<br><br><br><span class="hljs-meta">#<span class="hljs-keyword">endif</span>	<span class="hljs-comment">/* __SYSTICK_DELAY_H */</span></span><br><br></code></pre></td></tr></table></figure>
+
+<h5 id="（2）systick-c"><a href="#（2）systick-c" class="headerlink" title="（2）systick.c"></a>（2）systick.c</h5><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;systick.h&quot;</span></span><br><br><span class="hljs-type">void</span> <span class="hljs-title function_">delay_us</span><span class="hljs-params">(u32 i)</span><br>&#123;<br>	u32 temp;<br>	SysTick-&gt;LOAD=<span class="hljs-number">9</span>*i;		 <span class="hljs-comment">//Set the reload value, at 72MHZ</span><br>	SysTick-&gt;CTRL=<span class="hljs-number">0X01</span>;		 <span class="hljs-comment">//Enable, reduce to zero is no action, use external clock source</span><br>	SysTick-&gt;VAL=<span class="hljs-number">0</span>;		   	 <span class="hljs-comment">//Clear counter</span><br>	<span class="hljs-keyword">do</span><br>	&#123;<br>		temp=SysTick-&gt;CTRL;		<span class="hljs-comment">//Read current countdown value</span><br>	&#125;<br>	<span class="hljs-keyword">while</span>((temp&amp;<span class="hljs-number">0x01</span>)&amp;&amp;(!(temp&amp;(<span class="hljs-number">1</span>&lt;&lt;<span class="hljs-number">16</span>))));	 <span class="hljs-comment">//Waiting time to arrive</span><br>	SysTick-&gt;CTRL=<span class="hljs-number">0</span>;	<span class="hljs-comment">//Close counter</span><br>	SysTick-&gt;VAL=<span class="hljs-number">0</span>;		<span class="hljs-comment">//Empty counter</span><br>&#125;<br><span class="hljs-type">void</span> <span class="hljs-title function_">delay_ms</span><span class="hljs-params">(u32 i)</span><br>&#123;<br>	u32 temp;<br>	SysTick-&gt;LOAD=<span class="hljs-number">9000</span>*i;	<span class="hljs-comment">//Set the reload value, at 72MHZ</span><br>	SysTick-&gt;CTRL=<span class="hljs-number">0X01</span>;		<span class="hljs-comment">//Enable, reduce to zero is no action, use external clock source</span><br>	SysTick-&gt;VAL=<span class="hljs-number">0</span>;			<span class="hljs-comment">//Clear counter</span><br>	<span class="hljs-keyword">do</span><br>	&#123;<br>		temp=SysTick-&gt;CTRL;	   <span class="hljs-comment">//Read current countdown value</span><br>	&#125;<br>	<span class="hljs-keyword">while</span>((temp&amp;<span class="hljs-number">0x01</span>)&amp;&amp;(!(temp&amp;(<span class="hljs-number">1</span>&lt;&lt;<span class="hljs-number">16</span>))));	<span class="hljs-comment">//Waiting time to arrive</span><br>	SysTick-&gt;CTRL=<span class="hljs-number">0</span>;	<span class="hljs-comment">//Close counter</span><br>	SysTick-&gt;VAL=<span class="hljs-number">0</span>;		<span class="hljs-comment">//Empty counter</span><br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+<h4 id="5，-数据读取并在串口打印"><a href="#5，-数据读取并在串口打印" class="headerlink" title="5， 数据读取并在串口打印"></a>5， 数据读取并在串口打印</h4><p><strong>main.c：</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">/**</span><br><span class="hljs-comment">  ******************************************************************************</span><br><span class="hljs-comment">  * @file    main.c</span><br><span class="hljs-comment">  * @author  Soso</span><br><span class="hljs-comment">  * @date    2019-08-02</span><br><span class="hljs-comment">  * @brief   I2C read mpu6050 data. </span><br><span class="hljs-comment">  *</span><br><span class="hljs-comment">  ******************************************************************************</span><br><span class="hljs-comment">  */</span><br>  <br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;stm32f10x.h&quot;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;usart.h&quot;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;i2c_gpio.h&quot;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;mpu6050.h&quot;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;systick.h&quot;</span></span><br><br><span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span><br>&#123;<br>	USART_Config();<br>	I2C_Config();<br>	MPU6050_Init();<br>	<br>	MPU6050_Angle data;<br>	<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;MPU6050 initialzation.\r\n&quot;</span>);<br>	<br>	<span class="hljs-keyword">while</span>(<span class="hljs-number">1</span>)<br>	&#123;<br>		MPU6050_Get_Angle(&amp;data);  <span class="hljs-comment">// 计算三轴倾角         </span><br>		<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;X_Angle = %lf°    Y_Angle = %lf°    Z_Angle = %lf°\r\n&quot;</span>, data.X_Angle,data.Y_Angle,data.Z_Angle);<br>		<br><span class="hljs-comment">//		/* 打印 x, y, z 轴加速度 */</span><br><span class="hljs-comment">//		printf(&quot;ACCEL_X: %d    ACCEL_Y: %d    ACCEL_Z: %d\r\n&quot;, </span><br><span class="hljs-comment">//		MPU6050_Get_Data(ACCEL_XOUT_H)+ X_ACCEL_OFFSET,MPU6050_Get_Data(ACCEL_YOUT_H)+ Y_ACCEL_OFFSET,MPU6050_Get_Data(ACCEL_ZOUT_H)+ Z_ACCEL_OFFSET);</span><br><br><span class="hljs-comment">//		/* 打印温度，需要根据手册的公式换算为摄氏度 */</span><br><span class="hljs-comment">//		printf(&quot;TEMP: %0.2f\r\n&quot;, MPU6050_Get_Data(TEMP_OUT_H) / 340.0 + 36.53);</span><br><br><span class="hljs-comment">//		/* 打印 x, y, z 轴角速度 */</span><br><span class="hljs-comment">//		printf(&quot;GYRO_X: %d    GYRO_Y: %d    GYRO_Z: %d\r\n&quot;, </span><br><span class="hljs-comment">//		MPU6050_Get_Data(GYRO_XOUT_H)+ X_GYRO_OFFSET,MPU6050_Get_Data(GYRO_YOUT_H)+ Y_GYRO_OFFSET,MPU6050_Get_Data(GYRO_ZOUT_H)+ Z_GYRO_OFFSET);</span><br><br>		delay_ms(<span class="hljs-number">200</span>);<br>	&#125;<br>&#125;<br><br><br><br><br><span class="hljs-comment">/*********************************************END OF FILE*********************************************/</span><br><br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="三、元器件接线说明"><a href="#三、元器件接线说明" class="headerlink" title="三、元器件接线说明"></a>三、元器件接线说明</h3><p><img src="https://s2.ax1x.com/2019/11/24/ML4HFU.jpg" srcset="/img/loading.gif" lazyload alt="ML4HFU.jpg"></p>
+<figure class="highlight clean"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs clean">【 ！】 引脚分配<br>			STM32	     MPU6050<br>			PA12    -&gt;    SCL PIN<br>			PA11    -&gt;    SDA PIN<br>			+<span class="hljs-number">3.3</span>V   -&gt;    VCC<br>			GND     -&gt;    GND<br>			<br>			STM32		串口模块<br>			PB11    -&gt;     Tx<br>			PB10    -&gt;     Rx<br>			+<span class="hljs-number">3.3</span>V   -&gt;     +<span class="hljs-number">3.3</span>V<br>			GND     -&gt;     GND<br>			波特率：<span class="hljs-number">115200</span><br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="四、参考链接"><a href="#四、参考链接" class="headerlink" title="四、参考链接"></a>四、参考链接</h3><p><em>[1] <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/30621372">https://zhuanlan.zhihu.com/p/30621372</a></em></p>
+<p><em>[2] <a target="_blank" rel="noopener" href="https://blog.csdn.net/he__yuan/article/details/76559569">https://blog.csdn.net/he__yuan/article/details/76559569</a></em></p>
+
+              
+            </div>
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F/" class="category-chain-item">嵌入式</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F/STM32/" class="category-chain-item">STM32</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/STM32/">#STM32</a>
+      
+        <a href="/tags/MPU6050/">#MPU6050</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>STM32F103学习笔记——MPU6050数据读取与倾角检测</div>
+      <div>https://kevinloongc.github.io/posts/b1f7002e.html</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Kevin Loongc</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2019年8月2日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/posts/3bec21fb.html" title="PID系数调节讲解">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">PID系数调节讲解</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/posts/17780.html" title="在ARM体系中字、半字、字节的概念理解">
+                        <span class="hidden-mobile">在ARM体系中字、半字、字节的概念理解</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.4.16/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"aafuxXAEvmPa9M6u5J2bcS51-gzGzoHsz","appKey":"d6sAJLHqlK9SsXVkMJiMDJDU","path":"window.location.pathname","placeholder":null,"avatar":"retro","meta":["nick","mail"],"requiredFields":[],"pageSize":10,"lang":"zh-CN","highlight":false,"recordIP":false,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":false},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.0/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script>
+  (function() {
+    var enableLang = CONFIG.code_language.enable && CONFIG.code_language.default;
+    var enableCopy = CONFIG.copy_btn;
+    if (!enableLang && !enableCopy) {
+      return;
+    }
+
+    function getBgClass(ele) {
+      return Fluid.utils.getBackgroundLightness(ele) >= 0 ? 'code-widget-light' : 'code-widget-dark';
+    }
+
+    var copyTmpl = '';
+    copyTmpl += '<div class="code-widget">';
+    copyTmpl += 'LANG';
+    copyTmpl += '</div>';
+    jQuery('.markdown-body pre').each(function() {
+      var $pre = jQuery(this);
+      if ($pre.find('code.mermaid').length > 0) {
+        return;
+      }
+      if ($pre.find('span.line').length > 0) {
+        return;
+      }
+
+      var lang = '';
+
+      if (enableLang) {
+        lang = CONFIG.code_language.default;
+        if ($pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2 && $pre.children().hasClass('hljs')) {
+          lang = $pre[0].children[0].classList[1];
+        } else if ($pre[0].getAttribute('data-language')) {
+          lang = $pre[0].getAttribute('data-language');
+        } else if ($pre.parent().hasClass('sourceCode') && $pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2) {
+          lang = $pre[0].children[0].classList[1];
+          $pre.parent().addClass('code-wrapper');
+        } else if ($pre.parent().hasClass('markdown-body') && $pre[0].classList.length === 0) {
+          $pre.wrap('<div class="code-wrapper"></div>');
+        }
+        lang = lang.toUpperCase().replace('NONE', CONFIG.code_language.default);
+      }
+      $pre.append(copyTmpl.replace('LANG', lang).replace('code-widget">',
+        getBgClass($pre[0]) + (enableCopy ? ' code-widget copy-btn" data-clipboard-snippet><i class="iconfont icon-copy"></i>' : ' code-widget">')));
+
+      if (enableCopy) {
+        Fluid.utils.createScript('https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js', function() {
+          var clipboard = new window.ClipboardJS('.copy-btn', {
+            target: function(trigger) {
+              var nodes = trigger.parentNode.childNodes;
+              for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].tagName === 'CODE') {
+                  return nodes[i];
+                }
+              }
+            }
+          });
+          clipboard.on('success', function(e) {
+            e.clearSelection();
+            e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-copy', 'icon-success');
+            setTimeout(function() {
+              e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-success', 'icon-copy');
+            }, 2000);
+          });
+        });
+      }
+    });
+  })();
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
